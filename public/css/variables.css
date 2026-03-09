@@ -1,0 +1,129 @@
+/* ============================================
+   VELVET BEAUTY — CSS Variables / Design Tokens
+   Brand: Luxury beauty, feminine, elegant
+   Aesthetic: Rose gold + deep plum + cream
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* ── Brand Colors ── */
+  --pink-primary:    #E91E8C;   /* Hot pink — CTA buttons */
+  --pink-light:      #F472B6;   /* Soft pink */
+  --pink-pale:       #FDE8F3;   /* Background tints */
+  --plum:            #6B2D5E;   /* Deep plum — headings */
+  --plum-dark:       #4A1A40;   /* Darkest plum */
+  --rose-gold:       #C9956C;   /* Rose gold accent */
+  --rose-gold-light: #E8C5A8;   /* Light rose gold */
+  --cream:           #FDF6F0;   /* Page background */
+  --cream-dark:      #F5EBE0;   /* Section alternates */
+  --white:           #FFFFFF;
+  --black:           #1A0A12;   /* Soft black */
+
+  /* ── Neutrals ── */
+  --gray-50:  #FAF7F5;
+  --gray-100: #F3EDE8;
+  --gray-200: #E8DDD5;
+  --gray-300: #D4C4BB;
+  --gray-400: #B8A49A;
+  --gray-500: #8C7B72;
+  --gray-600: #6B5C55;
+  --gray-700: #4A3D38;
+  --gray-800: #2E2420;
+  --gray-900: #1A0F0C;
+
+  /* ── Semantic Colors ── */
+  --success:       #2D8A4E;
+  --success-light: #D4EDDA;
+  --warning:       #C9880A;
+  --warning-light: #FFF3CD;
+  --error:         #C0392B;
+  --error-light:   #FDECEA;
+  --info:          #2E6DA4;
+  --info-light:    #D6EAF8;
+
+  /* ── Typography ── */
+  --font-display: 'Cormorant Garamond', Georgia, serif;   /* Headings */
+  --font-body:    'Jost', sans-serif;                     /* Body text */
+
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-md:   1.125rem;   /* 18px */
+  --text-lg:   1.25rem;    /* 20px */
+  --text-xl:   1.5rem;     /* 24px */
+  --text-2xl:  2rem;       /* 32px */
+  --text-3xl:  2.5rem;     /* 40px */
+  --text-4xl:  3.5rem;     /* 56px */
+  --text-5xl:  4.5rem;     /* 72px */
+
+  --weight-light:   300;
+  --weight-normal:  400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+  --weight-bold:    700;
+
+  --leading-tight:  1.2;
+  --leading-snug:   1.4;
+  --leading-normal: 1.6;
+  --leading-loose:  1.8;
+
+  /* ── Spacing ── */
+  --space-1:  0.25rem;   /* 4px */
+  --space-2:  0.5rem;    /* 8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+  --space-32: 8rem;      /* 128px */
+
+  /* ── Border Radius ── */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-2xl:  32px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-xs:  0 1px 3px rgba(105, 45, 94, 0.08);
+  --shadow-sm:  0 2px 8px rgba(105, 45, 94, 0.10);
+  --shadow-md:  0 4px 20px rgba(105, 45, 94, 0.14);
+  --shadow-lg:  0 8px 40px rgba(105, 45, 94, 0.18);
+  --shadow-xl:  0 16px 60px rgba(105, 45, 94, 0.22);
+  --shadow-pink: 0 4px 20px rgba(233, 30, 140, 0.25);
+  --shadow-card: 0 2px 12px rgba(105, 45, 94, 0.10), 0 0 0 1px rgba(105, 45, 94, 0.04);
+
+  /* ── Transitions ── */
+  --ease-out:    cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast:   150ms;
+  --dur-normal: 250ms;
+  --dur-slow:   400ms;
+
+  /* ── Layout ── */
+  --container-sm:   640px;
+  --container-md:   768px;
+  --container-lg:   1024px;
+  --container-xl:   1280px;
+  --container-2xl:  1440px;
+
+  --nav-height:     72px;
+  --sidebar-width:  260px;
+
+  /* ── Z-index ── */
+  --z-base:    0;
+  --z-above:   10;
+  --z-dropdown:100;
+  --z-sticky:  200;
+  --z-overlay: 300;
+  --z-modal:   400;
+  --z-toast:   500;
+}

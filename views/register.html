@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — Velvet Beauty</title>
+  <link rel="stylesheet" href="../public/css/variables.css" />
+  <link rel="stylesheet" href="../public/css/main.css" />
+  <link rel="stylesheet" href="../public/css/auth.css" />
+</head>
+<body>
+
+  <div class="auth-page">
+
+    <!-- Left Panel -->
+    <div class="auth-panel-left">
+      <div class="auth-float-cards">
+        <span class="auth-float-pill">💄 Join the Club</span>
+        <span class="auth-float-pill">🌸 Exclusive Deals</span>
+        <span class="auth-float-pill">✨ Early Access</span>
+        <span class="auth-float-pill">💌 Beauty Tips</span>
+      </div>
+      <div class="auth-brand">
+        <svg class="auth-brand-logo" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="38" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.20)" stroke-width="1.5"/>
+          <ellipse cx="40" cy="30" rx="10" ry="14" fill="#E91E8C"/>
+          <ellipse cx="40" cy="30" rx="6" ry="10" fill="#F472B6"/>
+          <rect x="34" y="42" width="12" height="20" rx="6" fill="#C9956C"/>
+          <circle cx="40" cy="61" r="4" fill="#E91E8C"/>
+        </svg>
+        <span class="auth-brand-name">Velvet Beauty</span>
+        <span class="auth-brand-tagline">Luxury Cosmetics</span>
+        <p class="auth-brand-desc">
+          Create an account and enjoy exclusive member benefits: early access to new launches, personalised recommendations, and more.
+        </p>
+      </div>
+    </div>
+
+    <!-- Right Form Panel -->
+    <div class="auth-panel-right">
+      <div class="auth-form-container">
+
+        <!-- Role tabs -->
+        <div class="auth-role-tabs">
+          <button class="auth-role-tab active" onclick="switchRegisterRole('customer', this)">Customer</button>
+          <button class="auth-role-tab" onclick="switchRegisterRole('employee', this)">Employee</button>
+          <button class="auth-role-tab" onclick="switchRegisterRole('owner', this)">Owner</button>
+        </div>
+
+        <h2 class="auth-heading">Create Account</h2>
+        <p class="auth-subheading" id="reg-subheading">Join us as a customer</p>
+
+        <!-- Alert -->
+        <div class="auth-alert auth-alert-error hidden" id="reg-alert">
+          ⚠️ <span id="reg-alert-msg">Please fix the errors below.</span>
+        </div>
+
+        <!-- Register Form -->
+        <form class="auth-form" id="register-form" onsubmit="handleRegister(event)">
+
+          <div class="auth-row">
+            <div class="auth-input-group">
+              <label class="auth-label">First Name *</label>
+              <span class="auth-input-icon">👤</span>
+              <input type="text" class="auth-input" id="reg-first-name" placeholder="Ayesha" required />
+            </div>
+            <div class="auth-input-group">
+              <label class="auth-label">Last Name *</label>
+              <span class="auth-input-icon">👤</span>
+              <input type="text" class="auth-input" id="reg-last-name" placeholder="Khan" required />
+            </div>
+          </div>
+
+          <div class="auth-input-group">
+            <label class="auth-label">Email Address *</label>
+            <span class="auth-input-icon">✉️</span>
+            <input type="email" class="auth-input" id="reg-email" placeholder="ayesha@example.com" required autocomplete="email" />
+            <span class="auth-error-msg hidden" id="err-reg-email">Enter a valid email</span>
+          </div>
+
+          <div class="auth-input-group">
+            <label class="auth-label">Phone Number *</label>
+            <span class="auth-input-icon">📱</span>
+            <input type="tel" class="auth-input" id="reg-phone" placeholder="03XX-XXXXXXX" required />
+          </div>
+
+          <div class="auth-input-group">
+            <label class="auth-label">City</label>
+            <span class="auth-input-icon">🏙️</span>
+            <input type="text" class="auth-input" id="reg-city" placeholder="Lahore" />
+          </div>
+
+          <!-- Access code (hidden for customer, shown for employee/owner) -->
+          <div class="auth-input-group hidden" id="reg-code-group">
+            <label class="auth-label" id="reg-code-label">Employee Code *</label>
+            <span class="auth-input-icon">🏷️</span>
+            <input type="text" class="auth-input" id="reg-access-code" placeholder="Enter access code" autocomplete="off" />
+            <span class="auth-code-note" id="reg-code-note">Contact the owner to get your employee registration code.</span>
+          </div>
+
+          <div class="auth-input-group">
+            <label class="auth-label">Password *</label>
+            <span class="auth-input-icon">🔒</span>
+            <input type="password" class="auth-input" id="reg-password" placeholder="Create a strong password" required autocomplete="new-password" />
+            <span class="auth-error-msg hidden" id="err-reg-password">Password must be at least 6 characters</span>
+          </div>
+
+          <div class="auth-input-group">
+            <label class="auth-label">Confirm Password *</label>
+            <span class="auth-input-icon">🔒</span>
+            <input type="password" class="auth-input" id="reg-confirm-password" placeholder="Repeat password" required autocomplete="new-password" />
+            <span class="auth-error-msg hidden" id="err-reg-confirm">Passwords do not match</span>
+          </div>
+
+          <!-- Terms -->
+          <div style="margin-bottom:1.5rem;">
+            <label style="display:flex; align-items:flex-start; gap:0.5rem; cursor:pointer;">
+              <input type="checkbox" id="reg-terms" required style="margin-top:3px; accent-color: var(--pink-primary);" />
+              <span style="font-size:0.875rem; color:var(--gray-500); line-height:1.5;">
+                I agree to the <a href="#" style="color:var(--pink-primary);">Terms of Service</a> and <a href="#" style="color:var(--pink-primary);">Privacy Policy</a>
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" class="auth-submit-btn" id="reg-submit-btn">Create Account</button>
+
+        </form>
+
+        <div class="auth-switch">
+          Already have an account? <a href="login.html">Sign in</a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../public/js/auth.js"></script>
+</body>
+</html>
