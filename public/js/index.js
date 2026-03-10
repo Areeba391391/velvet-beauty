@@ -25,8 +25,6 @@ function renderCategories() {
       el.textContent = `${count} Products`;
     }
   });
-  const statEl = document.getElementById('stat-products');
-  if (statEl) statEl.textContent = products.length + '+';
 }
 
 // ── Featured tabs ─────────────────────────────────────────────

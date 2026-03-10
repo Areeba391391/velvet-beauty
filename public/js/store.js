@@ -172,9 +172,15 @@ const VBAuth = {
 
   guard(allowedRoles) {
     const session = DB.get(KEYS.session);
-    if (!session) { window.location.href = 'login.html'; return null; }
+    if (!session) {
+      // If guarding staff roles, go to dashboard login
+      const isStaffOnly = allowedRoles && allowedRoles.every(r => r === 'owner' || r === 'employee');
+      window.location.href = isStaffOnly ? 'dashboard-login.html' : 'login.html';
+      return null;
+    }
     if (allowedRoles && !allowedRoles.includes(session.role)) {
-      window.location.href = 'login.html';
+      const isStaffOnly = allowedRoles.every(r => r === 'owner' || r === 'employee');
+      window.location.href = isStaffOnly ? 'dashboard-login.html' : 'login.html';
       return null;
     }
     return session;
@@ -382,15 +388,46 @@ const VBCustomers = {
 
 // ── Analytics ─────────────────────────────────────────────────
 const VBAnalytics = {
-  get()    { return DB.get(KEYS.analytics) || []; },
+  // Compute real monthly analytics from orders
+  get() {
+    const orders = VBOrders.getAll().filter(o => o.status !== 'cancelled');
+    const customers = VBCustomers.getAll();
+    const monthMap = {};
+
+    orders.forEach(o => {
+      if (!o.date) return;
+      const d = new Date(o.date);
+      const key = d.toLocaleString('en-PK', { month:'short', year:'numeric' });
+      if (!monthMap[key]) monthMap[key] = { month:key, revenue:0, orders:0, newCustomers:0, avgOrder:0, _ts: d.getTime() };
+      monthMap[key].revenue += (o.total || 0);
+      monthMap[key].orders  += 1;
+    });
+
+    // Count new customers per month
+    customers.forEach(c => {
+      if (!c.joinDate) return;
+      const d = new Date(c.joinDate);
+      const key = d.toLocaleString('en-PK', { month:'short', year:'numeric' });
+      if (monthMap[key]) monthMap[key].newCustomers += 1;
+    });
+
+    const result = Object.values(monthMap)
+      .sort((a,b) => a._ts - b._ts)
+      .map(m => ({ ...m, avgOrder: m.orders ? Math.round(m.revenue / m.orders) : 0 }));
+
+    // If no real orders yet, fall back to seed analytics
+    if (!result.length) return DB.get(KEYS.analytics) || [];
+    return result;
+  },
+
   summary() {
-    const data = this.get();
-    const totalRev    = data.reduce((s,m) => s + m.revenue, 0);
-    const totalOrders = data.reduce((s,m) => s + m.orders, 0);
-    const avgMonthly  = data.length ? Math.round(totalRev / data.length) : 0;
-    const reviews     = VBReviews.getAll();
-    const avgRating   = reviews.length ? (reviews.reduce((s,r) => s + r.rating, 0) / reviews.length).toFixed(1) : '0.0';
-    return { totalRev, totalOrders, avgMonthly, avgRating };
+    const orders    = VBOrders.getAll().filter(o => o.status !== 'cancelled');
+    const totalRev  = orders.reduce((s,o) => s + (o.total||0), 0);
+    const reviews   = VBReviews.getAll();
+    const avgRating = reviews.length ? (reviews.reduce((s,r) => s + r.rating, 0) / reviews.length).toFixed(1) : '0.0';
+    const data      = this.get();
+    const avgMonthly = data.length ? Math.round(totalRev / data.length) : 0;
+    return { totalRev, totalOrders: orders.length, avgMonthly, avgRating };
   },
 };
 
@@ -438,6 +475,14 @@ function initNav() {
   VBCart.updateBadge();
   VBWish.updateBadge();
 
+  // Show dashboard link for staff only
+  const session = VBAuth.session();
+  if (session && (session.role === 'owner' || session.role === 'employee')) {
+    document.querySelectorAll('#nav-dashboard-link, #mob-dashboard-link').forEach(el => {
+      if (el) el.style.display = '';
+    });
+  }
+
   // Scroll behaviour (transparent → solid)
   const navbar = document.getElementById('navbar');
   if (navbar && navbar.classList.contains('transparent')) {
@@ -474,7 +519,7 @@ function updateNavUser() {
   if (!session) {
     if (accountBtn) accountBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
     if (dropdown)   dropdown.innerHTML = '';
-    if (mobLink)    mobLink.textContent = '👤 Login / Register';
+    if (mobLink)    mobLink.textContent = 'Login / Register';
     return;
   }
 
@@ -488,13 +533,13 @@ function updateNavUser() {
     accountBtn.parentNode.replaceChild(pill, accountBtn);
   }
 
-  if (mobLink) mobLink.textContent = `👤 ${session.name}`;
+  if (mobLink) mobLink.textContent = session.name;
 
   // Dropdown menu
   if (dropdown) {
-    const dashLink = session.role === 'owner'    ? '<a class="nav-dropdown-item" href="dashboard-owner.html">👑 Owner Dashboard</a>'
-                   : session.role === 'employee' ? '<a class="nav-dropdown-item" href="dashboard-emp.html">🏷️ Employee Dashboard</a>'
-                   : '<a class="nav-dropdown-item" href="#">📦 My Orders</a>';
+    const dashLink = session.role === 'owner'    ? '<a class="nav-dropdown-item" href="dashboard-owner.html">Owner Dashboard</a>'
+                   : session.role === 'employee' ? '<a class="nav-dropdown-item" href="dashboard-emp.html">Employee Dashboard</a>'
+                   : '<a class="nav-dropdown-item" href="#">My Orders</a>';
     dropdown.innerHTML = `
       <div class="nav-dropdown-head">
         <div class="nav-dropdown-name">${session.name}</div>
@@ -525,6 +570,15 @@ function logoutUser() {
 }
 
 // ── Product Card builder ──────────────────────────────────────
+// SVG icon set (inline)
+const ICONS = {
+  heart:     `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+  heartFill: `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+  eye:       `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  link:      `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+  cart:      `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+};
+
 function vbCard(product, animDelay=0) {
   const inWish  = VBWish.has(product.id);
   const badgeMap = { bestseller:'badge-bestseller', sale:'badge-sale', hot:'badge-hot', new:'badge-new' };
@@ -537,11 +591,15 @@ function vbCard(product, animDelay=0) {
         ${badgeHtml}
         <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.src='https://placehold.co/400x300/FDE8F3/E91E8C?text=VB'"/>
         <div class="pc-actions">
-          <button class="pc-action-btn ${inWish?'active':''}" title="Wishlist" onclick="vbToggleWish('${product.id}',this)">
-            ${inWish?'❤️':'🤍'}
+          <button class="pc-action-btn ${inWish?'active':''}" title="${inWish?'Remove from Wishlist':'Add to Wishlist'}" onclick="vbToggleWish('${product.id}',this)">
+            ${inWish ? ICONS.heartFill : ICONS.heart}
           </button>
-          <button class="pc-action-btn" title="Quick View" onclick="vbQuickView('${product.id}')">👁️</button>
-          <a class="pc-action-btn" title="View Details" href="product-detail.html?id=${product.id}">🔗</a>
+          <button class="pc-action-btn" title="Quick View" onclick="vbQuickView('${product.id}')">
+            ${ICONS.eye}
+          </button>
+          <a class="pc-action-btn" title="View Details" href="product-detail.html?id=${product.id}">
+            ${ICONS.link}
+          </a>
         </div>
       </div>
       <div class="pc-body">
@@ -556,7 +614,9 @@ function vbCard(product, animDelay=0) {
             <span class="pc-price-now">Rs. ${product.price.toLocaleString()}</span>
             ${origHtml}
           </div>
-          <button class="pc-add-btn" title="Add to Cart" onclick="vbAddToCart('${product.id}')">+</button>
+          <button class="pc-add-btn" title="Add to Cart" onclick="vbAddToCart('${product.id}')" style="font-size:0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
         </div>
       </div>
     </div>`;
@@ -566,11 +626,17 @@ function vbToggleWish(id, btn) {
   const session = VBAuth.session();
   if (!session) { VBToast.show('Please login to save to wishlist','warning'); window.location.href='login.html'; return; }
   const added = VBWish.toggle(id);
-  if (btn) { btn.innerHTML = added ? '❤️' : '🤍'; btn.classList.toggle('active', added); }
-  document.querySelectorAll(`[data-id="${id}"] .pc-action-btn`).forEach(b => {
-    if (b.title === 'Wishlist') { b.innerHTML = VBWish.has(id)?'❤️':'🤍'; b.classList.toggle('active', VBWish.has(id)); }
+  if (btn) {
+    btn.innerHTML = added ? ICONS.heartFill : ICONS.heart;
+    btn.classList.toggle('active', added);
+    btn.title = added ? 'Remove from Wishlist' : 'Add to Wishlist';
+  }
+  // Update all cards showing this product
+  document.querySelectorAll(`[data-id="${id}"] .pc-action-btn[title*="ishlist"]`).forEach(b => {
+    b.innerHTML = VBWish.has(id) ? ICONS.heartFill : ICONS.heart;
+    b.classList.toggle('active', VBWish.has(id));
   });
-  VBToast.show(added ? 'Added to wishlist 💝' : 'Removed from wishlist', added?'success':'info');
+  VBToast.show(added ? 'Added to wishlist' : 'Removed from wishlist', added?'success':'info');
 }
 
 function vbAddToCart(id) {

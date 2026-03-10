@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Staff Login — Velvet Beauty</title>
+  <link rel="stylesheet" href="../public/css/variables.css"/>
+  <link rel="stylesheet" href="../public/css/main.css"/>
+  <link rel="stylesheet" href="../public/css/auth.css"/>
+  <style>
+    .dash-login-page {
+      min-height: 100vh;
+      display: flex;
+      background: var(--plum-dark);
+    }
+    .dash-login-brand {
+      width: 420px;
+      flex-shrink: 0;
+      background: linear-gradient(160deg, #2A0D28 0%, #4A1A40 50%, #6B2D5E 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .dash-login-brand::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: rgba(233,30,140,0.08);
+    }
+    .dash-login-brand::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(201,149,108,0.08);
+    }
+    .dlb-logo { display:flex; align-items:center; gap:0.75rem; margin-bottom:3rem; }
+    .dlb-logo-name { font-family:var(--font-display); font-size:1.4rem; color:#fff; letter-spacing:0.01em; }
+    .dlb-logo-tag  { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.2em; color:rgba(255,255,255,0.5); margin-top:2px; }
+    .dlb-title { font-family:var(--font-display); font-size:2.2rem; color:#fff; font-weight:400; line-height:1.25; margin-bottom:1rem; }
+    .dlb-title em { color:var(--pink); font-style:italic; }
+    .dlb-desc { font-size:0.85rem; color:rgba(255,255,255,0.5); line-height:1.7; margin-bottom:2.5rem; }
+    .dlb-note {
+      background: rgba(233,30,140,0.12);
+      border: 1px solid rgba(233,30,140,0.25);
+      border-radius: var(--r-lg);
+      padding: 1rem 1.25rem;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+    }
+    .dlb-note strong { color: rgba(255,255,255,0.9); }
+    .dlb-back {
+      display: inline-flex; align-items:center; gap:0.4rem;
+      font-size:0.78rem; color:rgba(255,255,255,0.4);
+      margin-top:2rem; text-decoration:none; transition:color 0.2s;
+    }
+    .dlb-back:hover { color:var(--pink); }
+
+    .dash-login-form {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: var(--cream);
+    }
+    .dash-login-box {
+      width: 100%;
+      max-width: 420px;
+    }
+    .dlf-eyebrow {
+      font-size: 0.7rem; text-transform:uppercase; letter-spacing:0.15em;
+      color:var(--pink); font-weight:600; margin-bottom:0.5rem;
+    }
+    .dlf-title { font-family:var(--font-display); font-size:2rem; color:var(--plum-dark); margin-bottom:0.3rem; font-weight:400; }
+    .dlf-sub   { font-size:0.85rem; color:var(--g400); margin-bottom:2rem; }
+    .role-cards { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.5rem; }
+    .role-card {
+      padding: 1rem;
+      border: 2px solid var(--g100);
+      border-radius: var(--r-lg);
+      cursor: pointer;
+      transition: all var(--t-fast);
+      text-align: center;
+      background: #fff;
+    }
+    .role-card:hover { border-color:var(--pink-light); background:var(--pink-ultra); }
+    .role-card.active { border-color:var(--pink); background:var(--pink-ultra); }
+    .role-card-icon { font-size:1.6rem; margin-bottom:0.35rem; }
+    .role-card-name { font-size:0.82rem; font-weight:600; color:var(--plum-dark); }
+    .role-card-desc { font-size:0.7rem; color:var(--g400); margin-top:2px; }
+    .auth-guard-note {
+      background: #FFF8E7;
+      border: 1px solid #F5C842;
+      border-radius: var(--r-md);
+      padding: 0.75rem 1rem;
+      font-size: 0.78rem;
+      color: #7A5C00;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items:flex-start;
+      gap: 0.5rem;
+    }
+    @media (max-width: 640px) {
+      .dash-login-brand { display: none; }
+      .dash-login-form { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="toast-container"></div>
+
+<div class="dash-login-page">
+
+  <!-- Brand Panel -->
+  <div class="dash-login-brand">
+    <div class="dlb-logo">
+      <svg width="40" height="40" viewBox="0 0 38 38" fill="none">
+        <circle cx="19" cy="19" r="18" fill="rgba(255,255,255,0.12)"/>
+        <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
+        <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
+        <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
+        <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
+      </svg>
+      <div>
+        <div class="dlb-logo-name">Velvet Beauty</div>
+        <div class="dlb-logo-tag">Luxury Cosmetics</div>
+      </div>
+    </div>
+    <h2 class="dlb-title">Staff <em>Portal</em></h2>
+    <p class="dlb-desc">Restricted access for authorized Velvet Beauty team members only. Manage orders, products, customers and more.</p>
+    <div class="dlb-note">
+      <strong>Owner:</strong> Full access — CRUD on all data, analytics, settings<br>
+      <strong>Employee:</strong> Manage orders and view products
+    </div>
+    <a href="index.html" class="dlb-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Store
+    </a>
+  </div>
+
+  <!-- Form Panel -->
+  <div class="dash-login-form">
+    <div class="dash-login-box">
+      <div class="dlf-eyebrow">Staff Access Only</div>
+      <h2 class="dlf-title">Dashboard Login</h2>
+      <p class="dlf-sub">Select your role and sign in with your credentials.</p>
+
+      <!-- Role cards -->
+      <div class="role-cards">
+        <div class="role-card active" id="rc-owner" onclick="selectRole('owner')">
+          <div class="role-card-icon">👑</div>
+          <div class="role-card-name">Owner</div>
+          <div class="role-card-desc">Full access</div>
+        </div>
+        <div class="role-card" id="rc-employee" onclick="selectRole('employee')">
+          <div class="role-card-icon">🏷️</div>
+          <div class="role-card-name">Employee</div>
+          <div class="role-card-desc">Orders & products</div>
+        </div>
+      </div>
+
+      <div class="auth-guard-note">
+        <span>🔒</span>
+        <span>Customer accounts cannot access the dashboard. <a href="login.html" style="color:#7A5C00;font-weight:600;">Customer login →</a></span>
+      </div>
+
+      <!-- Login Form -->
+      <form onsubmit="handleDashLogin(event)">
+        <div class="form-group">
+          <label class="form-label">Email Address <span class="req">*</span></label>
+          <input class="form-input" id="dl-email" type="email" placeholder="staff@velvetbeauty.pk" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input class="form-input" id="dl-password" type="password" placeholder="••••••••" required/>
+            <button type="button" class="pw-toggle" onclick="toggleDlPw()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Access Code <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input class="form-input" id="dl-code" type="password" placeholder="Staff access code"/>
+            <button type="button" class="pw-toggle" onclick="toggleDlCode()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <span class="form-hint" id="dl-code-hint">Default owner code: OWNER2025</span>
+        </div>
+
+        <div class="alert alert-error hidden" id="dl-error">
+          <span class="alert-icon">⚠️</span>
+          <span id="dl-error-msg">Invalid credentials.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="dl-btn">
+          Sign In to Dashboard
+        </button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<script src="../public/js/store.js"></script>
+<script>
+  let dlRole = 'owner';
+
+  // Auto-redirect if already logged in as staff
+  document.addEventListener('DOMContentLoaded', () => {
+    seedIfNeeded();
+    const session = VBAuth.session();
+    if (session && (session.role === 'owner' || session.role === 'employee')) {
+      redirectToDash(session.role);
+    }
+  });
+
+  function selectRole(role) {
+    dlRole = role;
+    document.getElementById('rc-owner').classList.toggle('active', role === 'owner');
+    document.getElementById('rc-employee').classList.toggle('active', role === 'employee');
+    const hint = document.getElementById('dl-code-hint');
+    if (hint) hint.textContent = role === 'owner' ? 'Default owner code: OWNER2025' : 'Get your code from the Owner';
+  }
+
+  function toggleDlPw() {
+    const i = document.getElementById('dl-password');
+    i.type = i.type === 'password' ? 'text' : 'password';
+  }
+  function toggleDlCode() {
+    const i = document.getElementById('dl-code');
+    i.type = i.type === 'password' ? 'text' : 'password';
+  }
+
+  function handleDashLogin(e) {
+    e.preventDefault();
+    const email    = document.getElementById('dl-email').value.trim();
+    const password = document.getElementById('dl-password').value;
+    const code     = document.getElementById('dl-code').value.trim();
+    const btn      = document.getElementById('dl-btn');
+    const errEl    = document.getElementById('dl-error');
+    const msgEl    = document.getElementById('dl-error-msg');
+
+    btn.classList.add('btn-loading'); btn.disabled = true;
+    if (errEl) errEl.classList.add('hidden');
+
+    setTimeout(() => {
+      const result = VBAuth.login(email, password, dlRole, code);
+      btn.classList.remove('btn-loading'); btn.disabled = false;
+      if (!result.ok) {
+        if (msgEl) msgEl.textContent = result.error;
+        if (errEl) errEl.classList.remove('hidden');
+        return;
+      }
+      VBToast.show('Welcome back! Redirecting…', 'success');
+      setTimeout(() => redirectToDash(result.session.role), 700);
+    }, 600);
+  }
+
+  function redirectToDash(role) {
+    if (role === 'owner')    window.location.href = 'dashboard-owner.html';
+    else if (role === 'employee') window.location.href = 'dashboard-emp.html';
+    else window.location.href = 'login.html'; // customer → regular login
+  }
+</script>
+</body>
+</html>

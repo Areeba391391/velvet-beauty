@@ -22,10 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── Read URL params ───────────────────────────────────────────
 function readUrlParams() {
   const p = new URLSearchParams(window.location.search);
-  if (p.get('cat'))  { shopState.cat = p.get('cat'); setActiveCat(shopState.cat); }
-  if (p.get('new'))  { shopState.newOnly = true; document.getElementById('chk-new').checked = true; }
-  if (p.get('sale')) { shopState.saleOnly = true; document.getElementById('chk-sale').checked = true; }
-  // Update hero title
+  if (p.get('cat')) {
+    // Capitalize first letter to match data (lips → Lips)
+    const raw = p.get('cat');
+    shopState.cat = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+    setActiveCat(shopState.cat);
+  }
+  if (p.get('new'))  { shopState.newOnly = true; const el = document.getElementById('chk-new'); if(el) el.checked = true; }
+  if (p.get('sale')) { shopState.saleOnly = true; const el = document.getElementById('chk-sale'); if(el) el.checked = true; }
   updateHeroTitle();
 }
 
