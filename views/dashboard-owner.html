@@ -48,6 +48,9 @@
       <button class="sidebar-link" data-section="customers" onclick="showSection('customers',this)">
         <span class="sl-icon">👥</span> Customers
       </button>
+      <button class="sidebar-link" data-section="users" onclick="showSection('users',this)">
+        <span class="sl-icon">🔑</span> Staff Users
+      </button>
       <button class="sidebar-link" data-section="reviews" onclick="showSection('reviews',this)">
         <span class="sl-icon">⭐</span> Reviews
       </button>
@@ -298,8 +301,37 @@
         </div>
       </div>
 
+      <!-- ═══════════ STAFF USERS ═══════════ -->
+      <div class="dash-section" id="section-users">
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Staff Users</span>
+            <button class="btn btn-primary btn-sm" onclick="openUserModal()">+ Add Staff</button>
+          </div>
+          <div class="dash-panel-body">
+            <div class="vb-table-wrap">
+              <table class="vb-table" id="users-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Phone</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ═══════════ SETTINGS ═══════════ -->
       <div class="dash-section" id="section-settings">
+
+        <!-- Store Settings -->
         <div class="dash-panel" style="max-width:560px;">
           <div class="dash-panel-head">
             <span class="dash-panel-title">Store Settings</span>
@@ -309,15 +341,19 @@
               <label class="form-label">Employee Access Code</label>
               <div class="pw-wrap">
                 <input class="form-input" id="set-emp-code" type="password" value="EMP2025" placeholder="Employee code"/>
-                <button type="button" class="pw-toggle" onclick="togglePwOwner('set-emp-code',this)">👁️</button>
+                <button type="button" class="pw-toggle" onclick="togglePwOwner('set-emp-code',this)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
               </div>
-              <span class="form-hint">Employees use this code to register/login.</span>
+              <span class="form-hint">Employees use this code when logging in.</span>
             </div>
             <div class="form-group">
               <label class="form-label">Owner Access Code</label>
               <div class="pw-wrap">
                 <input class="form-input" id="set-owner-code" type="password" value="OWNER2025" placeholder="Owner code"/>
-                <button type="button" class="pw-toggle" onclick="togglePwOwner('set-owner-code',this)">👁️</button>
+                <button type="button" class="pw-toggle" onclick="togglePwOwner('set-owner-code',this)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
               </div>
               <span class="form-hint">Owner code to access this dashboard.</span>
             </div>
@@ -333,7 +369,64 @@
           </div>
         </div>
 
-        <!-- Active Coupon Codes info -->
+        <!-- Promo Banner Control -->
+        <div class="dash-panel" style="max-width:560px;margin-top:1.5rem;">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">🎉 Promo Banner</span>
+            <label class="toggle-switch" title="Show/hide promo on homepage">
+              <input type="checkbox" id="promo-active-toggle" onchange="togglePromoActive(this)"/>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label" id="promo-active-label">Active</span>
+            </label>
+          </div>
+          <div class="dash-panel-body" id="promo-form-body">
+            <div class="form-group">
+              <label class="form-label">Eyebrow Text</label>
+              <input class="form-input" id="promo-eyebrow-inp" type="text" placeholder="⚡ Limited Time Offer"/>
+              <span class="form-hint">Small text above title (e.g. ⚡ Flash Sale)</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Banner Title</label>
+              <input class="form-input" id="promo-title-inp" type="text" placeholder="Up to 40% Off Bestsellers"/>
+              <span class="form-hint">Use % to auto-highlight numbers (e.g. 40%)</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea class="form-input" id="promo-desc-inp" rows="2" placeholder="Sale description..."></textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="form-group">
+                <label class="form-label">Coupon Code</label>
+                <input class="form-input" id="promo-code-inp" type="text" placeholder="BEAUTY20"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Discount %</label>
+                <input class="form-input" id="promo-codepct-inp" type="number" min="1" max="100" placeholder="20"/>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="form-group">
+                <label class="form-label">CTA Button Text</label>
+                <input class="form-input" id="promo-ctatext-inp" type="text" placeholder="Shop Sale Now"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">CTA Link</label>
+                <input class="form-input" id="promo-ctalink-inp" type="text" placeholder="shop.html?sale=true"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Countdown Duration (Hours)</label>
+              <input class="form-input" id="promo-hours-inp" type="number" min="1" max="720" placeholder="8"/>
+              <span class="form-hint">Saving will reset countdown timer.</span>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:center;">
+              <button class="btn btn-primary" onclick="savePromo()">Save Promo</button>
+              <button class="btn btn-ghost btn-sm" onclick="resetPromoCountdown()">Reset Countdown</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coupon Codes -->
         <div class="dash-panel" style="max-width:560px;margin-top:1.5rem;">
           <div class="dash-panel-head">
             <span class="dash-panel-title">Promo Codes</span>
@@ -497,6 +590,53 @@
       <button class="btn btn-primary" onclick="updateCustomerType()">Update Type</button>
       <button class="btn btn-danger" onclick="deleteCustomer()">Delete</button>
       <button class="btn btn-ghost" onclick="VBModal.close('customer-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ USER MODAL ═══ -->
+<div class="modal-overlay" id="user-modal">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-hdr">
+      <h3 class="modal-title" id="um-title">Add Staff User</h3>
+      <button class="modal-close" onclick="VBModal.close('user-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="um-id"/>
+      <div class="form-group">
+        <label class="form-label">Full Name <span class="req">*</span></label>
+        <input class="form-input" id="um-name" type="text" placeholder="e.g. Sara Ahmed"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address <span class="req">*</span></label>
+        <input class="form-input" id="um-email" type="email" placeholder="staff@velvetbeauty.pk"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password <span class="req">*</span></label>
+        <div class="pw-wrap">
+          <input class="form-input" id="um-password" type="password" placeholder="Min 6 characters"/>
+          <button type="button" class="pw-toggle" onclick="togglePwOwner('um-password',this)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <span class="form-hint" id="um-password-hint">Leave blank to keep existing password when editing.</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Role <span class="req">*</span></label>
+        <select class="form-select" id="um-role">
+          <option value="employee">Employee</option>
+          <option value="owner">Owner</option>
+        </select>
+        <span class="form-hint">Owners have full dashboard access. Employees can manage orders and view products.</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" id="um-phone" type="text" placeholder="03XX-XXXXXXX"/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="saveUser()">Save User</button>
+      <button class="btn btn-ghost" onclick="VBModal.close('user-modal')">Cancel</button>
     </div>
   </div>
 </div>

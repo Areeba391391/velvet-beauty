@@ -328,15 +328,16 @@
 </section>
 
 <!-- ═══════════════════════ PROMO BANNER ═══════════════════════ -->
-<section class="promo-section">
+<section class="promo-section" id="promo-section">
   <div class="container">
     <div class="promo-banner">
       <div>
-        <div class="promo-eyebrow">⚡ Limited Time Offer</div>
-        <h2 class="promo-title">Up to <em>40% Off</em><br>Bestsellers</h2>
-        <p class="promo-desc">Don't miss our biggest beauty sale. Shop your favourites at incredible prices before they're gone!</p>
-        <div class="promo-code" onclick="copyCode('BEAUTY20')">
-          Use code: <span class="promo-code-key">BEAUTY20</span> for 20% off &nbsp;📋
+        <div class="promo-eyebrow" id="promo-eyebrow">⚡ Limited Time Offer</div>
+        <h2 class="promo-title" id="promo-title">Up to <em>40% Off</em><br>Bestsellers</h2>
+        <p class="promo-desc" id="promo-desc">Don't miss our biggest beauty sale. Shop your favourites at incredible prices before they're gone!</p>
+        <div class="promo-code" id="promo-code-wrap" onclick="copyCode('BEAUTY20')">
+          Use code: <span class="promo-code-key" id="promo-code-key">BEAUTY20</span> for <span id="promo-code-pct">20%</span> off &nbsp;
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         </div>
         <div class="countdown">
           <div class="cd-unit"><span class="cd-num" id="cd-h">08</span><div class="cd-label">Hours</div></div>
@@ -345,7 +346,9 @@
           <span class="cd-sep">:</span>
           <div class="cd-unit"><span class="cd-num" id="cd-s">00</span><div class="cd-label">Secs</div></div>
         </div>
-        <a href="shop.html?sale=true" class="btn btn-primary btn-lg">Shop Sale Now</a>
+        <a href="shop.html?sale=true" class="btn btn-primary btn-lg" id="promo-cta-btn">
+          <span id="promo-cta-text">Shop Sale Now</span>
+        </a>
       </div>
       <div class="promo-visual">
         <svg class="promo-svg" viewBox="0 0 200 240" fill="none">

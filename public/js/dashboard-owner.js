@@ -35,7 +35,7 @@ function showSection(name, btn) {
     const linkEl = document.querySelector(`.sidebar-link[data-section="${name}"]`);
     if (linkEl) linkEl.classList.add('active');
   }
-  const titles = { overview:'Overview', orders:'Orders', products:'Products', customers:'Customers', reviews:'Reviews', analytics:'Analytics', settings:'Settings' };
+  const titles = { overview:'Overview', orders:'Orders', products:'Products', customers:'Customers', users:'Staff Users', reviews:'Reviews', analytics:'Analytics', settings:'Settings' };
   document.getElementById('topbar-title').textContent = titles[name] || name;
 
   // Render on switch
@@ -43,8 +43,10 @@ function showSection(name, btn) {
   if (name === 'orders')     renderOrders();
   if (name === 'products')   renderProducts();
   if (name === 'customers')  renderCustomers();
+  if (name === 'users')      renderUsers();
   if (name === 'reviews')    renderReviews();
   if (name === 'analytics')  renderAnalytics();
+  if (name === 'settings')   loadPromoForm();
 }
 
 function setPendingBadge() {
@@ -437,5 +439,165 @@ function togglePwOwner(inputId, btn) {
   if (!input) return;
   const show = input.type === 'password';
   input.type = show ? 'text' : 'password';
-  btn.textContent = show ? '🙈' : '👁️';
+  btn.innerHTML = show
+    ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+    : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+}
+
+// ── STAFF USERS ───────────────────────────────────────────────
+function renderUsers() {
+  const tbody = document.getElementById('users-tbody');
+  if (!tbody) return;
+  const users = VBUsers.getAll();
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--g400);padding:2rem;">No staff users found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:0.6rem;">
+          <div style="width:32px;height:32px;border-radius:50%;background:${avatarBg(u.name)};display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:0.8rem;flex-shrink:0;">
+            ${u.name.charAt(0).toUpperCase()}
+          </div>
+          <span style="font-weight:500;">${u.name}</span>
+        </div>
+      </td>
+      <td style="color:var(--g500);font-size:0.82rem;">${u.email}</td>
+      <td>${u.role === 'owner'
+        ? '<span class="status-badge s-vip">👑 Owner</span>'
+        : '<span class="status-badge s-processing">🏷️ Employee</span>'}</td>
+      <td style="color:var(--g500);">${u.phone || '—'}</td>
+      <td style="color:var(--g400);font-size:0.78rem;">${u.createdAt || '—'}</td>
+      <td>
+        <div style="display:flex;gap:0.4rem;">
+          <button class="btn btn-sm btn-outline-pink" onclick="openUserModal('${u.id}')">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteUser('${u.id}')">Delete</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+let _editingUserId = null;
+
+function openUserModal(userId) {
+  _editingUserId = userId || null;
+  const titleEl = document.getElementById('um-title');
+  const hintEl  = document.getElementById('um-password-hint');
+
+  // Clear form
+  ['um-id','um-name','um-email','um-password','um-phone'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('um-role').value = 'employee';
+
+  if (userId) {
+    const user = VBUsers.getById(userId);
+    if (!user) return;
+    if (titleEl) titleEl.textContent = 'Edit Staff User';
+    if (hintEl)  hintEl.textContent  = 'Leave blank to keep existing password.';
+    document.getElementById('um-id').value       = user.id;
+    document.getElementById('um-name').value     = user.name;
+    document.getElementById('um-email').value    = user.email;
+    document.getElementById('um-role').value     = user.role;
+    document.getElementById('um-phone').value    = user.phone || '';
+  } else {
+    if (titleEl) titleEl.textContent = 'Add Staff User';
+    if (hintEl)  hintEl.textContent  = 'Min 6 characters.';
+  }
+  VBModal.open('user-modal');
+}
+
+function saveUser() {
+  const id       = document.getElementById('um-id').value.trim();
+  const name     = document.getElementById('um-name').value.trim();
+  const email    = document.getElementById('um-email').value.trim().toLowerCase();
+  const password = document.getElementById('um-password').value;
+  const role     = document.getElementById('um-role').value;
+  const phone    = document.getElementById('um-phone').value.trim();
+
+  if (!name || !email) { VBToast.show('Name and email are required.', 'warning'); return; }
+  if (!id && password.length < 6) { VBToast.show('Password must be at least 6 characters.', 'warning'); return; }
+
+  if (id) {
+    // Editing existing user
+    const updateData = { name, email, role, phone };
+    if (password.length >= 6) updateData.password = password;
+    VBUsers.update(id, updateData);
+    VBToast.show('Staff user updated ✅', 'success');
+  } else {
+    // Adding new user
+    const result = VBUsers.add({ name, email, password, role, phone });
+    if (!result.ok) { VBToast.show(result.error, 'error'); return; }
+    VBToast.show('Staff user added ✅', 'success');
+  }
+
+  VBModal.close('user-modal');
+  renderUsers();
+}
+
+function deleteUser(userId) {
+  const session = VBAuth.session();
+  if (session && session.id === userId) {
+    VBToast.show("You can't delete your own account while logged in.", 'warning');
+    return;
+  }
+  VBModal.confirm('Delete this staff user? They will no longer be able to log in.', () => {
+    const result = VBUsers.delete(userId);
+    if (result && !result.ok) { VBToast.show(result.error, 'error'); return; }
+    VBToast.show('User deleted.', 'info');
+    renderUsers();
+  });
+}
+
+// ── PROMO BANNER ─────────────────────────────────────────────
+function loadPromoForm() {
+  const promo = VBPromo.get();
+  const toggle = document.getElementById('promo-active-toggle');
+  const label  = document.getElementById('promo-active-label');
+  if (toggle) toggle.checked = !!promo.active;
+  if (label)  label.textContent = promo.active ? 'Active' : 'Inactive';
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  set('promo-eyebrow-inp',  promo.eyebrow);
+  set('promo-title-inp',    promo.title);
+  set('promo-desc-inp',     promo.desc);
+  set('promo-code-inp',     promo.code);
+  set('promo-codepct-inp',  promo.codePct);
+  set('promo-ctatext-inp',  promo.ctaText);
+  set('promo-ctalink-inp',  promo.ctaLink);
+  set('promo-hours-inp',    promo.countdownHours || 8);
+}
+
+function togglePromoActive(checkbox) {
+  const label = document.getElementById('promo-active-label');
+  if (label) label.textContent = checkbox.checked ? 'Active' : 'Inactive';
+  const promo = VBPromo.get();
+  VBPromo.save({ ...promo, active: checkbox.checked });
+  VBToast.show(checkbox.checked ? 'Promo banner activated ✅' : 'Promo banner hidden', 'info');
+}
+
+function savePromo() {
+  const get = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  const promo = {
+    active:         document.getElementById('promo-active-toggle')?.checked ?? true,
+    eyebrow:        get('promo-eyebrow-inp') || '⚡ Limited Time Offer',
+    title:          get('promo-title-inp')   || 'Up to 40% Off Bestsellers',
+    desc:           get('promo-desc-inp'),
+    code:           (get('promo-code-inp')   || 'BEAUTY20').toUpperCase(),
+    codePct:        get('promo-codepct-inp') || '20',
+    ctaText:        get('promo-ctatext-inp') || 'Shop Sale Now',
+    ctaLink:        get('promo-ctalink-inp') || 'shop.html?sale=true',
+    countdownHours: parseInt(get('promo-hours-inp')) || 8,
+  };
+  VBPromo.save(promo);
+  // Reset countdown timer so new hours take effect
+  localStorage.removeItem('vb_countdown_end');
+  VBToast.show('Promo banner saved ✅ — visible on homepage!', 'success');
+}
+
+function resetPromoCountdown() {
+  localStorage.removeItem('vb_countdown_end');
+  VBToast.show('Countdown timer reset ✅', 'success');
 }

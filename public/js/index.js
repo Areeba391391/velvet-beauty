@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFeatured('all');
   renderBestsellers();
   renderTestimonials();
-  startCountdown();
+  renderPromoBanner();
   setupFeatTabs();
 });
 
@@ -84,14 +84,50 @@ function renderTestimonials() {
   }).join('');
 }
 
+// ── Promo Banner (loaded from store) ─────────────────────────
+function renderPromoBanner() {
+  const promo = VBPromo.get();
+  const section = document.getElementById('promo-section');
+  if (!section) return;
+
+  if (!promo.active) { section.style.display = 'none'; return; }
+  section.style.display = '';
+
+  const set     = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setHtml = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML   = val; };
+  const setHref = (id, val) => { const el = document.getElementById(id); if (el) el.href        = val; };
+
+  set('promo-eyebrow',  promo.eyebrow  || '⚡ Limited Time Offer');
+  setHtml('promo-title', (promo.title  || 'Up to 40% Off Bestsellers').replace(/(\d+%)/g, '<em>$1</em>'));
+  set('promo-desc',     promo.desc     || '');
+  set('promo-code-key', promo.code     || 'BEAUTY20');
+  set('promo-code-pct', (promo.codePct || '20') + '%');
+  set('promo-cta-text', promo.ctaText  || 'Shop Sale Now');
+  setHref('promo-cta-btn', promo.ctaLink || 'shop.html?sale=true');
+
+  const codeEl = document.getElementById('promo-code-wrap');
+  if (codeEl) codeEl.onclick = () => copyCode(promo.code || 'BEAUTY20');
+
+  startCountdown(parseInt(promo.countdownHours) || 8);
+}
+
 // ── Promo Countdown ───────────────────────────────────────────
-function startCountdown() {
-  // 8 hours from page load
-  let total = 8 * 3600;
+function startCountdown(hours = 8) {
+  let total = hours * 3600;
+  // Persist countdown so it doesn't reset on refresh
+  const storageKey = 'vb_countdown_end';
+  let endTime = parseInt(localStorage.getItem(storageKey) || '0');
+  const now = Date.now();
+  if (!endTime || endTime < now) {
+    endTime = now + total * 1000;
+    localStorage.setItem(storageKey, endTime);
+  }
+
   function tick() {
-    const h = Math.floor(total / 3600);
-    const m = Math.floor((total % 3600) / 60);
-    const s = total % 60;
+    const remaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+    const h = Math.floor(remaining / 3600);
+    const m = Math.floor((remaining % 3600) / 60);
+    const s = remaining % 60;
     const pad = n => String(n).padStart(2, '0');
     const hEl = document.getElementById('cd-h');
     const mEl = document.getElementById('cd-m');
@@ -99,7 +135,6 @@ function startCountdown() {
     if (hEl) hEl.textContent = pad(h);
     if (mEl) mEl.textContent = pad(m);
     if (sEl) sEl.textContent = pad(s);
-    if (total > 0) total--;
   }
   tick();
   setInterval(tick, 1000);

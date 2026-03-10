@@ -16,6 +16,7 @@ const KEYS = {
   users:     'vb_users',
   analytics: 'vb_analytics',
   settings:  'vb_settings',
+  promo:     'vb_promo',
 };
 
 // ── DB helpers ───────────────────────────────────────────────
@@ -106,6 +107,19 @@ function seedIfNeeded() {
 
   // Settings
   DB.set(KEYS.settings, { empCode:'EMP2025', ownerCode:'OWNER2025', freeDeliveryMin:2000, deliveryFee:200 });
+
+  // Promo Banner
+  DB.set(KEYS.promo, {
+    active:      true,
+    eyebrow:     '⚡ Limited Time Offer',
+    title:       'Up to 40% Off Bestsellers',
+    desc:        "Don't miss our biggest beauty sale. Shop your favourites at incredible prices before they're gone!",
+    code:        'BEAUTY20',
+    codePct:     '20',
+    ctaText:     'Shop Sale Now',
+    ctaLink:     'shop.html?sale=true',
+    countdownHours: 8,
+  });
 }
 
 // ── Auth ─────────────────────────────────────────────────────
@@ -384,6 +398,59 @@ const VBCustomers = {
     if (i >= 0) { list[i] = { ...list[i], ...data }; this.save(list); }
   },
   delete(id)      { this.save(this.getAll().filter(c => c.id !== id)); },
+};
+
+// ── Staff Users (Owner / Employee accounts) ───────────────────
+const VBUsers = {
+  getAll()        { return (DB.get(KEYS.users) || []).filter(u => u.role !== 'customer'); },
+  getAllWithCustomers() { return DB.get(KEYS.users) || []; },
+  getById(id)     { return (DB.get(KEYS.users) || []).find(u => u.id === id); },
+  save(users)     { DB.set(KEYS.users, users); },
+
+  add(data) {
+    const all = DB.get(KEYS.users) || [];
+    if (all.find(u => u.email === data.email)) return { ok:false, error:'Email already exists.' };
+    const user = { id:'u'+Date.now(), createdAt: new Date().toISOString().slice(0,10), ...data };
+    all.push(user);
+    this.save(all);
+    return { ok:true, user };
+  },
+
+  update(id, data) {
+    const all = DB.get(KEYS.users) || [];
+    const i = all.findIndex(u => u.id === id);
+    if (i < 0) return;
+    // Don't allow email duplication
+    if (data.email && all.find(u => u.email === data.email && u.id !== id)) return;
+    all[i] = { ...all[i], ...data };
+    this.save(all);
+    // Also update session if editing self
+    const session = DB.get(KEYS.session);
+    if (session && session.id === id) {
+      DB.set(KEYS.session, { ...session, name:all[i].name, email:all[i].email });
+    }
+  },
+
+  delete(id) {
+    const all = DB.get(KEYS.users) || [];
+    // Protect the owner account from deleting itself if only one owner
+    const owners = all.filter(u => u.role === 'owner');
+    const target = all.find(u => u.id === id);
+    if (target?.role === 'owner' && owners.length <= 1) return { ok:false, error:'Cannot delete the only owner account.' };
+    this.save(all.filter(u => u.id !== id));
+    return { ok:true };
+  },
+};
+
+// ── Promo Banner ──────────────────────────────────────────────
+const VBPromo = {
+  defaults: {
+    active:true, eyebrow:'⚡ Limited Time Offer', title:'Up to 40% Off Bestsellers',
+    desc:"Don't miss our biggest beauty sale. Shop your favourites at incredible prices before they're gone!",
+    code:'BEAUTY20', codePct:'20', ctaText:'Shop Sale Now', ctaLink:'shop.html?sale=true', countdownHours:8,
+  },
+  get()       { return DB.get(KEYS.promo) || this.defaults; },
+  save(promo) { DB.set(KEYS.promo, promo); },
 };
 
 // ── Analytics ─────────────────────────────────────────────────
