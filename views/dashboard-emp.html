@@ -1,265 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Employee Dashboard — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css" />
-  <link rel="stylesheet" href="../public/css/dashboard-owner.css" />
-  <link rel="stylesheet" href="../public/css/dashboard-emp.css" />
+  <link rel="stylesheet" href="../public/css/variables.css"/>
+  <link rel="stylesheet" href="../public/css/main.css"/>
+  <link rel="stylesheet" href="../public/css/dashboard.css"/>
 </head>
-<body class="dashboard-body emp-dashboard">
+<body>
+<div id="toast-container"></div>
 
-  <!-- SIDEBAR -->
+<div class="dash-page">
+
+  <!-- ═══ SIDEBAR ═══ -->
   <aside class="dash-sidebar" id="dash-sidebar">
-    <div class="dash-sidebar-logo">
-      <svg class="dash-logo-svg" viewBox="0 0 38 38" fill="none">
-        <circle cx="19" cy="19" r="18" fill="rgba(255,255,255,0.10)"/>
-        <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
-        <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
-        <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
-        <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
-      </svg>
-      <div class="dash-logo-text">
-        <span class="brand">Velvet Beauty</span>
-        <span class="role emp-role">Employee Portal</span>
+    <div class="sidebar-logo">
+      <svg width="32" height="32" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" fill="rgba(255,255,255,0.15)"/><ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/><ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/><rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/></svg>
+      <div class="sidebar-logo-text">
+        <div class="sidebar-logo-name">Velvet Beauty</div>
+        <div class="sidebar-logo-role">🏷️ Employee Panel</div>
       </div>
     </div>
 
-    <nav class="dash-nav">
-      <div class="dash-nav-section">
-        <span class="dash-nav-section-label">Overview</span>
-        <button class="dash-nav-item active" onclick="showPanel('emp-overview', this)">
-          <span class="dash-nav-icon">🏠</span> My Dashboard
-        </button>
+    <div class="sidebar-user">
+      <div class="sidebar-user-inner">
+        <div class="sidebar-avatar" id="sb-avatar">E</div>
+        <div>
+          <div class="sidebar-user-name" id="sb-name">Employee</div>
+          <div class="sidebar-user-role">employee</div>
+        </div>
       </div>
-      <div class="dash-nav-section">
-        <span class="dash-nav-section-label">Orders</span>
-        <button class="dash-nav-item" onclick="showPanel('emp-orders', this)">
-          <span class="dash-nav-icon">📦</span> Orders
-          <span class="dash-nav-badge" id="emp-pending-badge">0</span>
-        </button>
-      </div>
-      <div class="dash-nav-section">
-        <span class="dash-nav-section-label">Products</span>
-        <!-- Employee: view only -->
-        <button class="dash-nav-item" onclick="showPanel('emp-products', this)">
-          <span class="dash-nav-icon">💄</span> Products
-          <span class="emp-readonly-badge" style="margin-left:auto;">View Only</span>
-        </button>
-        <button class="dash-nav-item" onclick="showPanel('emp-reviews', this)">
-          <span class="dash-nav-icon">⭐</span> Reviews
-        </button>
-      </div>
-      <div class="dash-nav-section">
-        <span class="dash-nav-section-label">Store</span>
-        <a href="index.html" class="dash-nav-item" target="_blank">
-          <span class="dash-nav-icon">🌐</span> View Store
-        </a>
-      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <button class="sidebar-link active" data-section="overview" onclick="showSection('overview',this)">
+        <span class="sl-icon">📊</span> Overview
+      </button>
+      <button class="sidebar-link" data-section="orders" onclick="showSection('orders',this)">
+        <span class="sl-icon">📦</span> Orders
+        <span class="sl-badge" id="sb-pending-count">0</span>
+      </button>
+      <button class="sidebar-link" data-section="products" onclick="showSection('products',this)">
+        <span class="sl-icon">💄</span> Products
+        <span style="font-size:0.6rem;color:rgba(255,255,255,0.35);margin-left:auto;">View Only</span>
+      </button>
+      <button class="sidebar-link" data-section="reviews" onclick="showSection('reviews',this)">
+        <span class="sl-icon">⭐</span> Reviews
+        <span style="font-size:0.6rem;color:rgba(255,255,255,0.35);margin-left:auto;">View Only</span>
+      </button>
     </nav>
 
-    <div class="dash-sidebar-footer">
-      <div class="dash-user-info">
-        <div class="dash-user-avatar" style="background:linear-gradient(135deg,#2E6DA4,#1A4A7A);" id="emp-sidebar-avatar">E</div>
-        <div>
-          <div class="dash-user-name" id="emp-sidebar-name">Employee</div>
-          <div class="dash-user-role" style="color:#A8C8E8;">Staff Member</div>
-        </div>
-        <button class="dash-logout-btn" onclick="logoutUser()" title="Logout">⏻</button>
-      </div>
+    <div class="sidebar-bottom">
+      <a href="index.html" class="sidebar-visit-site"><span class="sl-icon">🌐</span> Visit Store</a>
+      <button class="sidebar-logout" onclick="doLogout()"><span class="sl-icon">🚪</span> Logout</button>
     </div>
   </aside>
 
-  <div class="dash-sidebar-overlay" id="dash-sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
-  <!-- MAIN CONTENT -->
+  <!-- ═══ MAIN ═══ -->
   <main class="dash-main">
-
     <div class="dash-topbar">
-      <div style="display:flex; align-items:center; gap:1rem;">
-        <button class="dash-sidebar-toggle" id="dash-sidebar-toggle" onclick="toggleSidebar()">☰</button>
-        <h1 class="dash-topbar-title" id="topbar-title">My Dashboard</h1>
+      <div class="topbar-left">
+        <button class="mob-menu-btn" onclick="openSidebar()">☰</button>
+        <span class="topbar-page-title" id="topbar-title">Overview</span>
       </div>
-      <div class="dash-topbar-right">
-        <div class="dash-search">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" placeholder="Search..." />
-        </div>
-        <div class="dash-user-avatar" style="width:36px;height:36px;font-size:0.875rem;background:linear-gradient(135deg,#2E6DA4,#1A4A7A);" id="emp-topbar-avatar">E</div>
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbar-date"></span>
+        <span class="status-badge s-new">🏷️ Employee</span>
       </div>
     </div>
 
     <div class="dash-content">
 
-      <!-- ══════ EMPLOYEE OVERVIEW ══════ -->
-      <div class="dash-panel active" id="panel-emp-overview">
-
-        <!-- Welcome Card -->
-        <div class="emp-welcome-card">
-          <div>
-            <div class="emp-welcome-title">Welcome back, <span id="emp-welcome-name">Employee</span>! 👋</div>
-            <div class="emp-welcome-subtitle">Here's your work summary for today.</div>
+      <!-- ═══════════ OVERVIEW ═══════════ -->
+      <div class="dash-section active" id="section-overview">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-plum">📦</div>
+            <div><div class="stat-val" id="stat-today-orders">0</div><div class="stat-label">Today's Orders</div></div>
           </div>
-          <div class="emp-welcome-date" id="emp-date"></div>
-        </div>
-
-        <!-- Shift Stats -->
-        <div class="emp-shift-card">
-          <div class="emp-shift-stat">
-            <span class="emp-shift-stat-value" id="emp-orders-today">0</span>
-            <span class="emp-shift-stat-label">Orders Today</span>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-yellow">⏳</div>
+            <div><div class="stat-val" id="stat-pending">0</div><div class="stat-label">Pending</div></div>
           </div>
-          <div class="emp-shift-divider"></div>
-          <div class="emp-shift-stat">
-            <span class="emp-shift-stat-value" id="emp-processing">0</span>
-            <span class="emp-shift-stat-label">Processing</span>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-blue">🚚</div>
+            <div><div class="stat-val" id="stat-shipped">0</div><div class="stat-label">Shipped</div></div>
           </div>
-          <div class="emp-shift-divider"></div>
-          <div class="emp-shift-stat">
-            <span class="emp-shift-stat-value" id="emp-shipped">0</span>
-            <span class="emp-shift-stat-label">Shipped</span>
-          </div>
-          <div class="emp-shift-divider"></div>
-          <div class="emp-shift-stat">
-            <span class="emp-shift-stat-value" id="emp-delivered">0</span>
-            <span class="emp-shift-stat-label">Delivered</span>
-          </div>
-          <div class="emp-shift-divider"></div>
-          <div class="emp-shift-stat">
-            <span class="emp-shift-stat-value" id="emp-total-products">0</span>
-            <span class="emp-shift-stat-label">Products</span>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-green">✅</div>
+            <div><div class="stat-val" id="stat-delivered">0</div><div class="stat-label">Delivered</div></div>
           </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="emp-quick-actions">
-          <button class="emp-quick-btn" onclick="showPanel('emp-orders', null)">
-            <div class="emp-quick-icon">📦</div>
-            <span class="emp-quick-label">View Orders</span>
-            <span class="emp-quick-desc">Manage and update order statuses</span>
-          </button>
-          <button class="emp-quick-btn" onclick="showPanel('emp-products', null)">
-            <div class="emp-quick-icon">💄</div>
-            <span class="emp-quick-label">Browse Products</span>
-            <span class="emp-quick-desc">View the product catalogue</span>
-          </button>
-          <button class="emp-quick-btn" onclick="showPanel('emp-reviews', null)">
-            <div class="emp-quick-icon">⭐</div>
-            <span class="emp-quick-label">Reviews</span>
-            <span class="emp-quick-desc">Check customer feedback</span>
-          </button>
-        </div>
-
-        <!-- Recent Orders (employee view) -->
-        <div class="table-card">
-          <div class="table-card-header">
-            <h3 class="table-card-title">Pending Orders</h3>
-            <button class="btn btn-ghost btn-sm" onclick="showPanel('emp-orders', null)">View All →</button>
+        <!-- Recent orders quick view -->
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Recent Orders</span>
+            <button class="btn btn-sm btn-outline" onclick="showSection('orders',null)">View All</button>
           </div>
-          <table class="dash-table">
-            <thead>
-              <tr><th>Order #</th><th>Customer</th><th>Items</th><th>City</th><th>Status</th><th>Date</th><th>Update</th></tr>
-            </thead>
-            <tbody id="emp-recent-orders-tbody"></tbody>
-          </table>
-        </div>
-
-      </div>
-
-      <!-- ══════ EMPLOYEE ORDERS ══════ -->
-      <div class="dash-panel" id="panel-emp-orders">
-        <div class="table-card">
-          <div class="table-card-header">
-            <h3 class="table-card-title">All Orders</h3>
-            <div class="table-card-actions">
-              <select class="dash-form-select" style="width:auto;" onchange="filterEmpOrders(this.value)">
-                <option value="all">All Status</option>
-                <option value="processing">Processing</option>
-                <option value="shipped">Shipped</option>
-                <option value="delivered">Delivered</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
-              <input type="text" class="dash-form-input" style="width:200px;" placeholder="🔍 Search orders..." oninput="searchEmpOrders(this.value)" />
+          <div class="dash-panel-body no-pad">
+            <div class="vb-table-wrap">
+              <table class="vb-table">
+                <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+                <tbody id="emp-recent-orders"></tbody>
+              </table>
             </div>
           </div>
-          <table class="dash-table emp-no-delete">
-            <thead>
-              <tr><th>Order #</th><th>Customer</th><th>City</th><th>Items</th><th>Status</th><th>Date</th><th>Update Status</th></tr>
-            </thead>
-            <tbody id="emp-orders-tbody"></tbody>
-          </table>
         </div>
       </div>
 
-      <!-- ══════ EMPLOYEE PRODUCTS (VIEW ONLY) ══════ -->
-      <div class="dash-panel" id="panel-emp-products">
-        <div class="table-card">
-          <div class="table-card-header">
-            <h3 class="table-card-title">Products <span class="emp-readonly-badge" style="margin-left:0.5rem;">View Only</span></h3>
-            <div class="table-card-actions">
-              <select class="dash-form-select" style="width:auto;" onchange="filterEmpProducts(this.value)">
-                <option value="all">All Categories</option>
-                <option value="Lips">Lips</option>
-                <option value="Face">Face</option>
-                <option value="Eyes">Eyes</option>
-                <option value="Cheeks">Cheeks</option>
-                <option value="Skincare">Skincare</option>
-              </select>
-              <input type="text" class="dash-form-input" style="width:180px;" placeholder="🔍 Search..." oninput="searchEmpProducts(this.value)" />
+      <!-- ═══════════ ORDERS ═══════════ -->
+      <div class="dash-section" id="section-orders">
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Orders</span>
+            <span style="font-size:0.78rem;color:var(--g400);">You can update order status only</span>
+          </div>
+          <div class="panel-toolbar">
+            <div class="panel-search-wrap">
+              <span class="panel-search-icon">🔍</span>
+              <input class="panel-search" id="emp-orders-search" placeholder="Search orders..." oninput="renderEmpOrders()"/>
+            </div>
+            <select class="panel-filter-select" id="emp-orders-filter" onchange="renderEmpOrders()">
+              <option value="">All Status</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="dash-panel-body no-pad">
+            <div class="vb-table-wrap">
+              <table class="vb-table">
+                <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Update</th></tr></thead>
+                <tbody id="emp-orders-body"></tbody>
+              </table>
             </div>
           </div>
-          <table class="dash-table">
-            <thead>
-              <tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Sold</th><th>Rating</th><th>Status</th></tr>
-            </thead>
-            <tbody id="emp-products-tbody"></tbody>
-          </table>
         </div>
       </div>
 
-      <!-- ══════ EMPLOYEE REVIEWS ══════ -->
-      <div class="dash-panel" id="panel-emp-reviews">
-        <div class="table-card">
-          <div class="table-card-header">
-            <h3 class="table-card-title">Customer Reviews</h3>
+      <!-- ═══════════ PRODUCTS (VIEW ONLY) ═══════════ -->
+      <div class="dash-section" id="section-products">
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Products</span>
+            <span class="status-badge s-new" style="font-size:0.72rem;">View Only</span>
           </div>
-          <table class="dash-table">
-            <thead>
-              <tr><th>Customer</th><th>Product</th><th>Rating</th><th>Review</th><th>Date</th></tr>
-            </thead>
-            <tbody id="emp-reviews-tbody"></tbody>
-          </table>
+          <div class="panel-toolbar">
+            <div class="panel-search-wrap">
+              <span class="panel-search-icon">🔍</span>
+              <input class="panel-search" id="emp-prod-search" placeholder="Search products..." oninput="renderEmpProducts()"/>
+            </div>
+            <select class="panel-filter-select" id="emp-prod-cat" onchange="renderEmpProducts()">
+              <option value="">All Categories</option>
+              <option>Lips</option><option>Face</option><option>Eyes</option>
+              <option>Cheeks</option><option>Skincare</option>
+            </select>
+          </div>
+          <div class="dash-panel-body no-pad">
+            <div class="vb-table-wrap">
+              <table class="vb-table">
+                <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Rating</th><th>Status</th></tr></thead>
+                <tbody id="emp-products-body"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
-    </div><!-- end dash-content -->
+      <!-- ═══════════ REVIEWS (VIEW ONLY) ═══════════ -->
+      <div class="dash-section" id="section-reviews">
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Reviews</span>
+            <span class="status-badge s-new" style="font-size:0.72rem;">View Only</span>
+          </div>
+          <div class="panel-toolbar">
+            <div class="panel-search-wrap">
+              <span class="panel-search-icon">🔍</span>
+              <input class="panel-search" id="emp-reviews-search" placeholder="Search reviews..." oninput="renderEmpReviews()"/>
+            </div>
+          </div>
+          <div class="dash-panel-body no-pad">
+            <div class="vb-table-wrap">
+              <table class="vb-table">
+                <thead><tr><th>Customer</th><th>Product</th><th>Rating</th><th>Review</th><th>Date</th></tr></thead>
+                <tbody id="emp-reviews-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </main>
+</div>
 
-  <!-- Order Status Update Modal (employee can update) -->
-  <div class="modal-overlay" id="emp-order-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Update Order Status</h3>
-        <button class="modal-close" onclick="closeEmpOrderModal()">×</button>
+<!-- Order Status Update Modal -->
+<div class="modal-overlay" id="order-status-modal">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-hdr">
+      <h3 class="modal-title">Update Order Status</h3>
+      <button class="modal-close" onclick="VBModal.close('order-status-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="ems-order-id"/>
+      <div class="form-group">
+        <label class="form-label">Order ID</label>
+        <input class="form-input" id="ems-order-display" readonly style="background:var(--g50);"/>
       </div>
-      <div id="emp-order-modal-info" style="margin-bottom:1.5rem; font-size:0.875rem; color:var(--gray-500);"></div>
       <div class="form-group">
         <label class="form-label">New Status</label>
-        <select class="form-select" id="emp-order-status-select">
+        <select class="form-select" id="ems-status">
           <option value="processing">Processing</option>
           <option value="shipped">Shipped</option>
           <option value="delivered">Delivered</option>
           <option value="cancelled">Cancelled</option>
         </select>
       </div>
-      <button class="btn btn-primary w-full" onclick="updateEmpOrderStatus()">Update Status</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="empUpdateOrderStatus()">Update Status</button>
+      <button class="btn btn-ghost" onclick="VBModal.close('order-status-modal')">Cancel</button>
     </div>
   </div>
+</div>
 
-  <div class="toast-container" id="toast-container"></div>
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="confirm-body">
+      <div class="confirm-icon">⚠️</div>
+      <p class="confirm-msg" id="confirm-msg"></p>
+      <div class="confirm-btns">
+        <button class="btn btn-danger" id="confirm-yes">Confirm</button>
+        <button class="btn btn-ghost" onclick="VBModal.close('confirm-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <script src="../public/js/products-data.js"></script>
-  <script src="../public/js/dashboard-emp.js"></script>
+<script src="../public/js/store.js"></script>
+<script src="../public/js/dashboard-emp.js"></script>
 </body>
 </html>

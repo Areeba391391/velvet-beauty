@@ -1,22 +1,13 @@
 {
   "name": "velvet-beauty",
-  "version": "1.0.0",
-  "description": "VELVET — Luxury Makeup Brand | Full Stack Website + Admin Dashboard",
+  "version": "2.0.0",
+  "description": "Velvet Beauty — Luxury Cosmetics E-commerce (Frontend-only, localStorage)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^7.6.3",
-    "dotenv": "^16.3.1",
-    "cors": "^2.8.5"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+    "express": "^4.18.2"
   }
 }
-
-
-

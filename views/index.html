@@ -1,596 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Velvet Beauty — Luxury Cosmetics</title>
-  <meta name="description" content="Discover luxury beauty products — lipsticks, foundations, eyeshadows and skincare at Velvet Beauty." />
-  <link rel="stylesheet" href="../public/css/variables.css" />
-  <link rel="stylesheet" href="../public/css/main.css" />
-  <link rel="stylesheet" href="../public/css/index.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Velvet Beauty — Luxury Cosmetics Pakistan</title>
+  <meta name="description" content="Discover luxury beauty products — lipsticks, foundations, eyeshadows and skincare at Velvet Beauty Pakistan."/>
+  <link rel="stylesheet" href="../public/css/variables.css"/>
+  <link rel="stylesheet" href="../public/css/main.css"/>
+  <link rel="stylesheet" href="../public/css/index.css"/>
 </head>
-<body class="page-body">
+<body>
 
-  <!-- ════════════════════════════════════════
-       NAVBAR
-  ════════════════════════════════════════ -->
-  <nav class="navbar" id="navbar">
-    <div class="container">
-      <div class="navbar-inner">
+<!-- Toast -->
+<div id="toast-container"></div>
 
-        <!-- Logo -->
-        <a href="index.html" class="navbar-logo">
-          <svg class="navbar-logo-svg" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="19" cy="19" r="18" fill="#4A1A40"/>
-            <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
-            <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
-            <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
-            <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
-            <!-- sparkle left -->
-            <path d="M8 10 L9 8 L10 10 L8 10Z" fill="#C9956C" opacity="0.8"/>
-            <!-- sparkle right -->
-            <path d="M28 8 L29 6 L30 8 L28 8Z" fill="#F472B6" opacity="0.8"/>
-          </svg>
-          <div class="navbar-logo-text">
-            <span class="brand-name">Velvet Beauty</span>
-            <span class="brand-tagline">Luxury Cosmetics</span>
-          </div>
+<!-- ═══════════════════════ NAVBAR ═══════════════════════ -->
+<nav class="navbar transparent" id="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+
+      <!-- Logo -->
+      <a href="index.html" class="navbar-logo">
+        <svg class="logo-svg" viewBox="0 0 38 38" fill="none">
+          <circle cx="19" cy="19" r="18" fill="#4A1A40"/>
+          <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
+          <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
+          <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
+          <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
+          <path d="M8 10L9 8L10 10Z" fill="#C9956C" opacity="0.8"/>
+          <path d="M28 8L29 6L30 8Z" fill="#F472B6" opacity="0.8"/>
+        </svg>
+        <div class="logo-text">
+          <span class="logo-name">Velvet Beauty</span>
+          <span class="logo-tag">Luxury Cosmetics</span>
+        </div>
+      </a>
+
+      <!-- Nav Links -->
+      <ul class="navbar-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="shop.html?cat=lips">Lips</a></li>
+        <li><a href="shop.html?cat=face">Face</a></li>
+        <li><a href="shop.html?cat=eyes">Eyes</a></li>
+        <li><a href="shop.html?cat=skincare">Skincare</a></li>
+      </ul>
+
+      <!-- Nav Actions -->
+      <div class="navbar-actions">
+        <button class="nav-icon-btn" id="search-btn" title="Search" onclick="openSearch()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+        <a href="wishlist.html" class="nav-icon-btn" title="Wishlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="nav-badge" id="wishlist-count" style="display:none">0</span>
         </a>
+        <a href="cart.html" class="nav-icon-btn" title="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="nav-badge" id="cart-count" style="display:none">0</span>
+        </a>
+        <div class="nav-dropdown-wrap">
+          <a href="login.html" class="nav-icon-btn" id="account-btn" title="Account">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </a>
+          <div class="nav-dropdown" id="user-dropdown"></div>
+        </div>
+        <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
 
-        <!-- Nav Links -->
-        <ul class="navbar-links">
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="shop.html">Shop</a></li>
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html" class="active">🏠 Home</a>
+  <a href="shop.html">🛍️ Shop All</a>
+  <a href="shop.html?cat=lips">💄 Lips</a>
+  <a href="shop.html?cat=face">✨ Face</a>
+  <a href="shop.html?cat=eyes">👁️ Eyes</a>
+  <a href="shop.html?cat=cheeks">🌸 Cheeks</a>
+  <a href="shop.html?cat=skincare">🌿 Skincare</a>
+  <div class="mob-divider"></div>
+  <a href="wishlist.html">💝 Wishlist</a>
+  <a href="cart.html">🛒 Cart</a>
+  <a href="login.html" id="mob-account-link">👤 Login / Register</a>
+</div>
+
+<!-- ═══════════════════════ MARQUEE ═══════════════════════ -->
+<div class="marquee-bar" style="margin-top:72px;">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="marquee-dot"></span>Free Delivery on orders over Rs. 2000</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Use code VELVET10 for 10% off</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>New arrivals every week</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>100% Authentic Products</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Express delivery available nationwide</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Free Delivery on orders over Rs. 2000</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Use code VELVET10 for 10% off</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>New arrivals every week</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>100% Authentic Products</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Express delivery available nationwide</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section class="hero">
+  <!-- Left: Content -->
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span class="hero-eyebrow-text">New Season Collection 2025</span>
+    </div>
+    <h1 class="hero-title">
+      Beauty That<br>
+      <em>Speaks</em><br>
+      <strong>Volumes</strong>
+    </h1>
+    <p class="hero-sub">Luxurious, long-lasting cosmetics crafted for every complexion. From bold lips to flawless skin — own your beauty.</p>
+    <div class="hero-actions">
+      <a href="shop.html" class="btn btn-primary btn-xl">
+        Shop Collection
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="shop.html?new=true" class="btn btn-outline btn-xl">New Arrivals</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-val" id="stat-products">20+</div>
+        <div class="hero-stat-label">Products</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">500+</div>
+        <div class="hero-stat-label">Happy Customers</div>
+      </div>
+      <div>
+        <div class="hero-stat-val">4.8★</div>
+        <div class="hero-stat-label">Avg Rating</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Visual Panel -->
+  <div class="hero-visual">
+    <div class="hero-visual-bg"></div>
+    <!-- Floating cards -->
+    <div class="hero-float" style="top:18%;left:8%;">
+      <div class="hf-label">✨ Bestseller</div>
+      <div class="hf-val">Velvet Red 💄</div>
+    </div>
+    <div class="hero-float" style="bottom:22%;right:8%;">
+      <div class="hf-label">🆕 New</div>
+      <div class="hf-val">Rose Nude 🌸</div>
+    </div>
+    <div class="hero-float" style="top:54%;left:5%;">
+      <div class="hf-label">⭐ Rating</div>
+      <div class="hf-val">4.9 / 5.0</div>
+    </div>
+    <!-- SVG Cosmetics Illustration -->
+    <svg class="hero-svg" viewBox="0 0 600 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Big lipstick center -->
+      <g transform="translate(255,65)">
+        <rect x="28" y="118" width="44" height="90" rx="5" fill="rgba(255,255,255,0.13)"/>
+        <rect x="31" y="56" width="38" height="66" rx="4" fill="rgba(255,255,255,0.18)"/>
+        <rect x="34" y="22" width="32" height="38" rx="16 16 3 3" fill="#E91E8C"/>
+        <rect x="37" y="22" width="12" height="22" rx="6" fill="rgba(255,255,255,0.28)"/>
+        <rect x="23" y="113" width="54" height="9" rx="3" fill="rgba(255,255,255,0.22)"/>
+        <text x="50" y="148" fill="rgba(255,255,255,0.35)" font-size="7" text-anchor="middle" font-family="sans-serif">VELVET BEAUTY</text>
+      </g>
+      <!-- Left lipstick, tilted -->
+      <g transform="translate(130,155) rotate(-18)">
+        <rect x="16" y="88" width="32" height="68" rx="4" fill="rgba(255,255,255,0.10)"/>
+        <rect x="18" y="44" width="28" height="48" rx="3" fill="rgba(255,255,255,0.14)"/>
+        <rect x="21" y="18" width="22" height="30" rx="11 11 3 3" fill="#C2185B"/>
+        <rect x="16" y="84" width="40" height="7" rx="2" fill="rgba(255,255,255,0.18)"/>
+      </g>
+      <!-- Right lipstick, tilted -->
+      <g transform="translate(395,135) rotate(15)">
+        <rect x="16" y="88" width="32" height="72" rx="4" fill="rgba(255,255,255,0.10)"/>
+        <rect x="18" y="44" width="28" height="48" rx="3" fill="rgba(255,255,255,0.14)"/>
+        <rect x="21" y="18" width="22" height="30" rx="11 11 3 3" fill="#C9956C"/>
+        <rect x="16" y="84" width="40" height="7" rx="2" fill="rgba(255,255,255,0.18)"/>
+      </g>
+      <!-- Mascara wand -->
+      <g transform="translate(175,318) rotate(-22)">
+        <rect x="6" y="0" width="18" height="130" rx="9" fill="rgba(255,255,255,0.10)"/>
+        <circle cx="15" cy="0" r="9" fill="rgba(255,255,255,0.18)"/>
+        <rect x="8" y="85" width="14" height="45" rx="4" fill="rgba(0,0,0,0.28)"/>
+        <line x1="8" y1="90" x2="22" y2="90" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <line x1="8" y1="97" x2="22" y2="97" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+        <line x1="8" y1="104" x2="22" y2="104" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      </g>
+      <!-- Eye palette -->
+      <g transform="translate(290,340)">
+        <rect x="0" y="0" width="170" height="108" rx="14" fill="rgba(255,255,255,0.11)"/>
+        <rect x="5" y="5" width="160" height="98" rx="10" fill="rgba(255,255,255,0.05)"/>
+        <circle cx="28"  cy="32" r="16" fill="#E91E8C" opacity="0.82"/>
+        <circle cx="69"  cy="32" r="16" fill="#C2185B" opacity="0.82"/>
+        <circle cx="110" cy="32" r="16" fill="#C9956C" opacity="0.82"/>
+        <circle cx="148" cy="32" r="11" fill="#F472B6" opacity="0.82"/>
+        <circle cx="28"  cy="76" r="16" fill="#4A1A40" opacity="0.82"/>
+        <circle cx="69"  cy="76" r="16" fill="#880E4F" opacity="0.82"/>
+        <circle cx="110" cy="76" r="16" fill="rgba(255,255,255,0.28)"/>
+        <circle cx="148" cy="76" r="11" fill="rgba(245,198,24,0.7)"/>
+        <text x="85" y="108" fill="rgba(255,255,255,0.25)" font-size="6" text-anchor="middle" font-family="sans-serif">SMOKE & SULTRY PALETTE</text>
+      </g>
+      <!-- Serum bottle -->
+      <g transform="translate(430,305)">
+        <rect x="22" y="44" width="54" height="100" rx="12" fill="rgba(255,255,255,0.11)"/>
+        <rect x="29" y="22" width="40" height="26" rx="6" fill="rgba(255,255,255,0.16)"/>
+        <rect x="38" y="8" width="22" height="17" rx="5" fill="rgba(255,255,255,0.14)"/>
+        <circle cx="49" cy="7" r="5" fill="rgba(255,255,255,0.28)"/>
+        <rect x="28" y="70" width="42" height="3" rx="1.5" fill="rgba(233,30,140,0.55)"/>
+        <rect x="28" y="80" width="30" height="2" rx="1" fill="rgba(255,255,255,0.18)"/>
+        <rect x="28" y="87" width="36" height="2" rx="1" fill="rgba(255,255,255,0.18)"/>
+        <text x="49" y="118" fill="rgba(255,255,255,0.25)" font-size="5.5" text-anchor="middle" font-family="sans-serif">VIT C SERUM</text>
+      </g>
+      <!-- Blush compact -->
+      <g transform="translate(92,435)">
+        <ellipse cx="56" cy="32" rx="56" ry="32" fill="rgba(255,255,255,0.07)"/>
+        <ellipse cx="56" cy="30" rx="42" ry="24" fill="rgba(255,100,150,0.22)"/>
+        <ellipse cx="56" cy="28" rx="26" ry="15" fill="rgba(255,150,180,0.28)"/>
+        <ellipse cx="56" cy="27" rx="12" ry="7" fill="rgba(255,180,200,0.35)"/>
+      </g>
+      <!-- Sparkle dots -->
+      <g fill="rgba(255,255,255,0.55)">
+        <path d="M82 115L85 106L88 115L82 115Z"/>
+        <path d="M508 195L511 187L514 195L508 195Z"/>
+        <path d="M148 510L151 503L154 510L148 510Z"/>
+        <path d="M462 478L465 470L468 478L462 478Z"/>
+        <circle cx="98"  cy="295" r="3.5"/>
+        <circle cx="522" cy="148" r="2.5"/>
+        <circle cx="198" cy="582" r="3"/>
+        <circle cx="482" cy="560" r="2.5"/>
+        <circle cx="310" cy="490" r="2"/>
+        <circle cx="388" cy="220" r="2"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════ CATEGORIES ═══════════════════════ -->
+<section class="categories-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Browse By Category</div>
+      <h2 class="section-title">Shop Your <em>Favourites</em></h2>
+      <p class="section-sub">From bold lips to glowing skin — find everything you love in one place.</p>
+    </div>
+    <div class="categories-grid">
+      <a href="shop.html?cat=lips" class="cat-card cat-lips">
+        <div class="cat-card-bg"></div><div class="cat-gradient"></div>
+        <div class="cat-icon">💄</div>
+        <div class="cat-info"><div class="cat-name">Lips</div><div class="cat-count" id="cat-count-lips">5 Products</div></div>
+      </a>
+      <a href="shop.html?cat=face" class="cat-card cat-face">
+        <div class="cat-card-bg"></div><div class="cat-gradient"></div>
+        <div class="cat-icon">✨</div>
+        <div class="cat-info"><div class="cat-name">Face</div><div class="cat-count" id="cat-count-face">4 Products</div></div>
+      </a>
+      <a href="shop.html?cat=eyes" class="cat-card cat-eyes">
+        <div class="cat-card-bg"></div><div class="cat-gradient"></div>
+        <div class="cat-icon">👁️</div>
+        <div class="cat-info"><div class="cat-name">Eyes</div><div class="cat-count" id="cat-count-eyes">4 Products</div></div>
+      </a>
+      <a href="shop.html?cat=cheeks" class="cat-card cat-cheeks">
+        <div class="cat-card-bg"></div><div class="cat-gradient"></div>
+        <div class="cat-icon">🌸</div>
+        <div class="cat-info"><div class="cat-name">Cheeks</div><div class="cat-count" id="cat-count-cheeks">3 Products</div></div>
+      </a>
+      <a href="shop.html?cat=skincare" class="cat-card cat-skincare">
+        <div class="cat-card-bg"></div><div class="cat-gradient"></div>
+        <div class="cat-icon">🌿</div>
+        <div class="cat-info"><div class="cat-name">Skincare</div><div class="cat-count" id="cat-count-skincare">4 Products</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FEATURED ═══════════════════════ -->
+<section class="featured-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Handpicked For You</div>
+      <h2 class="section-title">Featured <em>Products</em></h2>
+    </div>
+    <div class="feat-tabs">
+      <button class="feat-tab active" data-tab="all">All</button>
+      <button class="feat-tab" data-tab="Lips">Lips</button>
+      <button class="feat-tab" data-tab="Face">Face</button>
+      <button class="feat-tab" data-tab="Eyes">Eyes</button>
+      <button class="feat-tab" data-tab="Cheeks">Cheeks</button>
+      <button class="feat-tab" data-tab="Skincare">Skincare</button>
+    </div>
+    <div class="products-grid" id="featured-grid"></div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="shop.html" class="btn btn-outline btn-lg">View All Products</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PROMO BANNER ═══════════════════════ -->
+<section class="promo-section">
+  <div class="container">
+    <div class="promo-banner">
+      <div>
+        <div class="promo-eyebrow">⚡ Limited Time Offer</div>
+        <h2 class="promo-title">Up to <em>40% Off</em><br>Bestsellers</h2>
+        <p class="promo-desc">Don't miss our biggest beauty sale. Shop your favourites at incredible prices before they're gone!</p>
+        <div class="promo-code" onclick="copyCode('BEAUTY20')">
+          Use code: <span class="promo-code-key">BEAUTY20</span> for 20% off &nbsp;📋
+        </div>
+        <div class="countdown">
+          <div class="cd-unit"><span class="cd-num" id="cd-h">08</span><div class="cd-label">Hours</div></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-unit"><span class="cd-num" id="cd-m">00</span><div class="cd-label">Mins</div></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-unit"><span class="cd-num" id="cd-s">00</span><div class="cd-label">Secs</div></div>
+        </div>
+        <a href="shop.html?sale=true" class="btn btn-primary btn-lg">Shop Sale Now</a>
+      </div>
+      <div class="promo-visual">
+        <svg class="promo-svg" viewBox="0 0 200 240" fill="none">
+          <rect x="60" y="100" width="80" height="125" rx="9" fill="rgba(255,255,255,0.11)"/>
+          <rect x="65" y="50" width="70" height="55" rx="6" fill="rgba(255,255,255,0.14)"/>
+          <rect x="70" y="18" width="60" height="36" rx="20 20 4 4" fill="#E91E8C"/>
+          <rect x="74" y="18" width="22" height="24" rx="11" fill="rgba(255,255,255,0.28)"/>
+          <rect x="55" y="96" width="90" height="9" rx="3" fill="rgba(255,255,255,0.18)"/>
+          <path d="M30 62L35 50L40 62Z" fill="rgba(255,255,255,0.48)"/>
+          <path d="M166 82L169 73L172 82Z" fill="rgba(245,198,24,0.6)"/>
+          <circle cx="27" cy="142" r="6" fill="rgba(255,255,255,0.18)"/>
+          <circle cx="176" cy="162" r="5" fill="rgba(255,150,200,0.28)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ BESTSELLERS ═══════════════════════ -->
+<section class="bestsellers-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Customer Favourites</div>
+      <h2 class="section-title">Our <em>Bestsellers</em></h2>
+      <p class="section-sub">The products our customers keep coming back for.</p>
+    </div>
+    <div class="products-grid" id="bestsellers-grid"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ WHY US ═══════════════════════ -->
+<section class="why-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Why Choose Us</div>
+      <h2 class="section-title">The Velvet <em>Promise</em></h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🌹</div>
+        <h3 class="why-title">100% Authentic</h3>
+        <p class="why-desc">Every product is directly sourced. No fakes, no compromises — only the real deal.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🚚</div>
+        <h3 class="why-title">Fast Delivery</h3>
+        <p class="why-desc">Free delivery on orders over Rs. 2000. Express shipping available nationwide.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💎</div>
+        <h3 class="why-title">Luxury Quality</h3>
+        <p class="why-desc">Premium formulas with the finest ingredients for long-lasting, stunning results.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🔄</div>
+        <h3 class="why-title">Easy Returns</h3>
+        <p class="why-desc">Not happy? Hassle-free 7-day returns on all products. No questions asked.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ TESTIMONIALS ═══════════════════════ -->
+<section class="testi-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Customer Love</div>
+      <h2 class="section-title">What They're <em>Saying</em></h2>
+    </div>
+    <div class="testi-grid" id="testi-grid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ NEWSLETTER ═══════════════════════ -->
+<section class="newsletter-section">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-icon">💌</div>
+      <h2 class="newsletter-title">Stay in the Glow</h2>
+      <p class="newsletter-sub">Subscribe for exclusive offers, new arrivals, and beauty tips delivered straight to your inbox.</p>
+      <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+        <input class="newsletter-input" type="email" placeholder="Your email address" required/>
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo-name">Velvet Beauty</div>
+        <p class="footer-desc">Pakistan's premier luxury cosmetics destination. Quality, authenticity, and elegance in every product.</p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social">f</a>
+          <a href="#" class="footer-social">in</a>
+          <a href="#" class="footer-social">tw</a>
+          <a href="#" class="footer-social">yt</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Shop</div>
+        <ul>
+          <li><a href="shop.html">All Products</a></li>
           <li><a href="shop.html?cat=lips">Lips</a></li>
           <li><a href="shop.html?cat=face">Face</a></li>
           <li><a href="shop.html?cat=eyes">Eyes</a></li>
+          <li><a href="shop.html?new=true">New Arrivals</a></li>
+          <li><a href="shop.html?sale=true">Sale</a></li>
         </ul>
-
-        <!-- Nav Actions -->
-        <div class="navbar-actions">
-          <!-- Search -->
-          <a href="shop.html" class="nav-icon-btn" title="Search">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          </a>
-          <!-- Wishlist -->
-          <a href="wishlist.html" class="nav-icon-btn" title="Wishlist" id="nav-wishlist-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            <span class="nav-badge" id="wishlist-count">0</span>
-          </a>
-          <!-- Cart -->
-          <a href="cart.html" class="nav-icon-btn" title="Cart" id="nav-cart-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            <span class="nav-badge" id="cart-count">0</span>
-          </a>
-          <!-- Account -->
-          <a href="login.html" class="nav-icon-btn" title="Account" id="nav-account-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </a>
-          <!-- Mobile Toggle -->
-          <button class="navbar-toggle" id="nav-toggle" aria-label="Menu">
-            <span></span><span></span><span></span>
-          </button>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Customer</div>
+        <ul>
+          <li><a href="login.html">My Account</a></li>
+          <li><a href="cart.html">Cart</a></li>
+          <li><a href="wishlist.html">Wishlist</a></li>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">Returns Policy</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Newsletter</div>
+        <p style="font-size:0.78rem;color:rgba(255,255,255,0.45);margin-bottom:0.75rem;line-height:1.7;">Get beauty tips & exclusive deals directly in your inbox.</p>
+        <div class="footer-newsletter-form">
+          <input class="footer-nl-input" type="email" placeholder="Your email"/>
+          <button class="footer-nl-btn" onclick="VBToast.show('Subscribed! 💌','success')">Go</button>
         </div>
-
       </div>
     </div>
-  </nav>
-
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="index.html">Home</a>
-    <a href="shop.html">Shop All</a>
-    <a href="shop.html?cat=lips">Lips</a>
-    <a href="shop.html?cat=face">Face</a>
-    <a href="shop.html?cat=eyes">Eyes</a>
-    <a href="shop.html?cat=cheeks">Cheeks</a>
-    <a href="shop.html?cat=skincare">Skincare</a>
-    <a href="wishlist.html">My Wishlist</a>
-    <a href="cart.html">Cart</a>
-    <a href="login.html">Login / Register</a>
-  </div>
-
-  <!-- ════════════════════════════════════════
-       MARQUEE BANNER
-  ════════════════════════════════════════ -->
-  <div class="marquee-banner">
-    <div class="marquee-track" id="marquee-track">
-      <!-- Duplicated for seamless loop -->
-      <span class="marquee-item"><span class="marquee-dot"></span>Free delivery on orders over Rs. 2000</span>
-      <span class="marquee-item"><span class="marquee-dot"></span>New Arrivals Every Friday</span>
-      <span class="marquee-item"><span class="marquee-dot"></span>100% Cruelty Free &amp; Vegan</span>
-      <span class="marquee-item"><span class="marquee-dot"></span>Premium Quality Guaranteed</span>
-      <span class="marquee-item"><span class="marquee-dot"></span>Free delivery on orders over Rs. 2000</span>
-      <span class="marquee-item"><span class="marquee-dot"></span>New Arrivals Every Friday</span>
-      <span class="marquee-item"><span class="marquee-dot"></span>100% Cruelty Free &amp; Vegan</span>
-      <span class="marquee-item"><span class="marquee-dot"></span>Premium Quality Guaranteed</span>
+    <div class="footer-bottom">
+      <span>© 2025 Velvet Beauty. All rights reserved.</span>
+      <span>Made with 💄 in Pakistan</span>
     </div>
   </div>
+</footer>
 
-  <!-- ════════════════════════════════════════
-       HERO SECTION
-  ════════════════════════════════════════ -->
-  <section class="hero">
-    <!-- Left: Content -->
-    <div class="hero-content">
-      <div class="hero-eyebrow">
-        <span class="hero-eyebrow-line"></span>
-        <span class="hero-eyebrow-text">New Collection 2025</span>
+<!-- ═══════════════════════ SEARCH MODAL ═══════════════════════ -->
+<div class="modal-overlay" id="search-modal">
+  <div class="modal-box" style="max-width:620px;">
+    <div class="modal-hdr">
+      <h3 class="modal-title">Search Products</h3>
+      <button class="modal-close" onclick="VBModal.close('search-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="input-group" style="margin-bottom:1.25rem;">
+        <span class="input-icon">🔍</span>
+        <input class="form-input" id="search-input" placeholder="Search lipsticks, serums, palettes..." oninput="handleSearch(this.value)" autofocus/>
       </div>
+      <div class="products-grid" id="search-results" style="grid-template-columns:repeat(3,1fr);gap:0.75rem;max-height:380px;overflow-y:auto;"></div>
+      <p id="search-empty" class="hidden" style="text-align:center;color:var(--g400);padding:2rem;">No products found. Try a different keyword.</p>
+    </div>
+  </div>
+</div>
 
-      <h1 class="hero-title">
-        Beauty That<br/>
-        <em>Speaks</em> For<br/>
-        Itself
-      </h1>
-
-      <p class="hero-subtitle">
-        Discover our curated collection of luxury cosmetics. From velvety lip colours to flawless foundations — beauty reimagined.
-      </p>
-
-      <div class="hero-actions">
-        <a href="shop.html" class="btn btn-primary btn-lg">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
-          Shop Now
-        </a>
-        <a href="shop.html?new=true" class="btn btn-outline btn-lg">New Arrivals</a>
-      </div>
-
-      <div class="hero-stats">
+<!-- ═══════════════════════ QUICK VIEW MODAL ═══════════════════════ -->
+<div class="modal-overlay" id="quickview-modal">
+  <div class="modal-box" style="max-width:700px;">
+    <div class="modal-hdr">
+      <h3 class="modal-title" id="qv-name">Product</h3>
+      <button class="modal-close" onclick="VBModal.close('quickview-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="qv-grid">
+        <img class="qv-img" id="qv-img" src="" alt=""/>
         <div>
-          <div class="hero-stat-value">200+</div>
-          <div class="hero-stat-label">Products</div>
-        </div>
-        <div>
-          <div class="hero-stat-value">5K+</div>
-          <div class="hero-stat-label">Customers</div>
-        </div>
-        <div>
-          <div class="hero-stat-value">4.9★</div>
-          <div class="hero-stat-label">Rating</div>
+          <div class="qv-cat"  id="qv-cat"></div>
+          <div class="qv-name" id="qv-name2"></div>
+          <div class="qv-stars" id="qv-stars"></div>
+          <p class="qv-desc" id="qv-desc"></p>
+          <div class="qv-price">
+            <span class="qv-price-now" id="qv-price-now"></span>
+            <span class="qv-price-was" id="qv-price-was"></span>
+          </div>
+          <div class="qv-btns">
+            <button class="btn btn-primary" id="qv-add-btn">Add to Cart 🛒</button>
+            <a class="btn btn-outline" id="qv-detail-btn" href="#">View Details</a>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- Right: Visual SVG Panel -->
-    <div class="hero-visual">
-      <div class="hero-visual-bg"></div>
-
-      <!-- Main SVG Illustration -->
-      <svg class="hero-visual-svg" viewBox="0 0 500 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Background glow -->
-        <circle cx="250" cy="300" r="200" fill="rgba(255,255,255,0.04)"/>
-        <circle cx="250" cy="300" r="140" fill="rgba(255,255,255,0.05)"/>
-
-        <!-- Lipstick 1 (center, tall) -->
-        <g transform="translate(200,80)">
-          <rect x="15" y="80" width="40" height="120" rx="4" fill="#C2185B"/>
-          <rect x="15" y="80" width="40" height="8" fill="#AD1457"/>
-          <rect x="10" y="200" width="50" height="100" rx="6" fill="#880E4F"/>
-          <ellipse cx="35" cy="75" rx="20" ry="30" fill="#E91E8C"/>
-          <ellipse cx="35" cy="60" rx="15" ry="16" fill="#F06292"/>
-          <!-- shine -->
-          <ellipse cx="28" cy="52" rx="5" ry="8" fill="rgba(255,255,255,0.35)" transform="rotate(-15 28 52)"/>
-        </g>
-
-        <!-- Lipstick 2 (right, shorter) -->
-        <g transform="translate(290,140)">
-          <rect x="15" y="70" width="34" height="100" rx="4" fill="#C9956C"/>
-          <rect x="10" y="170" width="44" height="85" rx="6" fill="#8B5E3C"/>
-          <ellipse cx="32" cy="65" rx="17" ry="25" fill="#E8A87C"/>
-          <ellipse cx="32" cy="52" rx="13" ry="14" fill="#F4C09A"/>
-          <ellipse cx="26" cy="45" rx="4" ry="7" fill="rgba(255,255,255,0.30)" transform="rotate(-10 26 45)"/>
-        </g>
-
-        <!-- Lipstick 3 (left, medium) -->
-        <g transform="translate(130,160)">
-          <rect x="15" y="70" width="36" height="105" rx="4" fill="#6B2D5E"/>
-          <rect x="10" y="175" width="46" height="88" rx="6" fill="#4A1A40"/>
-          <ellipse cx="33" cy="65" rx="18" ry="26" fill="#8B3A7A"/>
-          <ellipse cx="33" cy="52" rx="14" ry="14" fill="#AB4A9A"/>
-          <ellipse cx="27" cy="46" rx="4" ry="7" fill="rgba(255,255,255,0.28)" transform="rotate(-8 27 46)"/>
-        </g>
-
-        <!-- Palette compact -->
-        <g transform="translate(160,370)">
-          <rect x="0" y="0" width="140" height="90" rx="12" fill="#2A1020"/>
-          <rect x="0" y="0" width="140" height="45" rx="12" fill="#3A1530"/>
-          <!-- pan circles -->
-          <circle cx="28" cy="22" r="14" fill="#E91E8C"/>
-          <circle cx="60" cy="22" r="14" fill="#C9956C"/>
-          <circle cx="92" cy="22" r="14" fill="#6B2D5E"/>
-          <circle cx="114" cy="22" r="14" fill="#C2185B"/>
-          <!-- mirror -->
-          <rect x="8" y="50" width="124" height="32" rx="6" fill="#1A0A12"/>
-          <rect x="10" y="52" width="120" height="28" rx="5" fill="#0D0608" opacity="0.8"/>
-          <!-- shine on mirror -->
-          <rect x="12" y="54" width="40" height="3" rx="2" fill="rgba(255,255,255,0.06)"/>
-        </g>
-
-        <!-- Mascara wand -->
-        <g transform="translate(310,330) rotate(25)">
-          <rect x="0" y="0" width="12" height="80" rx="6" fill="#1A0A12"/>
-          <rect x="1" y="78" width="10" height="40" rx="3" fill="#333"/>
-          <!-- bristles -->
-          <line x1="6" y1="0" x2="0" y2="-5" stroke="#1A0A12" stroke-width="2"/>
-          <line x1="6" y1="5" x2="0" y2="0" stroke="#1A0A12" stroke-width="2"/>
-          <line x1="6" y1="10" x2="0" y2="5" stroke="#1A0A12" stroke-width="2"/>
-          <line x1="6" y1="15" x2="0" y2="10" stroke="#1A0A12" stroke-width="2"/>
-          <line x1="6" y1="20" x2="0" y2="15" stroke="#1A0A12" stroke-width="2"/>
-          <line x1="6" y1="0" x2="12" y2="-5" stroke="#1A0A12" stroke-width="2"/>
-          <line x1="6" y1="5" x2="12" y2="0" stroke="#1A0A12" stroke-width="2"/>
-          <line x1="6" y1="10" x2="12" y2="5" stroke="#1A0A12" stroke-width="2"/>
-          <line x1="6" y1="15" x2="12" y2="10" stroke="#1A0A12" stroke-width="2"/>
-          <line x1="6" y1="20" x2="12" y2="15" stroke="#1A0A12" stroke-width="2"/>
-        </g>
-
-        <!-- Glitter sparkles -->
-        <circle cx="170" cy="100" r="3" fill="rgba(255,255,255,0.6)"/>
-        <circle cx="340" cy="130" r="2" fill="rgba(255,255,255,0.5)"/>
-        <circle cx="120" cy="350" r="3" fill="rgba(255,255,255,0.4)"/>
-        <circle cx="390" cy="300" r="2.5" fill="rgba(255,255,255,0.6)"/>
-        <circle cx="420" cy="420" r="2" fill="rgba(255,255,255,0.4)"/>
-        <circle cx="80"  cy="430" r="3" fill="rgba(255,255,255,0.5)"/>
-        <!-- star sparkle -->
-        <path d="M380 180 L382 175 L384 180 L389 182 L384 184 L382 189 L380 184 L375 182 Z" fill="rgba(255,255,255,0.7)"/>
-        <path d="M100 200 L102 196 L104 200 L108 202 L104 204 L102 208 L100 204 L96 202 Z" fill="rgba(255,255,255,0.6)"/>
-        <path d="M440 350 L441 347 L442 350 L445 351 L442 352 L441 355 L440 352 L437 351 Z" fill="rgba(255,255,255,0.5)"/>
-      </svg>
-
-      <!-- Floating Cards -->
-      <div class="hero-float-card">
-        <div class="hero-float-card-label">★ Bestseller</div>
-        <div class="hero-float-card-value">Velvet Red</div>
-      </div>
-      <div class="hero-float-card">
-        <div class="hero-float-card-label">New Arrival</div>
-        <div class="hero-float-card-value">Rose Nude</div>
-      </div>
-      <div class="hero-float-card">
-        <div class="hero-float-card-label">Trending</div>
-        <div class="hero-float-card-value">Plum Kiss</div>
+<!-- ═══════════════════════ CONFIRM MODAL ═══════════════════════ -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="confirm-body">
+      <div class="confirm-icon">⚠️</div>
+      <p class="confirm-msg" id="confirm-msg"></p>
+      <div class="confirm-btns">
+        <button class="btn btn-danger" id="confirm-yes">Confirm</button>
+        <button class="btn btn-ghost" onclick="VBModal.close('confirm-modal')">Cancel</button>
       </div>
     </div>
-  </section>
+  </div>
+</div>
 
-  <!-- ════════════════════════════════════════
-       CATEGORIES
-  ════════════════════════════════════════ -->
-  <section class="categories-section">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Browse By Category</span>
-        <h2 class="section-title">Shop Your Look</h2>
-        <p class="section-subtitle">From bold lips to flawless skin — find every beauty essential you need.</p>
-      </div>
-
-      <div class="categories-grid">
-        <a href="shop.html?cat=lips" class="category-card cat-lips">
-          <div class="category-card-bg"></div>
-          <div class="category-card-icon">💋</div>
-          <div class="category-card-label">
-            <span class="category-card-name">Lips</span>
-            <span class="category-card-count">48 products</span>
-          </div>
-        </a>
-        <a href="shop.html?cat=face" class="category-card cat-face">
-          <div class="category-card-bg"></div>
-          <div class="category-card-icon">✨</div>
-          <div class="category-card-label">
-            <span class="category-card-name">Face</span>
-            <span class="category-card-count">62 products</span>
-          </div>
-        </a>
-        <a href="shop.html?cat=eyes" class="category-card cat-eyes">
-          <div class="category-card-bg"></div>
-          <div class="category-card-icon">👁</div>
-          <div class="category-card-label">
-            <span class="category-card-name">Eyes</span>
-            <span class="category-card-count">35 products</span>
-          </div>
-        </a>
-        <a href="shop.html?cat=cheeks" class="category-card cat-cheeks">
-          <div class="category-card-bg"></div>
-          <div class="category-card-icon">🌸</div>
-          <div class="category-card-label">
-            <span class="category-card-name">Cheeks</span>
-            <span class="category-card-count">29 products</span>
-          </div>
-        </a>
-        <a href="shop.html?cat=skincare" class="category-card cat-skin">
-          <div class="category-card-bg"></div>
-          <div class="category-card-icon">🌿</div>
-          <div class="category-card-label">
-            <span class="category-card-name">Skincare</span>
-            <span class="category-card-count">41 products</span>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════
-       FEATURED PRODUCTS
-  ════════════════════════════════════════ -->
-  <section class="featured-section">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Handpicked For You</span>
-        <h2 class="section-title">Featured Products</h2>
-      </div>
-
-      <!-- Category Tabs -->
-      <div class="featured-tabs">
-        <button class="featured-tab active" data-tab="all">All</button>
-        <button class="featured-tab" data-tab="Lips">Lips</button>
-        <button class="featured-tab" data-tab="Face">Face</button>
-        <button class="featured-tab" data-tab="Eyes">Eyes</button>
-        <button class="featured-tab" data-tab="Cheeks">Cheeks</button>
-        <button class="featured-tab" data-tab="Skincare">Skincare</button>
-      </div>
-
-      <!-- Products Grid (populated by JS) -->
-      <div class="products-grid" id="featured-products-grid">
-        <!-- JS will render product cards here -->
-      </div>
-
-      <div style="text-align:center; margin-top: 3rem;">
-        <a href="shop.html" class="btn btn-outline btn-lg">View All Products</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════
-       PROMO BANNER
-  ════════════════════════════════════════ -->
-  <section class="promo-section">
-    <div class="container">
-      <div class="promo-banner">
-        <div class="promo-content">
-          <div class="promo-eyebrow">Limited Time Offer</div>
-          <h2 class="promo-title">Up to <em>40% Off</em><br/>New Collection</h2>
-          <p class="promo-desc">Don't miss our biggest sale of the season. Premium beauty at unbeatable prices.</p>
-
-          <!-- Countdown Timer -->
-          <div class="promo-countdown">
-            <div class="countdown-item">
-              <div class="countdown-num" id="cd-hours">08</div>
-              <div class="countdown-label">Hours</div>
-            </div>
-            <div class="countdown-item" style="color:rgba(255,255,255,0.4); font-size:1.5rem; padding-top:4px;">:</div>
-            <div class="countdown-item">
-              <div class="countdown-num" id="cd-mins">45</div>
-              <div class="countdown-label">Mins</div>
-            </div>
-            <div class="countdown-item" style="color:rgba(255,255,255,0.4); font-size:1.5rem; padding-top:4px;">:</div>
-            <div class="countdown-item">
-              <div class="countdown-num" id="cd-secs">00</div>
-              <div class="countdown-label">Secs</div>
-            </div>
-          </div>
-
-          <a href="shop.html?sale=true" class="btn btn-primary btn-lg">Shop the Sale</a>
-        </div>
-
-        <div class="promo-visual">
-          <!-- Promo SVG illustration -->
-          <svg class="promo-visual-svg" viewBox="0 0 260 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="130" cy="160" r="120" fill="rgba(255,255,255,0.05)"/>
-            <!-- Gift box -->
-            <rect x="55" y="160" width="150" height="120" rx="10" fill="rgba(255,255,255,0.12)"/>
-            <rect x="55" y="145" width="150" height="30" rx="8" fill="rgba(255,255,255,0.18)"/>
-            <!-- ribbon vertical -->
-            <rect x="122" y="145" width="16" height="135" fill="rgba(233,30,140,0.5)"/>
-            <!-- ribbon horizontal -->
-            <rect x="55" y="155" width="150" height="14" fill="rgba(233,30,140,0.5)"/>
-            <!-- bow top left -->
-            <ellipse cx="100" cy="140" rx="28" ry="14" fill="rgba(233,30,140,0.7)" transform="rotate(-35 100 140)"/>
-            <!-- bow top right -->
-            <ellipse cx="160" cy="140" rx="28" ry="14" fill="rgba(233,30,140,0.7)" transform="rotate(35 160 140)"/>
-            <!-- bow center -->
-            <circle cx="130" cy="145" r="10" fill="#E91E8C"/>
-            <!-- sparkles -->
-            <path d="M60 100 L63 92 L66 100 L74 103 L66 106 L63 114 L60 106 L52 103Z" fill="rgba(255,255,255,0.8)"/>
-            <path d="M190 80 L192 75 L194 80 L199 82 L194 84 L192 89 L190 84 L185 82Z" fill="rgba(255,255,255,0.7)"/>
-            <circle cx="210" cy="130" r="4" fill="rgba(255,255,255,0.5)"/>
-            <circle cx="50" cy="200" r="3" fill="rgba(255,255,255,0.4)"/>
-            <!-- 40% text in box -->
-            <text x="90" y="230" fill="rgba(255,255,255,0.25)" font-size="36" font-family="serif" font-weight="bold">40%</text>
-            <text x="98" y="260" fill="rgba(255,255,255,0.20)" font-size="16" font-family="sans-serif">OFF</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════
-       BESTSELLERS
-  ════════════════════════════════════════ -->
-  <section class="bestsellers-section">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Customer Favourites</span>
-        <h2 class="section-title">Bestsellers</h2>
-        <p class="section-subtitle">Products our customers can't stop buying.</p>
-      </div>
-      <div class="products-grid" id="bestseller-grid">
-        <!-- Populated by JS -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════
-       WHY CHOOSE US
-  ════════════════════════════════════════ -->
-  <section class="why-section">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Why Velvet Beauty</span>
-        <h2 class="section-title">Beauty You Can Trust</h2>
-      </div>
-      <div class="why-grid">
-        <div class="why-card">
-          <div class="why-icon">🌿</div>
-          <h4 class="why-title">100% Cruelty Free</h4>
-          <p class="why-desc">All our products are vegan and cruelty-free. Beauty without compromise.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">✨</div>
-          <h4 class="why-title">Premium Quality</h4>
-          <p class="why-desc">Dermatologist-tested formulas crafted with the finest ingredients.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">🚚</div>
-          <h4 class="why-title">Fast Delivery</h4>
-          <p class="why-desc">Free delivery on orders over Rs. 2000. Delivered in 2-3 working days.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">💝</div>
-          <h4 class="why-title">Easy Returns</h4>
-          <p class="why-desc">Not happy? Return within 7 days for a full refund. No questions asked.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════
-       TESTIMONIALS
-  ════════════════════════════════════════ -->
-  <section class="testimonials-section">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Happy Customers</span>
-        <h2 class="section-title">What They Say</h2>
-      </div>
-      <div class="testimonials-slider">
-
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <p class="testimonial-text">The Velvet Red lipstick is absolutely gorgeous — long lasting, pigmented, and the packaging is so luxurious. I get compliments every time I wear it.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar" style="background: linear-gradient(135deg,#E91E8C,#C2185B);">A</div>
-            <div>
-              <div class="testimonial-name">Ayesha Khan</div>
-              <div class="testimonial-role">Lahore ★★★★★</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <p class="testimonial-text">Finally found a foundation that matches my skin tone perfectly. The coverage is incredible and it stays on all day. Will definitely reorder!</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar" style="background: linear-gradient(135deg,#C9956C,#8B5E3C);">S</div>
-            <div>
-              <div class="testimonial-name">Sara Malik</div>
-              <div class="testimonial-role">Karachi ★★★★★</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <p class="testimonial-text">The eyeshadow palette blends like a dream. Rich pigments, no fallout, and the shades are so wearable for everyday and glam looks both.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar" style="background: linear-gradient(135deg,#6B2D5E,#4A1A40);">M</div>
-            <div>
-              <div class="testimonial-name">Maryam Rizvi</div>
-              <div class="testimonial-role">Islamabad ★★★★★</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════
-       NEWSLETTER
-  ════════════════════════════════════════ -->
-  <section class="newsletter-section">
-    <div class="container">
-      <div class="newsletter-inner">
-        <div class="newsletter-icon">💌</div>
-        <h2 class="newsletter-title">Join The Beauty Club</h2>
-        <p class="newsletter-desc">Subscribe for exclusive offers, new arrivals, and beauty tips straight to your inbox.</p>
-        <form class="newsletter-form" id="newsletter-form" onsubmit="handleNewsletter(event)">
-          <input type="email" class="newsletter-input" placeholder="Enter your email address" required />
-          <button type="submit" class="btn btn-primary">Subscribe</button>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════
-       FOOTER
-  ════════════════════════════════════════ -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-
-        <!-- Brand col -->
-        <div class="footer-brand">
-          <div class="brand-name">Velvet Beauty</div>
-          <p>Luxury cosmetics crafted with care. Cruelty-free, vegan, and made for every skin tone.</p>
-          <div class="footer-socials" style="margin-top:1.5rem;">
-            <a href="#" class="social-icon" title="Instagram">📸</a>
-            <a href="#" class="social-icon" title="Facebook">👍</a>
-            <a href="#" class="social-icon" title="TikTok">🎵</a>
-            <a href="#" class="social-icon" title="Pinterest">📌</a>
-          </div>
-        </div>
-
-        <!-- Shop col -->
-        <div class="footer-col">
-          <h4>Shop</h4>
-          <ul>
-            <li><a href="shop.html?cat=lips">Lip Colour</a></li>
-            <li><a href="shop.html?cat=face">Foundation &amp; Concealer</a></li>
-            <li><a href="shop.html?cat=eyes">Eye Makeup</a></li>
-            <li><a href="shop.html?cat=cheeks">Blush &amp; Highlighter</a></li>
-            <li><a href="shop.html?cat=skincare">Skincare</a></li>
-            <li><a href="shop.html?new=true">New Arrivals</a></li>
-          </ul>
-        </div>
-
-        <!-- Help col -->
-        <div class="footer-col">
-          <h4>Help</h4>
-          <ul>
-            <li><a href="#">Track Order</a></li>
-            <li><a href="#">Returns &amp; Exchanges</a></li>
-            <li><a href="#">Shipping Info</a></li>
-            <li><a href="#">FAQs</a></li>
-            <li><a href="#">Contact Us</a></li>
-          </ul>
-        </div>
-
-        <!-- Newsletter col -->
-        <div class="footer-col">
-          <h4>Stay Updated</h4>
-          <p style="font-size:0.875rem; margin-bottom:1rem;">Get beauty tips and exclusive deals in your inbox.</p>
-          <form class="footer-newsletter-form" onsubmit="handleNewsletter(event)">
-            <input type="email" placeholder="Your email" required />
-            <button type="submit">Go</button>
-          </form>
-        </div>
-
-      </div>
-
-      <div class="footer-bottom">
-        <p>© 2025 Velvet Beauty. All rights reserved.</p>
-        <p>Made with 💄 in Pakistan</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Toast Container -->
-  <div class="toast-container" id="toast-container"></div>
-
-  <!-- JS -->
-  <script src="../public/js/products-data.js"></script>
-  <script src="../public/js/cart.js"></script>
-  <script src="../public/js/wishlist.js"></script>
-  <script src="../public/js/index.js"></script>
+<script src="../public/js/store.js"></script>
+<script src="../public/js/index.js"></script>
 </body>
 </html>

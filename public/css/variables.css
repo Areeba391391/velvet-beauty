@@ -1,129 +1,214 @@
-/* ============================================
-   VELVET BEAUTY — CSS Variables / Design Tokens
-   Brand: Luxury beauty, feminine, elegant
-   Aesthetic: Rose gold + deep plum + cream
-   ============================================ */
+/* ============================================================
+   VELVET BEAUTY — variables.css
+   Design Tokens: Soft Luxury Theme
+   Colors: Cream · Hot Pink · Deep Plum · Rose Gold
+   Fonts:  Cormorant Garamond (display) + Jost (body)
+   ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* ── Brand Colors ── */
-  --pink-primary:    #E91E8C;   /* Hot pink — CTA buttons */
-  --pink-light:      #F472B6;   /* Soft pink */
-  --pink-pale:       #FDE8F3;   /* Background tints */
-  --plum:            #6B2D5E;   /* Deep plum — headings */
-  --plum-dark:       #4A1A40;   /* Darkest plum */
-  --rose-gold:       #C9956C;   /* Rose gold accent */
-  --rose-gold-light: #E8C5A8;   /* Light rose gold */
-  --cream:           #FDF6F0;   /* Page background */
-  --cream-dark:      #F5EBE0;   /* Section alternates */
+
+  /* ── Brand Colors ─────────────────────────────── */
+  --pink:            #E91E8C;
+  --pink-dark:       #C2185B;
+  --pink-mid:        #D81B7A;
+  --pink-light:      #F472B6;
+  --pink-pale:       #FDE8F3;
+  --pink-ultra:      #FFF0F8;
+
+  --plum:            #6B2D5E;
+  --plum-dark:       #4A1A40;
+  --plum-mid:        #8B3A7A;
+  --plum-light:      #A0527E;
+
+  --rose:            #C9956C;
+  --rose-light:      #E8C5A8;
+  --rose-ultra:      #FDF0E8;
+
+  --cream:           #FDF6F0;
+  --cream-dark:      #F5EBE0;
+  --cream-mid:       #F0E4D8;
+
   --white:           #FFFFFF;
-  --black:           #1A0A12;   /* Soft black */
+  --black:           #1A0A12;
 
-  /* ── Neutrals ── */
-  --gray-50:  #FAF7F5;
-  --gray-100: #F3EDE8;
-  --gray-200: #E8DDD5;
-  --gray-300: #D4C4BB;
-  --gray-400: #B8A49A;
-  --gray-500: #8C7B72;
-  --gray-600: #6B5C55;
-  --gray-700: #4A3D38;
-  --gray-800: #2E2420;
-  --gray-900: #1A0F0C;
+  /* ── Grays ────────────────────────────────────── */
+  --g50:   #FAF7F5;
+  --g100:  #F3EDE8;
+  --g200:  #E8DDD5;
+  --g300:  #D4C4BB;
+  --g400:  #B8A49A;
+  --g500:  #8C7B72;
+  --g600:  #6B5C55;
+  --g700:  #4A3D38;
+  --g800:  #2E2420;
+  --g900:  #1A0F0C;
 
-  /* ── Semantic Colors ── */
-  --success:       #2D8A4E;
-  --success-light: #D4EDDA;
-  --warning:       #C9880A;
-  --warning-light: #FFF3CD;
-  --error:         #C0392B;
-  --error-light:   #FDECEA;
-  --info:          #2E6DA4;
-  --info-light:    #D6EAF8;
+  /* ── Semantic ─────────────────────────────────── */
+  --success:      #2D8A4E;
+  --success-bg:   #D4EDDA;
+  --warning:      #C9880A;
+  --warning-bg:   #FFF3CD;
+  --error:        #C0392B;
+  --error-bg:     #FDECEA;
+  --info:         #2E6DA4;
+  --info-bg:      #D6EAF8;
 
-  /* ── Typography ── */
-  --font-display: 'Cormorant Garamond', Georgia, serif;   /* Headings */
-  --font-body:    'Jost', sans-serif;                     /* Body text */
+  /* ── Typography ───────────────────────────────── */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Jost', sans-serif;
 
-  --text-xs:   0.75rem;    /* 12px */
-  --text-sm:   0.875rem;   /* 14px */
-  --text-base: 1rem;       /* 16px */
-  --text-md:   1.125rem;   /* 18px */
-  --text-lg:   1.25rem;    /* 20px */
-  --text-xl:   1.5rem;     /* 24px */
-  --text-2xl:  2rem;       /* 32px */
-  --text-3xl:  2.5rem;     /* 40px */
-  --text-4xl:  3.5rem;     /* 56px */
-  --text-5xl:  4.5rem;     /* 72px */
+  /* ── Font Sizes ───────────────────────────────── */
+  --fs-xs:   0.70rem;   /* 11px */
+  --fs-sm:   0.813rem;  /* 13px */
+  --fs-base: 0.938rem;  /* 15px */
+  --fs-md:   1.063rem;  /* 17px */
+  --fs-lg:   1.188rem;  /* 19px */
+  --fs-xl:   1.375rem;  /* 22px */
+  --fs-2xl:  1.75rem;   /* 28px */
+  --fs-3xl:  2.25rem;   /* 36px */
+  --fs-4xl:  3rem;      /* 48px */
+  --fs-5xl:  4rem;      /* 64px */
+  --fs-6xl:  5rem;      /* 80px */
 
-  --weight-light:   300;
-  --weight-normal:  400;
-  --weight-medium:  500;
-  --weight-semi:    600;
-  --weight-bold:    700;
+  /* ── Font Weights ─────────────────────────────── */
+  --fw-light:  300;
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semi:   600;
+  --fw-bold:   700;
 
-  --leading-tight:  1.2;
-  --leading-snug:   1.4;
-  --leading-normal: 1.6;
-  --leading-loose:  1.8;
+  /* ── Line Heights ─────────────────────────────── */
+  --lh-tight:  1.15;
+  --lh-snug:   1.35;
+  --lh-normal: 1.60;
+  --lh-loose:  1.80;
 
-  /* ── Spacing ── */
-  --space-1:  0.25rem;   /* 4px */
-  --space-2:  0.5rem;    /* 8px */
-  --space-3:  0.75rem;   /* 12px */
-  --space-4:  1rem;      /* 16px */
-  --space-5:  1.25rem;   /* 20px */
-  --space-6:  1.5rem;    /* 24px */
-  --space-8:  2rem;      /* 32px */
-  --space-10: 2.5rem;    /* 40px */
-  --space-12: 3rem;      /* 48px */
-  --space-16: 4rem;      /* 64px */
-  --space-20: 5rem;      /* 80px */
-  --space-24: 6rem;      /* 96px */
-  --space-32: 8rem;      /* 128px */
+  /* ── Spacing ──────────────────────────────────── */
+  --s1:  0.25rem;   /* 4px  */
+  --s2:  0.5rem;    /* 8px  */
+  --s3:  0.75rem;   /* 12px */
+  --s4:  1rem;      /* 16px */
+  --s5:  1.25rem;   /* 20px */
+  --s6:  1.5rem;    /* 24px */
+  --s8:  2rem;      /* 32px */
+  --s10: 2.5rem;    /* 40px */
+  --s12: 3rem;      /* 48px */
+  --s16: 4rem;      /* 64px */
+  --s20: 5rem;      /* 80px */
+  --s24: 6rem;      /* 96px */
+  --s32: 8rem;      /* 128px */
 
-  /* ── Border Radius ── */
-  --radius-sm:   4px;
-  --radius-md:   8px;
-  --radius-lg:   16px;
-  --radius-xl:   24px;
-  --radius-2xl:  32px;
-  --radius-full: 9999px;
+  /* ── Border Radius ────────────────────────────── */
+  --r-xs:   4px;
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   18px;
+  --r-xl:   24px;
+  --r-2xl:  32px;
+  --r-full: 9999px;
 
-  /* ── Shadows ── */
-  --shadow-xs:  0 1px 3px rgba(105, 45, 94, 0.08);
-  --shadow-sm:  0 2px 8px rgba(105, 45, 94, 0.10);
-  --shadow-md:  0 4px 20px rgba(105, 45, 94, 0.14);
-  --shadow-lg:  0 8px 40px rgba(105, 45, 94, 0.18);
-  --shadow-xl:  0 16px 60px rgba(105, 45, 94, 0.22);
-  --shadow-pink: 0 4px 20px rgba(233, 30, 140, 0.25);
-  --shadow-card: 0 2px 12px rgba(105, 45, 94, 0.10), 0 0 0 1px rgba(105, 45, 94, 0.04);
+  /* ── Shadows ──────────────────────────────────── */
+  --sh-xs:   0 1px 4px  rgba(74,26,64,0.07);
+  --sh-sm:   0 2px 10px rgba(74,26,64,0.09);
+  --sh-md:   0 4px 22px rgba(74,26,64,0.13);
+  --sh-lg:   0 8px 40px rgba(74,26,64,0.17);
+  --sh-xl:   0 16px 64px rgba(74,26,64,0.22);
+  --sh-pink: 0 6px 28px rgba(233,30,140,0.28);
+  --sh-card: 0 2px 12px rgba(74,26,64,0.09), 0 0 0 1px rgba(74,26,64,0.04);
 
-  /* ── Transitions ── */
+  /* ── Transitions ──────────────────────────────── */
   --ease-out:    cubic-bezier(0.0, 0.0, 0.2, 1);
   --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --dur-fast:   150ms;
-  --dur-normal: 250ms;
-  --dur-slow:   400ms;
+  --t-fast:   150ms;
+  --t-base:   250ms;
+  --t-slow:   420ms;
 
-  /* ── Layout ── */
-  --container-sm:   640px;
-  --container-md:   768px;
-  --container-lg:   1024px;
-  --container-xl:   1280px;
-  --container-2xl:  1440px;
-
-  --nav-height:     72px;
-  --sidebar-width:  260px;
-
-  /* ── Z-index ── */
-  --z-base:    0;
-  --z-above:   10;
-  --z-dropdown:100;
-  --z-sticky:  200;
-  --z-overlay: 300;
-  --z-modal:   400;
-  --z-toast:   500;
+  /* ── Layout ───────────────────────────────────── */
+  --nav-h:        72px;
+  --container:    1280px;
+  --sidebar-w:    262px;
 }
+
+/* ── Global Reset ─────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-normal);
+  line-height: var(--lh-normal);
+  color: var(--g800);
+  background: var(--cream);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img  { max-width: 100%; height: auto; display: block; }
+a    { color: inherit; text-decoration: none; }
+ul   { list-style: none; }
+button, input, select, textarea { font-family: var(--font-body); }
+button { cursor: pointer; border: none; background: none; }
+
+/* ── Container ────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--s6);
+}
+@media (max-width: 640px) { .container { padding: 0 var(--s4); } }
+
+/* ── Scrollbar ────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--g100); }
+::-webkit-scrollbar-thumb  { background: var(--pink-light); border-radius: var(--r-full); }
+
+/* ── Utility ──────────────────────────────────────────── */
+.hidden         { display: none !important; }
+.sr-only        { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+.text-pink      { color: var(--pink); }
+.text-plum      { color: var(--plum-dark); }
+.text-rose      { color: var(--rose); }
+.text-muted     { color: var(--g500); }
+.font-display   { font-family: var(--font-display); }
+.fw-light       { font-weight: var(--fw-light); }
+.fw-semi        { font-weight: var(--fw-semi); }
+.ta-center      { text-align: center; }
+.mt-auto        { margin-top: auto; }
+.flex           { display: flex; }
+.flex-center    { display: flex; align-items: center; justify-content: center; }
+.gap-2          { gap: var(--s2); }
+.gap-3          { gap: var(--s3); }
+.gap-4          { gap: var(--s4); }
+.w-full         { width: 100%; }
+
+/* ── Animations ───────────────────────────────────────── */
+@keyframes fadeUp    { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:none; } }
+@keyframes fadeIn    { from { opacity:0; } to { opacity:1; } }
+@keyframes scaleIn   { from { opacity:0; transform:scale(0.90); } to { opacity:1; transform:scale(1); } }
+@keyframes slideInL  { from { opacity:0; transform:translateX(-24px); } to { opacity:1; transform:none; } }
+@keyframes slideInR  { from { opacity:0; transform:translateX(24px);  } to { opacity:1; transform:none; } }
+@keyframes floatY    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+@keyframes spin      { to { transform:rotate(360deg); } }
+@keyframes pulse     { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+@keyframes shimmer   { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
+@keyframes marquee   { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes bumpBadge { 0%,100%{transform:scale(1)} 50%{transform:scale(1.35)} }
+@keyframes toastIn   { from{opacity:0;transform:translateX(110%)} to{opacity:1;transform:none} }
+@keyframes toastOut  { from{opacity:1;transform:none} to{opacity:0;transform:translateX(110%)} }
+@keyframes modalIn   { from{opacity:0;transform:scale(0.92) translateY(18px)} to{opacity:1;transform:none} }
+@keyframes drawLine  { from{width:0} to{width:100%} }

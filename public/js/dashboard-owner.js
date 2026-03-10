@@ -1,594 +1,441 @@
-/* ============================================
+/* ============================================================
    VELVET BEAUTY — dashboard-owner.js
-   Owner dashboard: CRUD products, orders,
-   customers, analytics, charts
-   ============================================ */
+   Owner Dashboard: Overview · Orders · Products
+   Customers · Reviews · Analytics · Settings
+   ============================================================ */
 
-/* ── State ── */
-let dashOrders    = [];
-let dashProducts  = [...VB_PRODUCTS];
-let dashCustomers = [...VB_CUSTOMERS];
-let dashReviews   = [...VB_REVIEWS];
-let dashAnalytics = [...VB_ANALYTICS];
-let editingOrder  = null;
-let deletingItem  = null;
-let deleteType    = '';
+let currentOrderId    = null;
+let currentCustomerId = null;
+let currentProductId  = null;
+let activeSection     = 'overview';
 
-/* ── Toast (reuse from cart.js or define locally) ── */
-function showToast(msg, type = 'default', duration = 3000) {
-  const container = document.getElementById('toast-container');
-  if (!container) return;
-  const icons = { default:'💄', success:'✅', error:'❌', warning:'⚠️' };
-  const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
-  toast.innerHTML = `<span class="toast-icon">${icons[type]||'💄'}</span> ${msg}`;
-  container.appendChild(toast);
-  setTimeout(() => { toast.classList.add('hiding'); setTimeout(() => toast.remove(), 400); }, duration);
+document.addEventListener('DOMContentLoaded', () => {
+  seedIfNeeded();
+  const session = VBAuth.guard(['owner']);
+  if (!session) return;
+
+  // Set user info
+  document.getElementById('sb-name').textContent   = session.name;
+  document.getElementById('sb-avatar').textContent = session.name.charAt(0).toUpperCase();
+  document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-PK', { weekday:'short', day:'numeric', month:'short' });
+
+  showSection('overview', null);
+  setPendingBadge();
+});
+
+// ── Section switching ─────────────────────────────────────────
+function showSection(name, btn) {
+  activeSection = name;
+  document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  const sectionEl = document.getElementById('section-' + name);
+  if (sectionEl) sectionEl.classList.add('active');
+  if (btn) btn.classList.add('active');
+  else {
+    const linkEl = document.querySelector(`.sidebar-link[data-section="${name}"]`);
+    if (linkEl) linkEl.classList.add('active');
+  }
+  const titles = { overview:'Overview', orders:'Orders', products:'Products', customers:'Customers', reviews:'Reviews', analytics:'Analytics', settings:'Settings' };
+  document.getElementById('topbar-title').textContent = titles[name] || name;
+
+  // Render on switch
+  if (name === 'overview')   renderOverview();
+  if (name === 'orders')     renderOrders();
+  if (name === 'products')   renderProducts();
+  if (name === 'customers')  renderCustomers();
+  if (name === 'reviews')    renderReviews();
+  if (name === 'analytics')  renderAnalytics();
 }
 
-/* ── Panel navigation ── */
-function showPanel(name, triggerBtn) {
-  /* Hide all panels */
-  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
-  /* Deactivate all nav items */
-  document.querySelectorAll('.dash-nav-item').forEach(i => i.classList.remove('active'));
-
-  /* Show target panel */
-  const panel = document.getElementById(`panel-${name}`);
-  if (panel) panel.classList.add('active');
-
-  /* Activate nav item */
-  if (triggerBtn) triggerBtn.classList.add('active');
-
-  /* Update topbar title */
-  const titles = {
-    overview:    'Dashboard',
-    orders:      'Orders',
-    analytics:   'Analytics',
-    products:    'Products',
-    'add-product': 'Add Product',
-    reviews:     'Reviews',
-    customers:   'Customers',
-    settings:    'Settings'
-  };
-  const title = document.getElementById('topbar-title');
-  if (title) title.textContent = titles[name] || name;
-
-  /* Load data for the panel */
-  const loaders = {
-    overview:     renderOverview,
-    orders:       renderOrders,
-    analytics:    renderAnalytics,
-    products:     renderProducts,
-    'add-product': resetProductForm,
-    reviews:      renderReviews,
-    customers:    renderCustomers
-  };
-  if (loaders[name]) loaders[name]();
+function setPendingBadge() {
+  const pending = VBOrders.getAll().filter(o => o.status === 'processing').length;
+  const badgeEl = document.getElementById('sb-pending-count');
+  if (badgeEl) { badgeEl.textContent = pending; badgeEl.style.display = pending ? '' : 'none'; }
 }
 
-/* ── Sidebar toggle (mobile) ── */
-function toggleSidebar() {
-  document.getElementById('dash-sidebar')?.classList.toggle('open');
-  document.getElementById('dash-sidebar-overlay')?.classList.toggle('visible');
-}
-function closeSidebar() {
-  document.getElementById('dash-sidebar')?.classList.remove('open');
-  document.getElementById('dash-sidebar-overlay')?.classList.remove('visible');
-}
+// ── Mobile sidebar ────────────────────────────────────────────
+function openSidebar()  { document.getElementById('dash-sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('show'); }
+function closeSidebar() { document.getElementById('dash-sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
 
-/* ── Load orders (localStorage + dummy) ── */
-function loadOrders() {
-  const saved = JSON.parse(localStorage.getItem('vb_orders') || '[]');
-  dashOrders = [...saved, ...VB_ORDERS].reduce((acc, o) => {
-    if (!acc.find(x => x.orderNumber === o.orderNumber)) acc.push(o);
-    return acc;
-  }, []);
-}
+// ── Logout ────────────────────────────────────────────────────
+function doLogout() { VBAuth.logout(); window.location.href = 'login.html'; }
 
-/* ── OVERVIEW ── */
+// ── OVERVIEW ─────────────────────────────────────────────────
 function renderOverview() {
-  loadOrders();
+  const orders    = VBOrders.getAll();
+  const customers = VBCustomers.getAll();
+  const products  = VBProducts.getAll();
+  const revenue   = orders.filter(o => o.status !== 'cancelled').reduce((s,o) => s + o.total, 0);
 
-  /* Stats */
-  const totalRevenue = dashOrders
-    .filter(o => o.status !== 'cancelled')
-    .reduce((sum, o) => sum + o.total, 0);
-  const pending = dashOrders.filter(o => o.status === 'processing').length;
+  document.getElementById('stat-revenue').textContent        = 'Rs. ' + revenue.toLocaleString();
+  document.getElementById('stat-orders').textContent         = orders.length;
+  document.getElementById('stat-customers').textContent      = customers.length;
+  document.getElementById('stat-products-count').textContent = products.filter(p => p.active).length;
 
-  document.getElementById('stat-revenue').textContent   = formatPrice(totalRevenue);
-  document.getElementById('stat-orders').textContent    = dashOrders.length;
-  document.getElementById('stat-products').textContent  = dashProducts.filter(p => p.isActive).length;
-  document.getElementById('stat-customers').textContent = dashCustomers.length;
-  document.getElementById('stat-pending-label').textContent = `${pending} pending`;
-  document.getElementById('pending-badge').textContent = pending;
-
-  /* Revenue bar chart */
-  const chartEl  = document.getElementById('revenue-chart');
-  const labelsEl = document.getElementById('chart-labels');
+  // Bar chart (monthly analytics)
+  const analytics = VBAnalytics.get();
+  const maxRev    = Math.max(...analytics.map(m => m.revenue));
+  const chartEl   = document.getElementById('overview-chart');
   if (chartEl) {
-    const maxRev = Math.max(...dashAnalytics.map(a => a.revenue));
-    chartEl.innerHTML = dashAnalytics.map(a => {
-      const h = Math.round((a.revenue / maxRev) * 100);
-      return `
-        <div class="bar-group">
-          <div class="bar" style="height:${h}%;" title="Rs.${a.revenue.toLocaleString()}"></div>
-        </div>`;
-    }).join('');
-    labelsEl.innerHTML = dashAnalytics.map(a =>
-      `<span style="flex:1; text-align:center; font-size:10px; color:var(--gray-400); white-space:nowrap;">
-        ${a.month.slice(0,3)}
-      </span>`
-    ).join('');
-  }
-
-  /* Category donut */
-  const catCounts = {};
-  dashOrders.forEach(o => o.items?.forEach(item => {
-    const prod = dashProducts.find(p => p.name === item.productName);
-    const cat  = prod?.category || 'Other';
-    catCounts[cat] = (catCounts[cat] || 0) + item.quantity;
-  }));
-  renderDonut(catCounts);
-
-  /* Recent orders */
-  renderRecentOrders();
-  renderActivity();
-}
-
-/* ── Donut chart ── */
-function renderDonut(catCounts) {
-  const svg    = document.getElementById('donut-svg');
-  const legend = document.getElementById('donut-legend');
-  const total  = Object.values(catCounts).reduce((s, v) => s + v, 0);
-  document.getElementById('donut-total').textContent = total;
-
-  const COLORS = { Lips:'#E91E8C', Face:'#C9956C', Eyes:'#6B2D5E', Cheeks:'#C2185B', Skincare:'#2D8A4E', Other:'#B8A49A' };
-  const r = 50, cx = 60, cy = 60, circ = 2 * Math.PI * r;
-
-  let offset = 0;
-  let svgHTML = '';
-  let legendHTML = '';
-
-  Object.entries(catCounts).forEach(([cat, count]) => {
-    const pct  = total ? count / total : 0;
-    const dash = pct * circ;
-    const gap  = circ - dash;
-    const col  = COLORS[cat] || '#ccc';
-
-    svgHTML += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="16"
-      stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}"
-      stroke-dashoffset="-${offset.toFixed(2)}"
-      opacity="0.85"/>`;
-    offset += dash;
-
-    legendHTML += `
-      <div class="donut-legend-item">
-        <span class="donut-legend-dot" style="background:${col};"></span>
-        <span>${cat}</span>
-        <span class="donut-legend-pct">${Math.round(pct*100)}%</span>
+    chartEl.innerHTML = analytics.map(m => {
+      const h = maxRev ? Math.round((m.revenue / maxRev) * 160) : 10;
+      return `<div class="chart-bar-col">
+        <div class="chart-bar" style="height:${h}px;">
+          <div class="chart-bar-tooltip">Rs. ${m.revenue.toLocaleString()}</div>
+        </div>
+        <span class="chart-bar-label">${m.month.split(' ')[0]}</span>
       </div>`;
-  });
+    }).join('');
+  }
 
-  if (svg)    svg.innerHTML    = svgHTML;
-  if (legend) legend.innerHTML = legendHTML;
+  // Category summary
+  const catEl = document.getElementById('cat-summary');
+  const cats  = ['Lips','Face','Eyes','Cheeks','Skincare'];
+  const catColors = { Lips:'#E91E8C', Face:'#C9956C', Eyes:'#6B2D5E', Cheeks:'#C2185B', Skincare:'#2D8A4E' };
+  if (catEl) {
+    catEl.innerHTML = cats.map(cat => {
+      const count = VBProducts.getByCat(cat).length;
+      return `<div class="anal-row">
+        <div class="anal-dot" style="background:${catColors[cat]}"></div>
+        <span class="anal-label">${cat}</span>
+        <span class="anal-val">${count} products</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Recent orders (last 5)
+  const tbody = document.getElementById('recent-orders-body');
+  if (tbody) {
+    tbody.innerHTML = orders.slice(0,5).map(o => `
+      <tr>
+        <td><b>${o.id}</b></td>
+        <td>${o.customerName}</td>
+        <td>${fmtPrice(o.total)}</td>
+        <td>${statusBadge(o.status)}</td>
+        <td>${fmtDate(o.date)}</td>
+      </tr>`).join('');
+  }
 }
 
-/* ── Recent orders table (overview) ── */
-function renderRecentOrders() {
-  const tbody = document.getElementById('recent-orders-tbody');
-  if (!tbody) return;
-  const recent = dashOrders.slice(0, 6);
-  tbody.innerHTML = recent.map(o => `
-    <tr>
-      <td class="td-primary">${o.orderNumber}</td>
-      <td>${o.customerName}</td>
-      <td>${o.items?.length || 0} item(s)</td>
-      <td>${formatPrice(o.total)}</td>
-      <td><span class="status-badge status-${o.status}"><span class="status-dot"></span>${o.status}</span></td>
-      <td>${o.createdAt?.slice(0,10) || ''}</td>
-      <td>
-        <div class="table-action-btns">
-          <button class="table-action-btn" onclick="openOrderModal('${o.id || o.orderNumber}')" title="Edit">✏️</button>
-        </div>
-      </td>
-    </tr>
-  `).join('');
-}
-
-/* ── Activity feed ── */
-function renderActivity() {
-  const list = document.getElementById('activity-list');
-  if (!list) return;
-  const activities = [
-    { icon:'📦', bg:'var(--pink-pale)',     title:'New order received',       desc:`Order #${dashOrders[0]?.orderNumber || 'VB-100001'}`, time:'2 min ago' },
-    { icon:'👤', bg:'rgba(107,45,94,0.10)', title:'New customer registered',   desc:'Sana Butt joined',           time:'1 hr ago' },
-    { icon:'⭐', bg:'rgba(201,149,108,0.15)',title:'New review posted',          desc:'5-star review on Velvet Red', time:'3 hr ago' },
-    { icon:'💄', bg:'var(--pink-pale)',     title:'Product stock low',          desc:'Berry Gloss Lip — 22 left',  time:'5 hr ago' },
-    { icon:'✅', bg:'var(--success-light)', title:'Order delivered',            desc:`Order ${dashOrders[0]?.orderNumber || 'VB-100001'}`, time:'Yesterday' }
-  ];
-  list.innerHTML = activities.map(a => `
-    <div class="activity-item">
-      <div class="activity-icon" style="background:${a.bg};">${a.icon}</div>
-      <div class="activity-info">
-        <div class="activity-title">${a.title}</div>
-        <div class="activity-desc">${a.desc}</div>
-      </div>
-      <div class="activity-time">${a.time}</div>
-    </div>
-  `).join('');
-}
-
-/* ── ALL ORDERS ── */
-let ordersFilter = 'all';
-let ordersSearch = '';
-
+// ── ORDERS ───────────────────────────────────────────────────
 function renderOrders() {
-  loadOrders();
-  const tbody = document.getElementById('orders-tbody');
+  let orders = VBOrders.getAll();
+  const q = (document.getElementById('orders-search')?.value||'').toLowerCase();
+  const st = document.getElementById('orders-status-filter')?.value || '';
+  if (q)  orders = orders.filter(o => o.id.toLowerCase().includes(q) || o.customerName.toLowerCase().includes(q));
+  if (st) orders = orders.filter(o => o.status === st);
+
+  const tbody = document.getElementById('orders-body');
   if (!tbody) return;
-  let list = dashOrders;
-  if (ordersFilter !== 'all') list = list.filter(o => o.status === ordersFilter);
-  if (ordersSearch) {
-    const q = ordersSearch.toLowerCase();
-    list = list.filter(o => o.orderNumber.toLowerCase().includes(q) || o.customerName.toLowerCase().includes(q));
-  }
-  tbody.innerHTML = list.map(o => `
+  if (!orders.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--g400);">No orders found</td></tr>`; return; }
+  tbody.innerHTML = orders.map(o => `
     <tr>
-      <td class="td-primary">${o.orderNumber}</td>
+      <td><b>${o.id}</b></td>
       <td>${o.customerName}</td>
-      <td>${o.city || '—'}</td>
-      <td>${o.items?.map(i=>`${i.quantity}× ${i.productName}`).join(', ') || '—'}</td>
-      <td>${formatPrice(o.total)}</td>
-      <td><span class="status-badge status-${o.status}"><span class="status-dot"></span>${o.status}</span></td>
-      <td>${o.createdAt?.slice(0,10) || ''}</td>
-      <td>
-        <div class="table-action-btns">
-          <button class="table-action-btn" onclick="openOrderModal('${o.id || o.orderNumber}')" title="Update Status">✏️</button>
-          <button class="table-action-btn btn-delete" onclick="confirmDeleteItem('${o.id || o.orderNumber}', 'order', '${o.orderNumber}')" title="Delete">🗑️</button>
-        </div>
-      </td>
-    </tr>
-  `).join('') || `<tr><td colspan="8" style="text-align:center;color:var(--gray-400);padding:2rem;">No orders found</td></tr>`;
+      <td>${o.items?.length||0} items</td>
+      <td>${fmtPrice(o.total)}</td>
+      <td>${statusBadge(o.status)}</td>
+      <td>${fmtDate(o.date)}</td>
+      <td><div class="tbl-actions">
+        <button class="tbl-btn tbl-view" onclick="openOrderModal('${o.id}')">View</button>
+      </div></td>
+    </tr>`).join('');
 }
 
-function filterOrders(val)  { ordersFilter = val; renderOrders(); }
-function searchOrders(val)  { ordersSearch = val; renderOrders(); }
+function openOrderModal(id) {
+  currentOrderId = id;
+  const o = VBOrders.getById(id);
+  if (!o) return;
+  document.getElementById('om-title').textContent = `Order ${o.id}`;
+  document.getElementById('om-status-select').value = o.status;
 
-/* ── ANALYTICS ── */
-function renderAnalytics() {
-  const totalRev    = dashAnalytics.reduce((s,a) => s+a.revenue, 0);
-  const totalOrds   = dashAnalytics.reduce((s,a) => s+a.orders, 0);
-  const avgOrd      = totalOrds ? Math.round(totalRev / totalOrds) : 0;
-  const delivered   = dashOrders.filter(o => o.status === 'delivered').length;
-  const fulfillRate = dashOrders.length ? Math.round(delivered / dashOrders.length * 100) : 0;
+  const items = (o.items||[]).map(i => `
+    <div style="display:flex;gap:0.75rem;align-items:center;padding:0.5rem 0;border-bottom:1px solid var(--g100);">
+      <img src="${i.image}" width="40" height="40" style="border-radius:8px;object-fit:cover;" onerror="this.src='https://placehold.co/40x40/FDE8F3/E91E8C?text=VB'"/>
+      <div style="flex:1;"><div style="font-weight:600;font-size:0.85rem;">${i.name}</div><div style="font-size:0.72rem;color:var(--g400);">Qty: ${i.qty}</div></div>
+      <div style="font-weight:600;color:var(--pink);">${fmtPrice(i.price * i.qty)}</div>
+    </div>`).join('');
 
-  document.getElementById('a-total-rev').textContent    = formatPrice(totalRev);
-  document.getElementById('a-total-orders').textContent = totalOrds;
-  document.getElementById('a-avg-order').textContent    = formatPrice(avgOrd);
-  document.getElementById('a-conversion').textContent   = fulfillRate + '%';
+  document.getElementById('om-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+      <div><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Customer</div><div style="font-weight:600;">${o.customerName}</div></div>
+      <div><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Date</div><div>${fmtDate(o.date)}</div></div>
+      <div><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Phone</div><div>${o.customerPhone||'—'}</div></div>
+      <div><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Payment</div><div style="text-transform:capitalize;">${o.paymentMethod||'—'}</div></div>
+      <div style="grid-column:1/-1;"><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Address</div><div>${o.address||'—'}</div></div>
+    </div>
+    <div style="margin-bottom:1rem;">${items}</div>
+    <div style="display:flex;justify-content:space-between;padding:.5rem 0;"><span style="color:var(--g500);">Subtotal</span><span>${fmtPrice(o.subtotal)}</span></div>
+    ${o.discount ? `<div style="display:flex;justify-content:space-between;padding:.5rem 0;"><span style="color:var(--g500);">Discount</span><span style="color:var(--success);">−${fmtPrice(o.discount)}</span></div>` : ''}
+    <div style="display:flex;justify-content:space-between;padding:.5rem 0;"><span style="color:var(--g500);">Delivery</span><span>${fmtPrice(o.deliveryFee)}</span></div>
+    <div style="display:flex;justify-content:space-between;padding:.75rem 0;border-top:2px solid var(--g100);margin-top:.5rem;"><span style="font-family:var(--font-display);font-size:1.1rem;color:var(--plum-dark);">Total</span><span style="font-family:var(--font-display);font-size:1.3rem;color:var(--pink);font-weight:500;">${fmtPrice(o.total)}</span></div>`;
 
-  const tbody = document.getElementById('analytics-tbody');
-  if (!tbody) return;
-  tbody.innerHTML = dashAnalytics.map(a => `
-    <tr>
-      <td class="td-primary">${a.month} ${a.year}</td>
-      <td>${formatPrice(a.revenue)}</td>
-      <td>${a.orders}</td>
-      <td>${a.newCustomers}</td>
-      <td>${formatPrice(a.avgOrderValue)}</td>
-    </tr>
-  `).join('');
-}
-
-/* ── PRODUCTS ── */
-let productsFilter = 'all';
-let productsSearch = '';
-
-function renderProducts() {
-  const tbody = document.getElementById('products-tbody');
-  if (!tbody) return;
-  let list = dashProducts;
-  if (productsFilter !== 'all') list = list.filter(p => p.category === productsFilter);
-  if (productsSearch) {
-    const q = productsSearch.toLowerCase();
-    list = list.filter(p => p.name.toLowerCase().includes(q));
-  }
-  tbody.innerHTML = list.map(p => `
-    <tr>
-      <td>
-        <div style="display:flex; align-items:center; gap:0.75rem;">
-          <img src="${p.image}" alt="${p.name}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;" onerror="this.style.display='none'"/>
-          <span class="td-primary">${p.name}</span>
-        </div>
-      </td>
-      <td><span class="tag tag-pink">${p.category}</span></td>
-      <td>${formatPrice(p.price)}</td>
-      <td>
-        <span style="color:${p.stock < 10 ? 'var(--error)' : 'var(--success)'}; font-weight:600;">${p.stock}</span>
-      </td>
-      <td>${p.sold}</td>
-      <td><span style="color:#F5C518;">★</span> ${p.rating}</td>
-      <td>
-        <span class="status-badge ${p.isActive ? 'status-delivered' : 'status-cancelled'}">
-          ${p.isActive ? 'Active' : 'Inactive'}
-        </span>
-      </td>
-      <td>
-        <div class="table-action-btns">
-          <button class="table-action-btn btn-edit" onclick="editProduct('${p.id}')" title="Edit">✏️</button>
-          <button class="table-action-btn btn-delete" onclick="confirmDeleteItem('${p.id}', 'product', '${p.name.replace(/'/g,'')}')" title="Delete">🗑️</button>
-        </div>
-      </td>
-    </tr>
-  `).join('') || `<tr><td colspan="8" style="text-align:center;color:var(--gray-400);padding:2rem;">No products found</td></tr>`;
-}
-
-function filterProducts(val) { productsFilter = val; renderProducts(); }
-function searchProducts(val) { productsSearch = val; renderProducts(); }
-
-/* ── SAVE PRODUCT (Add + Edit) ── */
-function saveProduct() {
-  const id     = document.getElementById('pf-edit-id')?.value;
-  const name   = document.getElementById('pf-name')?.value.trim();
-  const cat    = document.getElementById('pf-category')?.value;
-  const price  = Number(document.getElementById('pf-price')?.value);
-  const origP  = Number(document.getElementById('pf-original-price')?.value) || null;
-  const stock  = Number(document.getElementById('pf-stock')?.value);
-  const shade  = document.getElementById('pf-shade')?.value.trim();
-  const badge  = document.getElementById('pf-badge')?.value || null;
-  const desc   = document.getElementById('pf-description')?.value.trim();
-  const isNew  = document.getElementById('pf-is-new')?.checked;
-  const active = document.getElementById('pf-is-active')?.checked;
-
-  if (!name || !cat || !price || stock === undefined) {
-    showToast('Fill all required fields', 'error');
-    return;
-  }
-
-  if (id) {
-    /* Edit existing */
-    const idx = dashProducts.findIndex(p => p.id === id);
-    if (idx !== -1) {
-      dashProducts[idx] = { ...dashProducts[idx], name, category:cat, price, originalPrice:origP, stock, shade, badge, description:desc, isNew, isActive:active };
-      showToast('Product updated! ✅', 'success');
-    }
-  } else {
-    /* Add new */
-    const newProd = {
-      id: 'p' + Date.now(), name, category:cat, price, originalPrice:origP,
-      stock, sold:0, rating:4.5, reviews:0, shade, badge, description:desc,
-      isNew, isActive:active, color:'#E91E8C',
-      image: 'https://images.unsplash.com/photo-1586495777744-4e6232bf2b56?w=400&q=80'
-    };
-    dashProducts.unshift(newProd);
-    showToast('Product added! 💄', 'success');
-  }
-
-  showPanel('products', null);
-}
-
-/* ── EDIT PRODUCT ── */
-function editProduct(id) {
-  const p = dashProducts.find(prod => prod.id === id);
-  if (!p) return;
-
-  resetProductForm();
-  document.getElementById('pf-edit-id').value          = p.id;
-  document.getElementById('pf-name').value             = p.name;
-  document.getElementById('pf-category').value         = p.category;
-  document.getElementById('pf-price').value            = p.price;
-  document.getElementById('pf-original-price').value   = p.originalPrice || '';
-  document.getElementById('pf-stock').value            = p.stock;
-  document.getElementById('pf-shade').value            = p.shade || '';
-  document.getElementById('pf-badge').value            = p.badge || '';
-  document.getElementById('pf-description').value      = p.description || '';
-  document.getElementById('pf-is-new').checked         = p.isNew;
-  document.getElementById('pf-is-active').checked      = p.isActive;
-
-  document.getElementById('product-form-title').textContent = 'Edit Product';
-  showPanel('add-product', null);
-}
-
-function resetProductForm() {
-  document.getElementById('pf-edit-id').value    = '';
-  document.getElementById('pf-name').value       = '';
-  document.getElementById('pf-category').value   = '';
-  document.getElementById('pf-price').value      = '';
-  document.getElementById('pf-original-price').value = '';
-  document.getElementById('pf-stock').value      = '';
-  document.getElementById('pf-shade').value      = '';
-  document.getElementById('pf-badge').value      = '';
-  document.getElementById('pf-description').value = '';
-  document.getElementById('pf-is-new').checked   = false;
-  document.getElementById('pf-is-active').checked = true;
-  document.getElementById('product-form-title').textContent = 'Add New Product';
-}
-
-/* ── REVIEWS ── */
-let reviewsFilter = 'all';
-
-function renderReviews() {
-  const tbody = document.getElementById('reviews-tbody');
-  if (!tbody) return;
-  let list = dashReviews;
-  if (reviewsFilter !== 'all') {
-    const minR = Number(reviewsFilter);
-    list = reviewsFilter === '3' ? list.filter(r => r.rating <= 3) : list.filter(r => r.rating === minR);
-  }
-  tbody.innerHTML = list.map(r => `
-    <tr>
-      <td class="td-primary">${r.customerName}</td>
-      <td>${r.productName}</td>
-      <td><span style="color:#F5C518;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span></td>
-      <td style="max-width:300px; font-size:0.8rem; color:var(--gray-500);">${r.text.slice(0,100)}...</td>
-      <td>${r.createdAt}</td>
-      <td>
-        <div class="table-action-btns">
-          <button class="table-action-btn btn-delete" onclick="confirmDeleteItem('${r.id}', 'review', 'this review')" title="Delete">🗑️</button>
-        </div>
-      </td>
-    </tr>
-  `).join('') || `<tr><td colspan="6" style="text-align:center;color:var(--gray-400);padding:2rem;">No reviews</td></tr>`;
-}
-
-function filterReviews(val) { reviewsFilter = val; renderReviews(); }
-
-/* ── CUSTOMERS ── */
-let customersSearch = '';
-
-function renderCustomers() {
-  const tbody = document.getElementById('customers-tbody');
-  if (!tbody) return;
-  let list = dashCustomers;
-  if (customersSearch) {
-    const q = customersSearch.toLowerCase();
-    list = list.filter(c => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || c.city.toLowerCase().includes(q));
-  }
-  tbody.innerHTML = list.map(c => `
-    <tr>
-      <td>
-        <div style="display:flex; align-items:center; gap:0.75rem;">
-          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#E91E8C,#C2185B);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;flex-shrink:0;">${c.name[0]}</div>
-          <span class="td-primary">${c.name}</span>
-        </div>
-      </td>
-      <td>${c.email}</td>
-      <td>${c.phone}</td>
-      <td>${c.city}</td>
-      <td>${c.totalOrders}</td>
-      <td>${formatPrice(c.totalSpent)}</td>
-      <td><span class="status-badge status-${c.status.toLowerCase()}">${c.status}</span></td>
-      <td style="font-size:0.8rem;color:var(--gray-400);">${c.joinDate}</td>
-    </tr>
-  `).join('') || `<tr><td colspan="8" style="text-align:center;color:var(--gray-400);padding:2rem;">No customers found</td></tr>`;
-}
-
-function searchCustomers(val) { customersSearch = val; renderCustomers(); }
-
-/* ── ORDER STATUS MODAL ── */
-function openOrderModal(idOrNum) {
-  const order = dashOrders.find(o => o.id === idOrNum || o.orderNumber === idOrNum);
-  if (!order) return;
-  editingOrder = order;
-
-  document.getElementById('order-modal-info').innerHTML = `
-    <strong>${order.orderNumber}</strong> — ${order.customerName}<br/>
-    Total: ${formatPrice(order.total)} | Items: ${order.items?.length || 0}
-  `;
-  document.getElementById('order-status-select').value = order.status;
-  document.getElementById('order-modal')?.classList.add('active');
-}
-
-function closeOrderModal() {
-  document.getElementById('order-modal')?.classList.remove('active');
-  editingOrder = null;
+  VBModal.open('order-modal');
 }
 
 function updateOrderStatus() {
-  if (!editingOrder) return;
-  const newStatus = document.getElementById('order-status-select')?.value;
-  editingOrder.status = newStatus;
-
-  /* Update in localStorage if it's a user order */
-  const saved = JSON.parse(localStorage.getItem('vb_orders') || '[]');
-  const idx   = saved.findIndex(o => o.orderNumber === editingOrder.orderNumber);
-  if (idx !== -1) {
-    saved[idx].status = newStatus;
-    localStorage.setItem('vb_orders', JSON.stringify(saved));
-  }
-
-  closeOrderModal();
-  showToast(`Order status updated to "${newStatus}" ✅`, 'success');
-
-  /* Re-render current panel */
-  const active = document.querySelector('.dash-panel.active')?.id?.replace('panel-', '');
-  if (active === 'orders')   renderOrders();
-  if (active === 'overview') renderOverview();
+  const status = document.getElementById('om-status-select').value;
+  VBOrders.updateStatus(currentOrderId, status);
+  VBToast.show('Order status updated', 'success');
+  VBModal.close('order-modal');
+  renderOrders();
+  setPendingBadge();
 }
 
-/* ── DELETE CONFIRM ── */
-function confirmDeleteItem(id, type, label) {
-  deletingItem = id;
-  deleteType   = type;
-  document.getElementById('delete-modal-msg').textContent = `Are you sure you want to delete "${label}"? This cannot be undone.`;
-  document.getElementById('delete-modal')?.classList.add('active');
-}
-
-function closeDeleteModal() {
-  document.getElementById('delete-modal')?.classList.remove('active');
-  deletingItem = null;
-  deleteType   = '';
-}
-
-function confirmDelete() {
-  if (!deletingItem) return;
-
-  if (deleteType === 'product') {
-    dashProducts = dashProducts.filter(p => p.id !== deletingItem);
-    showToast('Product deleted', 'success');
-    renderProducts();
-  } else if (deleteType === 'order') {
-    dashOrders = dashOrders.filter(o => o.id !== deletingItem && o.orderNumber !== deletingItem);
-    const saved = JSON.parse(localStorage.getItem('vb_orders') || '[]');
-    localStorage.setItem('vb_orders', JSON.stringify(saved.filter(o => o.orderNumber !== deletingItem)));
-    showToast('Order deleted', 'success');
+function deleteOrder() {
+  VBModal.close('order-modal');
+  VBModal.confirm('Delete this order permanently?', () => {
+    VBOrders.delete(currentOrderId);
+    VBToast.show('Order deleted', 'success');
     renderOrders();
-  } else if (deleteType === 'review') {
-    dashReviews = dashReviews.filter(r => r.id !== deletingItem);
-    showToast('Review deleted', 'success');
-    renderReviews();
-  }
-
-  closeDeleteModal();
-}
-
-/* ── SEARCH ── */
-function dashSearch(val) {
-  if (!val) return;
-  const q = val.toLowerCase();
-  /* Search products */
-  const found = dashProducts.filter(p => p.name.toLowerCase().includes(q));
-  if (found.length > 0) {
-    showPanel('products', null);
-    productsSearch = val;
-    renderProducts();
-  }
-}
-
-/* ── SETTINGS ── */
-function saveSettings() {
-  const empCode   = document.getElementById('emp-code-setting')?.value.trim();
-  if (empCode) localStorage.setItem('vb_emp_code', empCode);
-  showToast('Settings saved ✅', 'success');
-}
-
-/* ── INIT ── */
-document.addEventListener('DOMContentLoaded', () => {
-  /* Auth check */
-  const session = JSON.parse(localStorage.getItem('vb_session') || 'null');
-  if (!session || session.role !== 'owner') {
-    /* Uncomment in production to enforce auth: */
-    /* window.location.href = 'login.html'; return; */
-  }
-
-  /* Set user info in sidebar */
-  const name = session?.name || 'Owner';
-  const initial = name[0].toUpperCase();
-  document.getElementById('sidebar-name').textContent  = name;
-  document.getElementById('sidebar-avatar').textContent = initial;
-  document.getElementById('topbar-avatar').textContent  = initial;
-
-  /* Load initial panel */
-  renderOverview();
-
-  /* Close modals on overlay click */
-  ['order-modal', 'delete-modal'].forEach(id => {
-    document.getElementById(id)?.addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) {
-        if (id === 'order-modal')  closeOrderModal();
-        if (id === 'delete-modal') closeDeleteModal();
-      }
-    });
+    setPendingBadge();
   });
-});
+}
+
+// ── PRODUCTS ─────────────────────────────────────────────────
+function renderProducts() {
+  let products = VBProducts.getAll();
+  const q = (document.getElementById('products-search')?.value||'').toLowerCase();
+  const cat = document.getElementById('products-cat-filter')?.value || '';
+  if (q)   products = products.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+  if (cat) products = products.filter(p => p.category === cat);
+
+  const tbody = document.getElementById('products-body');
+  if (!tbody) return;
+  if (!products.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--g400);">No products found</td></tr>`; return; }
+  tbody.innerHTML = products.map(p => `
+    <tr>
+      <td>
+        <div class="tbl-product-cell">
+          <div class="tbl-product-img"><img src="${p.image}" alt="${p.name}" onerror="this.src='https://placehold.co/44x44/FDE8F3/E91E8C?text=VB'"/></div>
+          <div><div class="tbl-product-name">${p.name}</div><div class="tbl-product-cat">${p.badge||''}</div></div>
+        </div>
+      </td>
+      <td>${p.category}</td>
+      <td>${fmtPrice(p.price)}</td>
+      <td>${p.stock||0}</td>
+      <td>⭐ ${p.rating||0}</td>
+      <td><span class="status-badge ${p.active?'s-delivered':'s-cancelled'}">${p.active?'Active':'Hidden'}</span></td>
+      <td><div class="tbl-actions">
+        <button class="tbl-btn tbl-edit"   onclick="openProductModal('${p.id}')">Edit</button>
+        <button class="tbl-btn tbl-delete" onclick="deleteProduct('${p.id}')">Delete</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function openProductModal(id) {
+  currentProductId = id;
+  const pm = id ? VBProducts.getById(id) : null;
+  document.getElementById('pm-title').textContent = pm ? 'Edit Product' : 'Add Product';
+  document.getElementById('pm-id').value          = pm?.id || '';
+  document.getElementById('pm-name').value        = pm?.name || '';
+  document.getElementById('pm-cat').value         = pm?.category || 'Lips';
+  document.getElementById('pm-badge').value       = pm?.badge || '';
+  document.getElementById('pm-price').value       = pm?.price || '';
+  document.getElementById('pm-orig-price').value  = pm?.origPrice || '';
+  document.getElementById('pm-stock').value       = pm?.stock || '';
+  document.getElementById('pm-rating').value      = pm?.rating || '';
+  document.getElementById('pm-active').checked    = pm ? pm.active : true;
+  document.getElementById('pm-bestseller').checked = pm?.bestseller || false;
+  document.getElementById('pm-image').value       = pm?.image || '';
+  document.getElementById('pm-desc').value        = pm?.desc || '';
+  document.getElementById('pm-shades').value      = pm?.shades?.join(', ') || '';
+  previewProductImg(pm?.image || '');
+  VBModal.open('product-modal');
+}
+
+function previewProductImg(url) {
+  const img         = document.getElementById('pm-img-preview');
+  const placeholder = document.getElementById('pm-img-placeholder');
+  if (url && img) {
+    img.src = url;
+    img.classList.remove('hidden');
+    if (placeholder) placeholder.style.display = 'none';
+    img.onerror = () => { img.classList.add('hidden'); if (placeholder) placeholder.style.display = ''; };
+  } else {
+    if (img) img.classList.add('hidden');
+    if (placeholder) placeholder.style.display = '';
+  }
+}
+
+function saveProduct() {
+  const id         = document.getElementById('pm-id').value;
+  const shadesRaw  = document.getElementById('pm-shades').value.trim();
+  const data = {
+    name:       document.getElementById('pm-name').value.trim(),
+    category:   document.getElementById('pm-cat').value,
+    badge:      document.getElementById('pm-badge').value,
+    price:      parseFloat(document.getElementById('pm-price').value) || 0,
+    origPrice:  parseFloat(document.getElementById('pm-orig-price').value) || null,
+    stock:      parseInt(document.getElementById('pm-stock').value) || 0,
+    rating:     parseFloat(document.getElementById('pm-rating').value) || 0,
+    active:     document.getElementById('pm-active').checked,
+    bestseller: document.getElementById('pm-bestseller').checked,
+    isNew:      document.getElementById('pm-badge').value === 'new',
+    image:      document.getElementById('pm-image').value.trim(),
+    desc:       document.getElementById('pm-desc').value.trim(),
+    shades:     shadesRaw ? shadesRaw.split(',').map(s => s.trim()).filter(Boolean) : [],
+  };
+  if (!data.name) { VBToast.show('Product name is required', 'warning'); return; }
+  if (!data.price) { VBToast.show('Price is required', 'warning'); return; }
+  if (id) VBProducts.update(id, data);
+  else    VBProducts.add(data);
+  VBToast.show(id ? 'Product updated ✅' : 'Product added ✅', 'success');
+  VBModal.close('product-modal');
+  renderProducts();
+}
+
+function deleteProduct(id) {
+  VBModal.confirm('Delete this product permanently?', () => {
+    VBProducts.delete(id);
+    VBToast.show('Product deleted', 'success');
+    renderProducts();
+  });
+}
+
+// ── CUSTOMERS ────────────────────────────────────────────────
+function renderCustomers() {
+  let customers = VBCustomers.getAll();
+  const q  = (document.getElementById('customers-search')?.value||'').toLowerCase();
+  const tp = document.getElementById('customers-type-filter')?.value || '';
+  if (q)  customers = customers.filter(c => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || (c.city||'').toLowerCase().includes(q));
+  if (tp) customers = customers.filter(c => c.type === tp);
+
+  const tbody = document.getElementById('customers-body');
+  if (!tbody) return;
+  if (!customers.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--g400);">No customers found</td></tr>`; return; }
+  tbody.innerHTML = customers.map(c => `
+    <tr>
+      <td>
+        <div class="tbl-customer-cell">
+          <div class="tbl-cust-avatar" style="background:${avatarBg(c.name)}">${c.name.charAt(0)}</div>
+          <div><div class="tbl-cust-name">${c.name}</div><div class="tbl-cust-email">${c.email}</div></div>
+        </div>
+      </td>
+      <td>${c.phone||'—'}</td>
+      <td>${c.city||'—'}</td>
+      <td>${c.totalOrders||0}</td>
+      <td>${fmtPrice(c.totalSpent||0)}</td>
+      <td>${typeBadge(c.type)}</td>
+      <td><div class="tbl-actions">
+        <button class="tbl-btn tbl-view" onclick="openCustomerModal('${c.id}')">View</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+function openCustomerModal(id) {
+  currentCustomerId = id;
+  const c = VBCustomers.getById(id);
+  if (!c) return;
+  document.getElementById('cm-title').textContent = c.name;
+  document.getElementById('cm-type-select').value = c.type;
+  const orders = VBOrders.getAll().filter(o => o.customerName === c.name || o.customerId === c.id);
+  document.getElementById('cm-body').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+      <div><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;margin-bottom:4px;">Email</div><div>${c.email}</div></div>
+      <div><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;margin-bottom:4px;">Phone</div><div>${c.phone||'—'}</div></div>
+      <div><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;margin-bottom:4px;">City</div><div>${c.city||'—'}</div></div>
+      <div><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;margin-bottom:4px;">Joined</div><div>${fmtDate(c.joinDate)}</div></div>
+      <div><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;margin-bottom:4px;">Total Orders</div><div>${c.totalOrders||0}</div></div>
+      <div><div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;margin-bottom:4px;">Total Spent</div><div style="color:var(--pink);font-weight:600;">${fmtPrice(c.totalSpent||0)}</div></div>
+    </div>
+    ${orders.length ? `<div style="font-size:0.7rem;color:var(--g400);text-transform:uppercase;margin-bottom:.5rem;">Recent Orders</div>
+      ${orders.slice(0,3).map(o => `<div style="display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--g100);font-size:.85rem;"><span>${o.id}</span>${statusBadge(o.status)}<span>${fmtPrice(o.total)}</span></div>`).join('')}` : ''}`;
+  VBModal.open('customer-modal');
+}
+
+function updateCustomerType() {
+  const type = document.getElementById('cm-type-select').value;
+  VBCustomers.update(currentCustomerId, { type });
+  VBToast.show('Customer type updated ✅', 'success');
+  VBModal.close('customer-modal');
+  renderCustomers();
+}
+
+function deleteCustomer() {
+  VBModal.close('customer-modal');
+  VBModal.confirm('Delete this customer permanently?', () => {
+    VBCustomers.delete(currentCustomerId);
+    VBToast.show('Customer deleted', 'success');
+    renderCustomers();
+  });
+}
+
+// ── REVIEWS ──────────────────────────────────────────────────
+function renderReviews() {
+  let reviews = VBReviews.getAll();
+  const q  = (document.getElementById('reviews-search')?.value||'').toLowerCase();
+  const rt = document.getElementById('reviews-rating-filter')?.value || '';
+  if (q)  reviews = reviews.filter(r => r.customerName.toLowerCase().includes(q) || r.text.toLowerCase().includes(q));
+  if (rt) reviews = reviews.filter(r => r.rating === parseInt(rt));
+
+  const tbody = document.getElementById('reviews-body');
+  if (!tbody) return;
+  if (!reviews.length) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--g400);">No reviews found</td></tr>`; return; }
+  tbody.innerHTML = reviews.map(r => {
+    const p = VBProducts.getById(r.productId);
+    return `<tr>
+      <td>
+        <div class="tbl-customer-cell">
+          <div class="tbl-cust-avatar" style="background:${avatarBg(r.customerName)}">${r.customerName.charAt(0)}</div>
+          <div class="tbl-cust-name">${r.customerName}</div>
+        </div>
+      </td>
+      <td><span style="font-size:0.82rem;">${p?.name||'—'}</span></td>
+      <td><span style="color:#F5C518;">${'★'.repeat(r.rating)}</span></td>
+      <td style="max-width:260px;"><div style="font-size:0.82rem;color:var(--g600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.text}</div></td>
+      <td>${fmtDate(r.date)}</td>
+      <td><button class="tbl-btn tbl-delete" onclick="deleteReview('${r.id}')">Delete</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function deleteReview(id) {
+  VBModal.confirm('Delete this review?', () => {
+    VBReviews.delete(id);
+    VBToast.show('Review deleted', 'success');
+    renderReviews();
+  });
+}
+
+// ── ANALYTICS ────────────────────────────────────────────────
+function renderAnalytics() {
+  const data    = VBAnalytics.get();
+  const summary = VBAnalytics.summary();
+  document.getElementById('anal-avg-monthly').textContent = 'Rs. ' + summary.avgMonthly.toLocaleString();
+  document.getElementById('anal-total-orders').textContent = summary.totalOrders;
+  document.getElementById('anal-avg-rating').textContent  = summary.avgRating + ' ⭐';
+  document.getElementById('anal-total-rev').textContent   = 'Rs. ' + summary.totalRev.toLocaleString();
+
+  const tbody = document.getElementById('analytics-body');
+  if (!tbody) return;
+  tbody.innerHTML = data.map(m => `
+    <tr>
+      <td><b>${m.month}</b></td>
+      <td style="color:var(--pink);font-weight:600;">Rs. ${m.revenue.toLocaleString()}</td>
+      <td>${m.orders}</td>
+      <td>${m.newCustomers}</td>
+      <td>Rs. ${m.avgOrder.toLocaleString()}</td>
+    </tr>`).join('');
+}
+
+// ── SETTINGS ─────────────────────────────────────────────────
+function saveSettings() {
+  const settings = {
+    empCode:        document.getElementById('set-emp-code').value.trim(),
+    ownerCode:      document.getElementById('set-owner-code').value.trim(),
+    freeDeliveryMin: parseInt(document.getElementById('set-free-delivery').value) || 2000,
+    deliveryFee:    parseInt(document.getElementById('set-delivery-fee').value) || 200,
+  };
+  if (!settings.empCode || !settings.ownerCode) { VBToast.show('Access codes cannot be empty', 'warning'); return; }
+  DB.set(KEYS.settings, settings);
+  VBToast.show('Settings saved ✅', 'success');
+}
+
+function togglePwOwner(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁️';
+}

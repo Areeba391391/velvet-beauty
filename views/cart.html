@@ -1,179 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cart — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css" />
-  <link rel="stylesheet" href="../public/css/main.css" />
-  <link rel="stylesheet" href="../public/css/cart.css" />
+  <link rel="stylesheet" href="../public/css/variables.css"/>
+  <link rel="stylesheet" href="../public/css/main.css"/>
+  <link rel="stylesheet" href="../public/css/cart.css"/>
 </head>
-<body class="page-body">
+<body>
+<div id="toast-container"></div>
 
-  <!-- NAVBAR -->
-  <nav class="navbar" id="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <a href="index.html" class="navbar-logo">
-          <svg class="navbar-logo-svg" viewBox="0 0 38 38" fill="none">
-            <circle cx="19" cy="19" r="18" fill="#4A1A40"/>
-            <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
-            <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
-            <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
-            <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
-          </svg>
-          <div class="navbar-logo-text">
-            <span class="brand-name">Velvet Beauty</span>
-            <span class="brand-tagline">Luxury Cosmetics</span>
-          </div>
+<nav class="navbar solid" id="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <svg class="logo-svg" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" fill="#4A1A40"/><ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/><ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/><rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/><circle cx="19" cy="29" r="2" fill="#E91E8C"/></svg>
+        <div class="logo-text"><span class="logo-name">Velvet Beauty</span><span class="logo-tag">Luxury Cosmetics</span></div>
+      </a>
+      <ul class="navbar-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="shop.html?cat=lips">Lips</a></li>
+        <li><a href="shop.html?cat=face">Face</a></li>
+        <li><a href="shop.html?cat=eyes">Eyes</a></li>
+        <li><a href="shop.html?cat=skincare">Skincare</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <a href="wishlist.html" class="nav-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="nav-badge" id="wishlist-count" style="display:none">0</span>
         </a>
-        <ul class="navbar-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="shop.html">Shop</a></li>
-          <li><a href="shop.html?cat=lips">Lips</a></li>
-          <li><a href="shop.html?cat=face">Face</a></li>
-          <li><a href="shop.html?cat=eyes">Eyes</a></li>
-        </ul>
-        <div class="navbar-actions">
-          <a href="shop.html" class="nav-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></a>
-          <a href="wishlist.html" class="nav-icon-btn" id="nav-wishlist-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="nav-badge" id="wishlist-count">0</span></a>
-          <a href="cart.html" class="nav-icon-btn active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="nav-badge" id="cart-count">0</span></a>
-          <a href="login.html" class="nav-icon-btn" id="nav-account-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
-          <button class="navbar-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
-        </div>
-      </div>
-    </div>
-  </nav>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="index.html">Home</a><a href="shop.html">Shop All</a>
-    <a href="wishlist.html">Wishlist</a><a href="cart.html">Cart</a><a href="login.html">Login</a>
-  </div>
-
-  <!-- CART PAGE -->
-  <div class="cart-page">
-    <div class="container">
-
-      <nav class="breadcrumb">
-        <a href="index.html">Home</a>
-        <span class="breadcrumb-sep">›</span>
-        <span class="current">Shopping Cart</span>
-      </nav>
-
-      <h1 class="cart-page-title">Shopping Cart <span style="font-family:var(--font-body); font-size:1rem; color:var(--gray-400); font-weight:400;" id="cart-item-count-label">(0 items)</span></h1>
-
-      <!-- Cart Layout -->
-      <div class="cart-layout" id="cart-layout">
-
-        <!-- Cart Items Panel -->
-        <div>
-          <div class="cart-items-panel" id="cart-items-panel">
-            <!-- Header row (desktop) -->
-            <div class="cart-items-header">
-              <span>Product</span>
-              <span>Price</span>
-              <span>Qty</span>
-              <span>Total</span>
-              <span></span>
-            </div>
-
-            <!-- Items inserted by JS -->
-            <div id="cart-items-list">
-              <!-- JS renders cart rows here -->
-            </div>
-
-            <!-- Coupon -->
-            <div class="coupon-form">
-              <input type="text" class="coupon-input" id="coupon-input" placeholder="🎁 Enter coupon code" />
-              <button class="btn btn-outline btn-sm" onclick="applyCoupon()">Apply</button>
-            </div>
-
-            <!-- Cart Footer -->
-            <div class="cart-footer">
-              <a href="shop.html" class="continue-shopping">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-                Continue Shopping
-              </a>
-              <button class="clear-cart-btn" onclick="clearCart()">Clear Cart</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Order Summary -->
-        <div class="order-summary" id="order-summary">
-          <h3 class="order-summary-title">Order Summary</h3>
-
-          <div class="summary-line">
-            <span>Subtotal</span>
-            <span class="amount" id="summary-subtotal">Rs. 0</span>
-          </div>
-          <div class="summary-line discount" id="summary-discount-row" style="display:none;">
-            <span>Discount</span>
-            <span class="amount" id="summary-discount">-Rs. 0</span>
-          </div>
-          <div class="summary-line">
-            <span>Delivery</span>
-            <span class="amount" id="summary-delivery">Free</span>
-          </div>
-          <div class="summary-line total">
-            <span>Total</span>
-            <span class="amount" id="summary-total">Rs. 0</span>
-          </div>
-
-          <a href="checkout.html" class="checkout-btn" id="checkout-btn">
-            Proceed to Checkout →
+        <a href="cart.html" class="nav-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="nav-badge" id="cart-count" style="display:none">0</span>
+        </a>
+        <div class="nav-dropdown-wrap">
+          <a href="login.html" class="nav-icon-btn" id="account-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </a>
+          <div class="nav-dropdown" id="user-dropdown"></div>
+        </div>
+        <button class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </div>
+</nav>
 
-          <div class="secure-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Secure Checkout
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">🏠 Home</a>
+  <a href="shop.html">🛍️ Shop</a>
+  <div class="mob-divider"></div>
+  <a href="wishlist.html">💝 Wishlist</a>
+  <a href="cart.html">🛒 Cart</a>
+  <a href="login.html" id="mob-account-link">👤 Login</a>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="container">
+    <div class="page-hero-eyebrow">Your Selection</div>
+    <h1 class="page-hero-title">Shopping <em>Cart</em></h1>
+    <p class="page-hero-sub">Review your items and proceed to checkout.</p>
+  </div>
+</div>
+
+<!-- CART SECTION -->
+<section class="cart-section">
+  <div class="container">
+
+    <!-- Empty State -->
+    <div class="empty-state hidden" id="cart-empty">
+      <div class="empty-icon">🛒</div>
+      <h3>Your Cart is Empty</h3>
+      <p>Looks like you haven't added anything yet. Explore our luxurious collection!</p>
+      <a href="shop.html" class="btn btn-primary btn-lg">Shop Now</a>
+    </div>
+
+    <!-- Cart Layout -->
+    <div class="cart-layout" id="cart-layout">
+
+      <!-- Items Panel -->
+      <div>
+        <div class="cart-panel">
+          <div class="cart-panel-head">
+            <div>
+              <span class="cart-panel-title">Your Items</span>
+              <span class="cart-item-count" id="cart-item-count"></span>
+            </div>
+            <button class="cart-clear-btn" onclick="clearCart()">Clear All</button>
           </div>
+          <!-- Items list -->
+          <div id="cart-items-list"></div>
 
-          <div class="payment-icons" style="justify-content:center; margin-top:1rem;">
-            <span class="payment-icon">VISA</span>
-            <span class="payment-icon">MC</span>
-            <span class="payment-icon">JCB</span>
-            <span class="payment-icon">COD</span>
+          <!-- Coupon -->
+          <div class="coupon-row">
+            <div id="coupon-normal">
+              <div class="form-label" style="margin-bottom:0.5rem;">Have a promo code?</div>
+              <div class="coupon-form">
+                <input class="coupon-input" id="coupon-input" placeholder="ENTER CODE" maxlength="20"/>
+                <button class="btn btn-plum btn-sm" onclick="applyCoupon()">Apply</button>
+              </div>
+            </div>
+            <div id="coupon-applied" class="hidden">
+              <div class="coupon-applied-tag">
+                ✅ Coupon <b id="applied-code-name"></b> applied — <b id="applied-disc-text"></b> off!
+                <button class="coupon-remove" onclick="removeCoupon()">✕</button>
+              </div>
+            </div>
           </div>
         </div>
 
+        <div style="margin-top:1rem;">
+          <a href="shop.html" class="btn btn-ghost" style="font-size:0.85rem;">
+            ← Continue Shopping
+          </a>
+        </div>
       </div>
 
-      <!-- Empty Cart -->
-      <div class="cart-empty hidden" id="cart-empty-state">
-        <svg class="cart-empty-illustration" viewBox="0 0 120 120" fill="none">
-          <circle cx="60" cy="60" r="55" fill="#FDE8F3" opacity="0.5"/>
-          <path d="M35 40h50l-8 35H43L35 40Z" fill="#E91E8C" opacity="0.2"/>
-          <path d="M35 40h50l-8 35H43L35 40Z" stroke="#E91E8C" stroke-width="2" fill="none"/>
-          <circle cx="50" cy="82" r="4" fill="#C9956C"/>
-          <circle cx="70" cy="82" r="4" fill="#C9956C"/>
-          <path d="M25 30l5 5M90 28l-4 6" stroke="#E91E8C" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
-        </svg>
-        <h3>Your Cart is Empty</h3>
-        <p>Looks like you haven't added anything yet. Discover our luxury beauty collection!</p>
-        <a href="shop.html" class="btn btn-primary btn-lg">Start Shopping</a>
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h3 class="os-title">Order Summary</h3>
+        <div class="os-row">
+          <span class="os-row-label">Subtotal (<span id="os-item-count">0</span> items)</span>
+          <span class="os-row-val" id="os-subtotal">Rs. 0</span>
+        </div>
+        <div class="os-row" id="os-disc-row" style="display:none">
+          <span class="os-row-label">Discount</span>
+          <span class="os-row-disc" id="os-disc">−Rs. 0</span>
+        </div>
+        <div class="os-row">
+          <span class="os-row-label">Delivery</span>
+          <span class="os-row-val" id="os-delivery">Rs. 200</span>
+        </div>
+        <div class="os-total-row">
+          <span class="os-total-label">Total</span>
+          <span class="os-total-val" id="os-total">Rs. 0</span>
+        </div>
+        <button class="btn btn-primary btn-full btn-lg" onclick="goCheckout()">
+          Proceed to Checkout →
+        </button>
+        <div class="os-payment-icons" style="margin-top:1rem;justify-content:center;">
+          <span class="pay-icon">VISA</span>
+          <span class="pay-icon">MC</span>
+          <span class="pay-icon">JCB</span>
+          <span class="pay-icon">COD</span>
+        </div>
       </div>
+    </div>
 
+  </div>
+</section>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="confirm-body">
+      <div class="confirm-icon">⚠️</div>
+      <p class="confirm-msg" id="confirm-msg"></p>
+      <div class="confirm-btns">
+        <button class="btn btn-danger" id="confirm-yes">Confirm</button>
+        <button class="btn btn-ghost" onclick="VBModal.close('confirm-modal')">Cancel</button>
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand"><div class="brand-name">Velvet Beauty</div><p>Luxury cosmetics crafted with care.</p></div>
-        <div class="footer-col"><h4>Shop</h4><ul><li><a href="shop.html?cat=lips">Lips</a></li><li><a href="shop.html?cat=face">Face</a></li><li><a href="shop.html?cat=eyes">Eyes</a></li></ul></div>
-        <div class="footer-col"><h4>Help</h4><ul><li><a href="#">Returns</a></li><li><a href="#">Shipping</a></li></ul></div>
-        <div class="footer-col"><h4>Newsletter</h4><form class="footer-newsletter-form" onsubmit="return false;"><input type="email" placeholder="Your email" /><button>Go</button></form></div>
-      </div>
-      <div class="footer-bottom"><p>© 2025 Velvet Beauty. All rights reserved.</p></div>
-    </div>
-  </footer>
-
-  <div class="toast-container" id="toast-container"></div>
-
-  <script src="../public/js/products-data.js"></script>
-  <script src="../public/js/cart.js"></script>
-  <script src="../public/js/wishlist.js"></script>
-  <script src="../public/js/cart-page.js"></script>
+<script src="../public/js/store.js"></script>
+<script src="../public/js/cart.js"></script>
 </body>
 </html>

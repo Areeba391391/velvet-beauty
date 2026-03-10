@@ -1,115 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css" />
-  <link rel="stylesheet" href="../public/css/main.css" />
-  <link rel="stylesheet" href="../public/css/auth.css" />
+  <link rel="stylesheet" href="../public/css/variables.css"/>
+  <link rel="stylesheet" href="../public/css/main.css"/>
+  <link rel="stylesheet" href="../public/css/auth.css"/>
 </head>
 <body>
+<div id="toast-container"></div>
 
-  <div class="auth-page">
+<div class="auth-page">
 
-    <!-- Left Decorative Panel -->
-    <div class="auth-panel-left">
-      <!-- Floating pills -->
-      <div class="auth-float-cards">
-        <span class="auth-float-pill">💋 Velvet Red</span>
-        <span class="auth-float-pill">✨ New Arrivals</span>
-        <span class="auth-float-pill">🌿 Cruelty Free</span>
-        <span class="auth-float-pill">💝 VIP Club</span>
-      </div>
-
-      <div class="auth-brand">
-        <!-- Logo SVG -->
-        <svg class="auth-brand-logo" viewBox="0 0 80 80" fill="none">
-          <circle cx="40" cy="40" r="38" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.20)" stroke-width="1.5"/>
-          <ellipse cx="40" cy="30" rx="10" ry="14" fill="#E91E8C"/>
-          <ellipse cx="40" cy="30" rx="6" ry="10" fill="#F472B6"/>
-          <rect x="34" y="42" width="12" height="20" rx="6" fill="#C9956C"/>
-          <circle cx="40" cy="61" r="4" fill="#E91E8C"/>
-          <path d="M20 22 L22 18 L24 22 L20 22Z" fill="#C9956C" opacity="0.8"/>
-          <path d="M56 16 L58 12 L60 16 L56 16Z" fill="#F472B6" opacity="0.8"/>
-        </svg>
-
-        <span class="auth-brand-name">Velvet Beauty</span>
-        <span class="auth-brand-tagline">Luxury Cosmetics</span>
-        <p class="auth-brand-desc">
-          Discover premium beauty products crafted for every skin tone. Join thousands of beauty lovers across Pakistan.
-        </p>
+  <!-- ═══ LEFT: Brand Panel ═══ -->
+  <div class="auth-brand">
+    <div class="auth-brand-logo">
+      <svg width="44" height="44" viewBox="0 0 38 38" fill="none">
+        <circle cx="19" cy="19" r="18" fill="rgba(255,255,255,0.15)"/>
+        <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
+        <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
+        <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
+        <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
+      </svg>
+      <div>
+        <div class="auth-brand-name">Velvet Beauty</div>
+        <div class="auth-brand-tagline">Luxury Cosmetics</div>
       </div>
     </div>
 
-    <!-- Right Form Panel -->
-    <div class="auth-panel-right">
-      <div class="auth-form-container">
+    <h2 class="auth-brand-title">
+      Your Beauty<br>
+      <em>Journey</em><br>
+      Starts Here
+    </h2>
+    <p class="auth-brand-desc">
+      Join thousands of beauty lovers across Pakistan who trust Velvet Beauty for luxurious, authentic cosmetics.
+    </p>
 
-        <!-- Role tabs -->
-        <div class="auth-role-tabs">
-          <button class="auth-role-tab active" onclick="switchRole('customer', this)">Customer</button>
-          <button class="auth-role-tab" onclick="switchRole('employee', this)">Employee</button>
-          <button class="auth-role-tab" onclick="switchRole('owner', this)">Owner</button>
+    <div class="auth-pills">
+      <div class="auth-pill"><span class="auth-pill-icon">✨</span> 20+ Premium Products</div>
+      <div class="auth-pill"><span class="auth-pill-icon">🚚</span> Free Delivery over Rs. 2000</div>
+      <div class="auth-pill"><span class="auth-pill-icon">🔒</span> 100% Secure Shopping</div>
+      <div class="auth-pill"><span class="auth-pill-icon">💝</span> Exclusive Member Deals</div>
+    </div>
+  </div>
+
+  <!-- ═══ RIGHT: Form Panel ═══ -->
+  <div class="auth-form-panel">
+    <div class="auth-form-inner">
+
+      <!-- Back link -->
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--g400);margin-bottom:1.5rem;transition:color 0.2s;" onmouseover="this.style.color='var(--pink)'" onmouseout="this.style.color='var(--g400)'">
+        ← Back to Store
+      </a>
+
+      <h2 style="font-family:var(--font-display);font-size:2rem;color:var(--plum-dark);margin-bottom:0.3rem;font-weight:400;">
+        Welcome <em style="color:var(--pink);font-style:italic;">Back</em>
+      </h2>
+      <p style="font-size:0.85rem;color:var(--g400);margin-bottom:1.5rem;">Sign in to your account or create a new one.</p>
+
+      <!-- Role Tabs -->
+      <div class="auth-role-tabs">
+        <button class="auth-role-tab active" data-role="customer" onclick="switchRole('customer',this)">👤 Customer</button>
+        <button class="auth-role-tab" data-role="employee" onclick="switchRole('employee',this)">🏷️ Employee</button>
+        <button class="auth-role-tab" data-role="owner" onclick="switchRole('owner',this)">👑 Owner</button>
+      </div>
+
+      <!-- Login / Register Toggle -->
+      <div class="auth-toggle" id="auth-toggle">
+        <button class="auth-toggle-btn active" onclick="switchMode('login',this)">Login</button>
+        <button class="auth-toggle-btn" id="register-tab" onclick="switchMode('register',this)">Register</button>
+      </div>
+
+      <!-- ═ LOGIN FORM ═ -->
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label">Email <span class="req">*</span></label>
+          <input class="form-input" id="login-email" type="email" placeholder="sara@example.com" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input class="form-input" id="login-password" type="password" placeholder="••••••••" required/>
+            <button type="button" class="pw-toggle" onclick="togglePw('login-password',this)">👁️</button>
+          </div>
         </div>
 
-        <h2 class="auth-heading">Welcome back</h2>
-        <p class="auth-subheading" id="login-subheading">Sign in to your customer account</p>
-
-        <!-- Alert message -->
-        <div class="auth-alert auth-alert-error hidden" id="login-alert">
-          ⚠️ <span id="login-alert-msg">Invalid email or password.</span>
+        <!-- Access code (employee/owner only) -->
+        <div class="form-group auth-code-group hidden" id="login-code-group">
+          <label class="form-label">Access Code <span class="req">*</span></label>
+          <input class="form-input" id="login-code" type="password" placeholder="Enter access code"/>
+          <div class="auth-code-hint" id="login-code-hint"></div>
         </div>
 
-        <!-- Login Form -->
-        <form class="auth-form" id="login-form" onsubmit="handleLogin(event)">
-
-          <!-- Email -->
-          <div class="auth-input-group">
-            <label class="auth-label">Email Address</label>
-            <span class="auth-input-icon">✉️</span>
-            <input type="email" class="auth-input" id="login-email" placeholder="your@email.com" required autocomplete="email" />
-            <span class="auth-error-msg hidden" id="err-login-email">Enter a valid email</span>
-          </div>
-
-          <!-- Password -->
-          <div class="auth-input-group">
-            <label class="auth-label">Password</label>
-            <span class="auth-input-icon">🔒</span>
-            <input type="password" class="auth-input" id="login-password" placeholder="Enter your password" required autocomplete="current-password" />
-            <span class="auth-error-msg hidden" id="err-login-password">Password required</span>
-          </div>
-
-          <!-- Employee/Owner code (hidden for customer) -->
-          <div class="auth-input-group hidden" id="access-code-group">
-            <label class="auth-label" id="access-code-label">Employee Code</label>
-            <span class="auth-input-icon">🏷️</span>
-            <input type="text" class="auth-input" id="access-code" placeholder="Enter your access code" autocomplete="off" />
-            <span class="auth-code-note" id="access-code-note">Ask your manager for the employee access code.</span>
-          </div>
-
-          <!-- Remember + Forgot -->
-          <div class="auth-options-row">
-            <label class="auth-remember">
-              <input type="checkbox" id="remember-me" />
-              Remember me
-            </label>
-            <a href="#" class="auth-forgot">Forgot password?</a>
-          </div>
-
-          <button type="submit" class="auth-submit-btn" id="login-submit-btn">Sign In</button>
-
-        </form>
-
-        <div class="auth-switch">
-          Don't have an account? <a href="register.html">Create one</a>
+        <div class="alert alert-error hidden" id="login-error">
+          <span class="alert-icon">⚠️</span>
+          <span id="login-error-msg">Invalid email or password.</span>
         </div>
 
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="login-btn">
+          Sign In
+        </button>
+      </form>
+
+      <!-- ═ REGISTER FORM ═ -->
+      <form id="register-form" class="hidden" onsubmit="handleRegister(event)">
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label class="form-label">First Name <span class="req">*</span></label>
+            <input class="form-input" id="reg-fname" placeholder="Sara" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name <span class="req">*</span></label>
+            <input class="form-input" id="reg-lname" placeholder="Khan" required/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email <span class="req">*</span></label>
+          <input class="form-input" id="reg-email" type="email" placeholder="sara@example.com" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input class="form-input" id="reg-phone" placeholder="03XX-XXXXXXX"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input class="form-input" id="reg-password" type="password" placeholder="Min 6 characters" required minlength="6"/>
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-password',this)">👁️</button>
+          </div>
+        </div>
+
+        <!-- Access code (employee/owner only) -->
+        <div class="form-group auth-code-group hidden" id="reg-code-group">
+          <label class="form-label">Access Code <span class="req">*</span></label>
+          <input class="form-input" id="reg-code" type="password" placeholder="Enter access code"/>
+          <div class="auth-code-hint" id="reg-code-hint"></div>
+        </div>
+
+        <div class="alert alert-error hidden" id="reg-error">
+          <span class="alert-icon">⚠️</span>
+          <span id="reg-error-msg">Something went wrong.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="register-btn">
+          Create Account
+        </button>
+      </form>
+
+      <!-- Hide register for staff -->
+      <div id="staff-note" class="hidden" style="text-align:center;padding:1rem;background:var(--info-bg);border-radius:var(--r-md);font-size:0.82rem;color:var(--info);margin-top:0.75rem;">
+        ℹ️ Staff accounts are created by the Owner. Please login with your provided credentials.
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="confirm-body">
+      <div class="confirm-icon">⚠️</div>
+      <p class="confirm-msg" id="confirm-msg"></p>
+      <div class="confirm-btns">
+        <button class="btn btn-danger" id="confirm-yes">Confirm</button>
+        <button class="btn btn-ghost" onclick="VBModal.close('confirm-modal')">Cancel</button>
       </div>
     </div>
+  </div>
+</div>
 
-  </div><!-- end auth-page -->
-
-  <script src="../public/js/auth.js"></script>
+<script src="../public/js/store.js"></script>
+<script src="../public/js/auth.js"></script>
 </body>
 </html>

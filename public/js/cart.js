@@ -1,169 +1,132 @@
-/* ============================================
+/* ============================================================
    VELVET BEAUTY — cart.js
-   Shared cart logic (localStorage).
-   Included on every page.
-   ============================================ */
+   Cart: Items · Qty · Remove · Coupon · Summary
+   ============================================================ */
 
-/* ── Toast helper ── */
-function showToast(msg, type = 'default', duration = 3000) {
-  const container = document.getElementById('toast-container');
-  if (!container) return;
+let activeCoupon = null;
 
-  const icons = { default: '💄', success: '✅', error: '❌', warning: '⚠️' };
-  const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
-  toast.innerHTML = `<span class="toast-icon">${icons[type] || '💄'}</span> ${msg}`;
+document.addEventListener('DOMContentLoaded', () => {
+  initNav();
+  VBAuth.guard(['customer','employee','owner']);
+  renderCart();
+});
 
-  container.appendChild(toast);
+function renderCart() {
+  const cart    = VBCart.get();
+  const emptyEl = document.getElementById('cart-empty');
+  const layoutEl = document.getElementById('cart-layout');
 
-  setTimeout(() => {
-    toast.classList.add('hiding');
-    setTimeout(() => toast.remove(), 400);
-  }, duration);
-}
-
-/* ── Cart State ── */
-function getCart() {
-  try {
-    return JSON.parse(localStorage.getItem('vb_cart') || '[]');
-  } catch {
-    return [];
-  }
-}
-
-function saveCart(cart) {
-  localStorage.setItem('vb_cart', JSON.stringify(cart));
-  updateCartBadge();
-}
-
-/* ── Add to cart ── */
-function addToCart(product, quantity = 1) {
-  const cart = getCart();
-  const existing = cart.find(item => item.id === product.id);
-
-  if (existing) {
-    existing.quantity += quantity;
-  } else {
-    cart.push({
-      id:       product.id,
-      name:     product.name,
-      price:    product.price,
-      image:    product.image || '',
-      category: product.category,
-      quantity
-    });
-  }
-
-  saveCart(cart);
-  showToast(`<strong>${product.name}</strong> added to cart!`, 'success');
-
-  /* Animate nav badge */
-  const badge = document.getElementById('cart-count');
-  if (badge) {
-    badge.classList.remove('bump');
-    void badge.offsetWidth; /* reflow to restart animation */
-    badge.classList.add('bump');
-  }
-}
-
-/* ── Remove from cart ── */
-function removeFromCart(productId) {
-  const cart = getCart().filter(item => item.id !== productId);
-  saveCart(cart);
-}
-
-/* ── Update quantity ── */
-function updateCartQty(productId, newQty) {
-  const cart = getCart();
-  const item = cart.find(i => i.id === productId);
-  if (!item) return;
-  if (newQty <= 0) {
-    removeFromCart(productId);
+  if (!cart.length) {
+    if (emptyEl)  emptyEl.classList.remove('hidden');
+    if (layoutEl) layoutEl.style.display = 'none';
     return;
   }
-  item.quantity = newQty;
-  saveCart(cart);
-}
+  if (emptyEl)  emptyEl.classList.add('hidden');
+  if (layoutEl) layoutEl.style.display = '';
 
-/* ── Clear cart ── */
-function clearCart() {
-  saveCart([]);
-  if (typeof renderCartPage === 'function') renderCartPage();
-  showToast('Cart cleared', 'default');
-}
+  // Item count label
+  const countEl = document.getElementById('cart-item-count');
+  if (countEl) countEl.textContent = ` (${cart.length} item${cart.length!==1?'s':''})`;
 
-/* ── Get cart totals ── */
-function getCartTotals(discountPercent = 0) {
-  const cart = getCart();
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const discount = Math.round(subtotal * discountPercent / 100);
-  const delivery = subtotal >= 2000 ? 0 : 200;
-  const total    = subtotal - discount + delivery;
-  return { subtotal, discount, delivery, total };
-}
-
-/* ── Update nav badge count ── */
-function updateCartBadge() {
-  const cart  = getCart();
-  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const badge = document.getElementById('cart-count');
-  if (badge) {
-    badge.textContent = count;
-    badge.style.display = count > 0 ? 'flex' : 'none';
+  // Items
+  const listEl = document.getElementById('cart-items-list');
+  if (listEl) {
+    listEl.innerHTML = cart.map(item => `
+      <div class="cart-item" data-id="${item.id}">
+        <div class="cart-item-img">
+          <img src="${item.image}" alt="${item.name}" onerror="this.src='https://placehold.co/88x88/FDE8F3/E91E8C?text=VB'"/>
+        </div>
+        <div class="cart-item-info">
+          <div class="cart-item-cat">${item.category||''}</div>
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-unit">Rs. ${item.price.toLocaleString()} each</div>
+        </div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty('${item.id}', ${item.qty-1})">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${item.id}', ${item.qty+1})">+</button>
+        </div>
+        <div class="cart-item-price">
+          Rs. ${(item.price * item.qty).toLocaleString()}
+          <div class="cart-item-price-sub">${item.qty > 1 ? `${item.qty} × Rs. ${item.price.toLocaleString()}` : ''}</div>
+        </div>
+        <button class="cart-remove-btn" onclick="removeItem('${item.id}')" title="Remove">✕</button>
+      </div>`).join('');
   }
+
+  updateSummary();
 }
 
-/* ── Coupon codes ── */
-const COUPONS = {
-  'VELVET10': 10,
-  'BEAUTY20': 20,
-  'VIP30':    30
-};
+function changeQty(id, qty) {
+  if (qty < 1) { removeItem(id); return; }
+  VBCart.updateQty(id, qty);
+  renderCart();
+}
 
-let appliedCoupon = null;
+function removeItem(id) {
+  VBCart.remove(id);
+  VBToast.show('Item removed from cart', 'info');
+  renderCart();
+}
 
+function clearCart() {
+  VBModal.confirm('Clear your entire cart?', () => {
+    VBCart.clear();
+    activeCoupon = null;
+    VBToast.show('Cart cleared', 'info');
+    renderCart();
+  });
+}
+
+// ── Coupon ────────────────────────────────────────────────────
 function applyCoupon() {
   const input = document.getElementById('coupon-input');
-  if (!input) return;
-  const code = input.value.trim().toUpperCase();
+  const code  = (input?.value || '').trim().toUpperCase();
+  const valid = { VELVET10:10, BEAUTY20:20, VIP30:30, FIRST15:15 };
+  if (!code) { VBToast.show('Please enter a coupon code', 'warning'); return; }
+  if (!valid[code]) { VBToast.show('Invalid coupon code', 'error'); return; }
+  activeCoupon = code;
+  document.getElementById('coupon-normal').classList.add('hidden');
+  document.getElementById('coupon-applied').classList.remove('hidden');
+  document.getElementById('applied-code-name').textContent = code;
+  document.getElementById('applied-disc-text').textContent = valid[code] + '%';
+  VBToast.show(`Coupon ${code} applied — ${valid[code]}% off! 🎉`, 'success');
+  updateSummary();
+}
 
-  if (!code) { showToast('Enter a coupon code', 'warning'); return; }
-  if (COUPONS[code]) {
-    appliedCoupon = { code, percent: COUPONS[code] };
-    showToast(`Coupon "${code}" applied! ${COUPONS[code]}% off 🎉`, 'success');
-    if (typeof renderCartSummary === 'function') renderCartSummary();
+function removeCoupon() {
+  activeCoupon = null;
+  document.getElementById('coupon-normal').classList.remove('hidden');
+  document.getElementById('coupon-applied').classList.add('hidden');
+  document.getElementById('coupon-input').value = '';
+  VBToast.show('Coupon removed', 'info');
+  updateSummary();
+}
+
+// ── Summary ───────────────────────────────────────────────────
+function updateSummary() {
+  const t = VBCart.totals(activeCoupon);
+
+  document.getElementById('os-item-count').textContent = VBCart.get().length;
+  document.getElementById('os-subtotal').textContent   = fmtPrice(t.subtotal);
+  document.getElementById('os-delivery').textContent   = t.deliveryFee === 0 ? '🎁 Free' : fmtPrice(t.deliveryFee);
+  document.getElementById('os-total').textContent      = fmtPrice(t.total);
+
+  const discRow = document.getElementById('os-disc-row');
+  const discEl  = document.getElementById('os-disc');
+  if (t.discount > 0) {
+    discRow.style.display = '';
+    discEl.textContent = `−${fmtPrice(t.discount)}`;
   } else {
-    showToast('Invalid coupon code', 'error');
+    discRow.style.display = 'none';
   }
 }
 
-/* ── Init: run on every page ── */
-document.addEventListener('DOMContentLoaded', () => {
-  updateCartBadge();
-
-  /* Sticky navbar scroll effect */
-  const navbar = document.getElementById('navbar');
-  if (navbar) {
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 10);
-    });
-  }
-
-  /* Mobile nav toggle */
-  const toggle = document.getElementById('nav-toggle');
-  const menu   = document.getElementById('mobile-menu');
-  if (toggle && menu) {
-    toggle.addEventListener('click', () => {
-      toggle.classList.toggle('open');
-      menu.classList.toggle('open');
-    });
-  }
-
-  /* Close mobile menu on outside click */
-  document.addEventListener('click', (e) => {
-    if (menu && toggle && !menu.contains(e.target) && !toggle.contains(e.target)) {
-      menu.classList.remove('open');
-      toggle.classList.remove('open');
-    }
-  });
-});
+// ── Checkout ──────────────────────────────────────────────────
+function goCheckout() {
+  if (!VBCart.get().length) { VBToast.show('Your cart is empty', 'warning'); return; }
+  // Pass coupon in session storage for checkout
+  if (activeCoupon) sessionStorage.setItem('vb_coupon', activeCoupon);
+  else sessionStorage.removeItem('vb_coupon');
+  window.location.href = 'checkout.html';
+}

@@ -1,112 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Checkout — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css" />
-  <link rel="stylesheet" href="../public/css/main.css" />
-  <link rel="stylesheet" href="../public/css/checkout.css" />
+  <link rel="stylesheet" href="../public/css/variables.css"/>
+  <link rel="stylesheet" href="../public/css/main.css"/>
+  <link rel="stylesheet" href="../public/css/checkout.css"/>
 </head>
-<body class="page-body">
+<body>
+<div id="toast-container"></div>
 
-  <!-- NAVBAR -->
-  <nav class="navbar" id="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <a href="index.html" class="navbar-logo">
-          <svg class="navbar-logo-svg" viewBox="0 0 38 38" fill="none">
-            <circle cx="19" cy="19" r="18" fill="#4A1A40"/>
-            <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
-            <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
-            <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
-            <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
-          </svg>
-          <div class="navbar-logo-text">
-            <span class="brand-name">Velvet Beauty</span>
-            <span class="brand-tagline">Luxury Cosmetics</span>
-          </div>
+<nav class="navbar solid" id="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <svg class="logo-svg" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" fill="#4A1A40"/><ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/><ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/><rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/><circle cx="19" cy="29" r="2" fill="#E91E8C"/></svg>
+        <div class="logo-text"><span class="logo-name">Velvet Beauty</span><span class="logo-tag">Luxury Cosmetics</span></div>
+      </a>
+      <ul class="navbar-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <a href="cart.html" class="nav-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="nav-badge" id="cart-count" style="display:none">0</span>
         </a>
-        <div class="navbar-actions">
-          <a href="cart.html" class="nav-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg><span class="nav-badge" id="cart-count">0</span></a>
+        <div class="nav-dropdown-wrap">
+          <a href="login.html" class="nav-icon-btn" id="account-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </a>
+          <div class="nav-dropdown" id="user-dropdown"></div>
         </div>
+        <button class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></button>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <!-- CHECKOUT PAGE -->
-  <div class="checkout-page">
-    <div class="container">
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">🏠 Home</a>
+  <a href="shop.html">🛍️ Shop</a>
+  <a href="cart.html">🛒 Cart</a>
+</div>
 
-      <nav class="breadcrumb">
-        <a href="index.html">Home</a><span class="breadcrumb-sep">›</span>
-        <a href="cart.html">Cart</a><span class="breadcrumb-sep">›</span>
-        <span class="current">Checkout</span>
-      </nav>
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="container">
+    <div class="page-hero-eyebrow">Almost There</div>
+    <h1 class="page-hero-title">Secure <em>Checkout</em></h1>
+    <p class="page-hero-sub">Complete your order safely and quickly.</p>
+  </div>
+</div>
 
-      <h1 class="checkout-title">Checkout</h1>
+<!-- CHECKOUT SECTION -->
+<section class="checkout-section">
+  <div class="container">
 
-      <!-- Steps -->
-      <div class="checkout-steps">
-        <div class="checkout-step done" id="step-cart">
-          <div class="checkout-step-circle">✓</div>
-          <span class="checkout-step-name">Cart</span>
-        </div>
-        <div class="checkout-step-line"></div>
-        <div class="checkout-step active" id="step-shipping">
-          <div class="checkout-step-circle">2</div>
-          <span class="checkout-step-name">Shipping</span>
-        </div>
-        <div class="checkout-step-line"></div>
-        <div class="checkout-step" id="step-confirm">
-          <div class="checkout-step-circle">3</div>
-          <span class="checkout-step-name">Confirm</span>
-        </div>
+    <!-- Steps -->
+    <div class="checkout-steps" id="checkout-steps">
+      <div class="step-item active" id="step-1">
+        <div class="step-circle">1</div>
+        <span class="step-label">Address</span>
       </div>
+      <div class="step-item" id="step-2">
+        <div class="step-circle">2</div>
+        <span class="step-label">Delivery</span>
+      </div>
+      <div class="step-item" id="step-3">
+        <div class="step-circle">3</div>
+        <span class="step-label">Payment</span>
+      </div>
+      <div class="step-item" id="step-4">
+        <div class="step-circle">4</div>
+        <span class="step-label">Review</span>
+      </div>
+    </div>
 
-      <!-- Checkout Layout -->
-      <div class="checkout-layout">
+    <div class="checkout-layout">
+      <!-- Left: Form panels -->
+      <div>
 
-        <!-- Form Panel -->
-        <div>
-          <!-- Contact Info -->
-          <div class="checkout-form-panel" style="margin-bottom:1.5rem;">
-            <h3 class="checkout-section-title">Contact Information</h3>
-            <div class="checkout-form-row">
-              <div class="form-group">
-                <label class="form-label">First Name *</label>
-                <input type="text" class="form-input" id="first-name" placeholder="Ayesha" />
-                <span class="form-error hidden" id="err-first-name">Required</span>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Last Name *</label>
-                <input type="text" class="form-input" id="last-name" placeholder="Khan" />
-                <span class="form-error hidden" id="err-last-name">Required</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Phone Number *</label>
-              <input type="tel" class="form-input" id="phone" placeholder="03XX-XXXXXXX" />
-              <span class="form-error hidden" id="err-phone">Enter valid phone number</span>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email Address</label>
-              <input type="email" class="form-input" id="email" placeholder="ayesha@example.com" />
-            </div>
+        <!-- Step 1: Address -->
+        <div class="checkout-panel" id="panel-address">
+          <div class="cp-head">
+            <div class="cp-num">1</div>
+            <h3 class="cp-title">Delivery Address</h3>
           </div>
-
-          <!-- Shipping Address -->
-          <div class="checkout-form-panel" style="margin-bottom:1.5rem;">
-            <h3 class="checkout-section-title">Shipping Address</h3>
-            <div class="form-group">
-              <label class="form-label">Full Address *</label>
-              <input type="text" class="form-input" id="address" placeholder="House #, Street, Area" />
-              <span class="form-error hidden" id="err-address">Required</span>
-            </div>
-            <div class="checkout-form-row">
+          <div class="cp-body">
+            <div class="form-row form-row-2">
               <div class="form-group">
-                <label class="form-label">City *</label>
-                <select class="form-select" id="city">
+                <label class="form-label">Full Name <span class="req">*</span></label>
+                <input class="form-input" id="addr-name" placeholder="Sara Khan" required/>
+                <span class="form-error" id="err-name">Please enter your name</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number <span class="req">*</span></label>
+                <input class="form-input" id="addr-phone" placeholder="03XX-XXXXXXX" required/>
+                <span class="form-error" id="err-phone">Please enter a valid phone number</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Street Address <span class="req">*</span></label>
+              <input class="form-input" id="addr-street" placeholder="House #, Street, Area" required/>
+              <span class="form-error" id="err-street">Please enter your address</span>
+            </div>
+            <div class="form-row form-row-2">
+              <div class="form-group">
+                <label class="form-label">City <span class="req">*</span></label>
+                <select class="form-select" id="addr-city" required>
                   <option value="">Select City</option>
                   <option>Karachi</option>
                   <option>Lahore</option>
@@ -116,122 +119,149 @@
                   <option>Multan</option>
                   <option>Peshawar</option>
                   <option>Quetta</option>
+                  <option>Sialkot</option>
+                  <option>Hyderabad</option>
                   <option>Other</option>
                 </select>
-                <span class="form-error hidden" id="err-city">Select a city</span>
+                <span class="form-error" id="err-city">Please select your city</span>
               </div>
               <div class="form-group">
-                <label class="form-label">Province</label>
-                <select class="form-select" id="province">
-                  <option value="">Select Province</option>
-                  <option>Punjab</option>
-                  <option>Sindh</option>
-                  <option>KPK</option>
-                  <option>Balochistan</option>
-                </select>
+                <label class="form-label">Postal Code</label>
+                <input class="form-input" id="addr-postal" placeholder="75000"/>
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Order Notes (optional)</label>
-              <textarea class="form-textarea" id="order-notes" placeholder="Any special instructions for your order..."></textarea>
+              <label class="form-label">Order Notes (Optional)</label>
+              <textarea class="form-textarea" id="addr-notes" placeholder="Special instructions, landmarks, etc." rows="2"></textarea>
             </div>
           </div>
+        </div>
 
-          <!-- Delivery Options -->
-          <div class="checkout-form-panel">
-            <h3 class="checkout-section-title">Delivery Method</h3>
+        <!-- Step 2: Delivery -->
+        <div class="checkout-panel" id="panel-delivery">
+          <div class="cp-head">
+            <div class="cp-num">2</div>
+            <h3 class="cp-title">Delivery Method</h3>
+          </div>
+          <div class="cp-body">
             <div class="delivery-options">
-              <div class="delivery-option selected" data-delivery="standard" onclick="selectDelivery(this, 'standard', 0)">
-                <div class="delivery-option-left">
-                  <span class="delivery-option-icon">📦</span>
-                  <div>
-                    <div class="delivery-option-name">Standard Delivery</div>
-                    <div class="delivery-option-time">3–5 business days</div>
-                  </div>
+              <label class="delivery-opt">
+                <input type="radio" name="delivery" value="standard" checked/>
+                <span class="do-icon">🚚</span>
+                <div class="do-info">
+                  <div class="do-name">Standard Delivery</div>
+                  <div class="do-time">3–5 business days</div>
                 </div>
-                <span class="delivery-option-price" id="delivery-std-price">Free</span>
-              </div>
-              <div class="delivery-option" data-delivery="express" onclick="selectDelivery(this, 'express', 299)">
-                <div class="delivery-option-left">
-                  <span class="delivery-option-icon">⚡</span>
-                  <div>
-                    <div class="delivery-option-name">Express Delivery</div>
-                    <div class="delivery-option-time">1–2 business days</div>
-                  </div>
+                <span class="do-price" id="do-price-std">Rs. 200</span>
+              </label>
+              <label class="delivery-opt">
+                <input type="radio" name="delivery" value="express"/>
+                <span class="do-icon">⚡</span>
+                <div class="do-info">
+                  <div class="do-name">Express Delivery</div>
+                  <div class="do-time">1–2 business days</div>
                 </div>
-                <span class="delivery-option-price">Rs. 299</span>
-              </div>
+                <span class="do-price">Rs. 400</span>
+              </label>
+              <label class="delivery-opt">
+                <input type="radio" name="delivery" value="sameday"/>
+                <span class="do-icon">🏃</span>
+                <div class="do-info">
+                  <div class="do-name">Same Day (Karachi only)</div>
+                  <div class="do-time">Order before 2 PM</div>
+                </div>
+                <span class="do-price">Rs. 600</span>
+              </label>
             </div>
-
-            <!-- Payment Method -->
-            <h3 class="checkout-section-title" style="margin-top:2rem;">Payment Method</h3>
-            <div class="delivery-options">
-              <div class="delivery-option selected" data-pay="cod" onclick="selectPayment(this, 'cod')">
-                <div class="delivery-option-left">
-                  <span class="delivery-option-icon">💵</span>
-                  <div>
-                    <div class="delivery-option-name">Cash on Delivery</div>
-                    <div class="delivery-option-time">Pay when your order arrives</div>
-                  </div>
-                </div>
-              </div>
-              <div class="delivery-option" data-pay="card" onclick="selectPayment(this, 'card')">
-                <div class="delivery-option-left">
-                  <span class="delivery-option-icon">💳</span>
-                  <div>
-                    <div class="delivery-option-name">Credit / Debit Card</div>
-                    <div class="delivery-option-time">Secure online payment</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Place Order Button -->
-            <button class="btn btn-primary btn-lg w-full" style="margin-top:2rem;" onclick="placeOrder()">
-              Place Order →
-            </button>
-            <p style="text-align:center; font-size:0.75rem; color:var(--gray-400); margin-top:1rem;">
-              🔒 Your information is secure and encrypted
+            <p id="free-delivery-note" style="margin-top:0.75rem;font-size:0.82rem;color:var(--success);display:none;">
+              ✅ You qualify for free standard delivery!
             </p>
           </div>
         </div>
 
-        <!-- Order Review Sidebar -->
-        <div class="checkout-order-review">
-          <h3 class="order-review-title">Your Order</h3>
-
-          <div class="order-review-items" id="checkout-order-items">
-            <!-- JS renders items -->
+        <!-- Step 3: Payment -->
+        <div class="checkout-panel" id="panel-payment">
+          <div class="cp-head">
+            <div class="cp-num">3</div>
+            <h3 class="cp-title">Payment Method</h3>
           </div>
-
-          <hr class="divider" />
-
-          <div class="summary-line">
-            <span>Subtotal</span>
-            <span id="co-subtotal">Rs. 0</span>
-          </div>
-          <div class="summary-line discount" id="co-discount-row" style="display:none;">
-            <span>Discount</span>
-            <span id="co-discount">-Rs. 0</span>
-          </div>
-          <div class="summary-line">
-            <span>Delivery</span>
-            <span id="co-delivery">Free</span>
-          </div>
-          <div class="summary-line total">
-            <span>Total</span>
-            <span id="co-total">Rs. 0</span>
+          <div class="cp-body">
+            <div class="payment-options">
+              <label class="payment-opt">
+                <input type="radio" name="payment" value="cod" checked/>
+                <span class="po-icon">💵</span>
+                <div class="po-info">
+                  <div class="po-name">Cash on Delivery</div>
+                  <div class="po-desc">Pay when your order arrives</div>
+                </div>
+              </label>
+              <label class="payment-opt">
+                <input type="radio" name="payment" value="easypaisa"/>
+                <span class="po-icon">📱</span>
+                <div class="po-info">
+                  <div class="po-name">EasyPaisa</div>
+                  <div class="po-desc">Mobile wallet payment</div>
+                </div>
+              </label>
+              <label class="payment-opt">
+                <input type="radio" name="payment" value="jazzcash"/>
+                <span class="po-icon">🏦</span>
+                <div class="po-info">
+                  <div class="po-name">JazzCash</div>
+                  <div class="po-desc">Mobile wallet payment</div>
+                </div>
+              </label>
+              <label class="payment-opt">
+                <input type="radio" name="payment" value="bank"/>
+                <span class="po-icon">💳</span>
+                <div class="po-info">
+                  <div class="po-name">Bank Transfer</div>
+                  <div class="po-desc">Online banking / card</div>
+                </div>
+              </label>
+            </div>
           </div>
         </div>
 
-      </div><!-- end checkout-layout -->
+        <!-- Place Order Button -->
+        <button class="btn btn-primary btn-full btn-xl" id="place-order-btn" onclick="placeOrder()">
+          Place Order 🎉
+        </button>
+        <p style="text-align:center;margin-top:0.75rem;font-size:0.78rem;color:var(--g400);">
+          🔒 Your order and payment info is 100% secure
+        </p>
+      </div>
+
+      <!-- Right: Order Summary -->
+      <div class="checkout-summary">
+        <h3 class="cs-title">Order Review</h3>
+        <div class="cs-items" id="cs-items"></div>
+        <div class="cs-row">
+          <span class="cs-row-label">Subtotal</span>
+          <span class="cs-row-val" id="cs-subtotal">Rs. 0</span>
+        </div>
+        <div class="cs-row" id="cs-disc-row" style="display:none">
+          <span class="cs-row-label">Discount</span>
+          <span class="cs-row-disc" id="cs-disc">−Rs. 0</span>
+        </div>
+        <div class="cs-row">
+          <span class="cs-row-label">Delivery</span>
+          <span class="cs-row-val" id="cs-delivery">Rs. 200</span>
+        </div>
+        <div class="cs-total-row">
+          <span class="cs-total-label">Total</span>
+          <span class="cs-total-val" id="cs-total">Rs. 0</span>
+        </div>
+        <div style="margin-top:1rem;padding:0.75rem;background:var(--success-bg);border-radius:var(--r-md);font-size:0.78rem;color:var(--success);">
+          ✅ Free returns within 7 days
+        </div>
+      </div>
     </div>
+
   </div>
+</section>
 
-  <div class="toast-container" id="toast-container"></div>
-
-  <script src="../public/js/products-data.js"></script>
-  <script src="../public/js/cart.js"></script>
-  <script src="../public/js/checkout.js"></script>
+<script src="../public/js/store.js"></script>
+<script src="../public/js/checkout.js"></script>
 </body>
 </html>

@@ -1,549 +1,521 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Owner Dashboard — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css" />
-  <link rel="stylesheet" href="../public/css/dashboard-owner.css" />
+  <link rel="stylesheet" href="../public/css/variables.css"/>
+  <link rel="stylesheet" href="../public/css/main.css"/>
+  <link rel="stylesheet" href="../public/css/dashboard.css"/>
 </head>
-<body class="dashboard-body">
+<body>
+<div id="toast-container"></div>
 
-  <!-- ═══════════════════════════════════════
-       SIDEBAR
-  ═══════════════════════════════════════ -->
+<div class="dash-page">
+
+  <!-- ═══ SIDEBAR ═══ -->
   <aside class="dash-sidebar" id="dash-sidebar">
-    <!-- Logo -->
-    <div class="dash-sidebar-logo">
-      <svg class="dash-logo-svg" viewBox="0 0 38 38" fill="none">
-        <circle cx="19" cy="19" r="18" fill="rgba(255,255,255,0.10)"/>
-        <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
-        <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
-        <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
-        <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
-      </svg>
-      <div class="dash-logo-text">
-        <span class="brand">Velvet Beauty</span>
-        <span class="role">Owner Dashboard</span>
+    <div class="sidebar-logo">
+      <svg width="32" height="32" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" fill="rgba(255,255,255,0.15)"/><ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/><ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/><rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/></svg>
+      <div class="sidebar-logo-text">
+        <div class="sidebar-logo-name">Velvet Beauty</div>
+        <div class="sidebar-logo-role">👑 Owner Panel</div>
       </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="dash-nav">
-      <!-- Overview -->
-      <div class="dash-nav-section">
-        <span class="dash-nav-section-label">Overview</span>
-        <button class="dash-nav-item active" onclick="showPanel('overview', this)">
-          <span class="dash-nav-icon">📊</span> Dashboard
-        </button>
+    <div class="sidebar-user">
+      <div class="sidebar-user-inner">
+        <div class="sidebar-avatar" id="sb-avatar">O</div>
+        <div>
+          <div class="sidebar-user-name" id="sb-name">Owner</div>
+          <div class="sidebar-user-role">owner</div>
+        </div>
       </div>
+    </div>
 
-      <!-- Orders -->
-      <div class="dash-nav-section">
-        <span class="dash-nav-section-label">Sales</span>
-        <button class="dash-nav-item" onclick="showPanel('orders', this)">
-          <span class="dash-nav-icon">📦</span> Orders
-          <span class="dash-nav-badge" id="pending-badge">0</span>
-        </button>
-        <button class="dash-nav-item" onclick="showPanel('analytics', this)">
-          <span class="dash-nav-icon">📈</span> Analytics
-        </button>
-      </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Main</div>
+      <button class="sidebar-link active" data-section="overview" onclick="showSection('overview',this)">
+        <span class="sl-icon">📊</span> Overview
+      </button>
+      <button class="sidebar-link" data-section="orders" onclick="showSection('orders',this)">
+        <span class="sl-icon">📦</span> Orders
+        <span class="sl-badge" id="sb-pending-count">0</span>
+      </button>
+      <button class="sidebar-link" data-section="products" onclick="showSection('products',this)">
+        <span class="sl-icon">💄</span> Products
+      </button>
+      <button class="sidebar-link" data-section="customers" onclick="showSection('customers',this)">
+        <span class="sl-icon">👥</span> Customers
+      </button>
+      <button class="sidebar-link" data-section="reviews" onclick="showSection('reviews',this)">
+        <span class="sl-icon">⭐</span> Reviews
+      </button>
 
-      <!-- Products -->
-      <div class="dash-nav-section">
-        <span class="dash-nav-section-label">Catalogue</span>
-        <button class="dash-nav-item" onclick="showPanel('products', this)">
-          <span class="dash-nav-icon">💄</span> Products
-        </button>
-        <button class="dash-nav-item" onclick="showPanel('add-product', this)">
-          <span class="dash-nav-icon">➕</span> Add Product
-        </button>
-        <button class="dash-nav-item" onclick="showPanel('reviews', this)">
-          <span class="dash-nav-icon">⭐</span> Reviews
-        </button>
-      </div>
-
-      <!-- Customers (Owner only) -->
-      <div class="dash-nav-section">
-        <span class="dash-nav-section-label">Customers</span>
-        <button class="dash-nav-item" onclick="showPanel('customers', this)">
-          <span class="dash-nav-icon">👥</span> Customers
-        </button>
-      </div>
-
-      <!-- Store -->
-      <div class="dash-nav-section">
-        <span class="dash-nav-section-label">Store</span>
-        <a href="index.html" class="dash-nav-item" target="_blank">
-          <span class="dash-nav-icon">🌐</span> View Store
-        </a>
-        <button class="dash-nav-item" onclick="showPanel('settings', this)">
-          <span class="dash-nav-icon">⚙️</span> Settings
-        </button>
-      </div>
+      <div class="sidebar-section-label" style="margin-top:1rem;">Analytics</div>
+      <button class="sidebar-link" data-section="analytics" onclick="showSection('analytics',this)">
+        <span class="sl-icon">📈</span> Analytics
+      </button>
+      <button class="sidebar-link" data-section="settings" onclick="showSection('settings',this)">
+        <span class="sl-icon">⚙️</span> Settings
+      </button>
     </nav>
 
-    <!-- User Info -->
-    <div class="dash-sidebar-footer">
-      <div class="dash-user-info">
-        <div class="dash-user-avatar" id="sidebar-avatar">O</div>
-        <div>
-          <div class="dash-user-name" id="sidebar-name">Owner</div>
-          <div class="dash-user-role">Administrator</div>
-        </div>
-        <button class="dash-logout-btn" onclick="logoutUser()" title="Logout">⏻</button>
-      </div>
+    <div class="sidebar-bottom">
+      <a href="index.html" class="sidebar-visit-site"><span class="sl-icon">🌐</span> Visit Store</a>
+      <button class="sidebar-logout" onclick="doLogout()"><span class="sl-icon">🚪</span> Logout</button>
     </div>
   </aside>
 
-  <!-- Sidebar Overlay (mobile) -->
-  <div class="dash-sidebar-overlay" id="dash-sidebar-overlay" onclick="closeSidebar()"></div>
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
-  <!-- ═══════════════════════════════════════
-       MAIN CONTENT
-  ═══════════════════════════════════════ -->
+  <!-- ═══ MAIN ═══ -->
   <main class="dash-main">
-
-    <!-- Top Bar -->
     <div class="dash-topbar">
-      <div style="display:flex; align-items:center; gap:1rem;">
-        <button class="dash-sidebar-toggle" id="dash-sidebar-toggle" onclick="toggleSidebar()">☰</button>
-        <h1 class="dash-topbar-title" id="topbar-title">Dashboard</h1>
+      <div class="topbar-left">
+        <button class="mob-menu-btn" onclick="openSidebar()">☰</button>
+        <span class="topbar-page-title" id="topbar-title">Overview</span>
       </div>
-      <div class="dash-topbar-right">
-        <div class="dash-search">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" placeholder="Search..." id="dash-search-input" oninput="dashSearch(this.value)" />
-        </div>
-        <button class="dash-notif-btn" title="Notifications">
-          🔔
-          <span class="dash-notif-dot"></span>
-        </button>
-        <div class="dash-user-avatar" style="width:36px;height:36px;font-size:0.875rem;" id="topbar-avatar">O</div>
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbar-date"></span>
+        <span class="status-badge s-vip">👑 Owner</span>
       </div>
     </div>
 
-    <!-- Content Panels -->
     <div class="dash-content">
 
-      <!-- ══════ OVERVIEW PANEL ══════ -->
-      <div class="dash-panel active" id="panel-overview">
-
-        <!-- Stats Grid -->
+      <!-- ═══════════ OVERVIEW ═══════════ -->
+      <div class="dash-section active" id="section-overview">
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-card-top">
-              <div class="stat-card-icon stat-icon-pink">💰</div>
-              <div class="stat-card-trend trend-up">↑ 18%</div>
-            </div>
-            <div class="stat-card-value" id="stat-revenue">Rs. 0</div>
-            <div class="stat-card-label">Total Revenue</div>
-            <div class="stat-card-sub">This month</div>
+            <div class="stat-icon stat-icon-pink">💰</div>
+            <div><div class="stat-val" id="stat-revenue">Rs.0</div><div class="stat-label">Total Revenue</div></div>
           </div>
           <div class="stat-card">
-            <div class="stat-card-top">
-              <div class="stat-card-icon stat-icon-plum">📦</div>
-              <div class="stat-card-trend trend-up">↑ 12%</div>
-            </div>
-            <div class="stat-card-value" id="stat-orders">0</div>
-            <div class="stat-card-label">Total Orders</div>
-            <div class="stat-card-sub" id="stat-pending-label">0 pending</div>
+            <div class="stat-icon stat-icon-plum">📦</div>
+            <div><div class="stat-val" id="stat-orders">0</div><div class="stat-label">Total Orders</div></div>
           </div>
           <div class="stat-card">
-            <div class="stat-card-top">
-              <div class="stat-card-icon stat-icon-rose">💄</div>
-              <div class="stat-card-trend trend-up">↑ 5%</div>
-            </div>
-            <div class="stat-card-value" id="stat-products">0</div>
-            <div class="stat-card-label">Products</div>
-            <div class="stat-card-sub">Active items</div>
+            <div class="stat-icon stat-icon-rose">👥</div>
+            <div><div class="stat-val" id="stat-customers">0</div><div class="stat-label">Customers</div></div>
           </div>
           <div class="stat-card">
-            <div class="stat-card-top">
-              <div class="stat-card-icon stat-icon-success">👥</div>
-              <div class="stat-card-trend trend-up">↑ 24%</div>
-            </div>
-            <div class="stat-card-value" id="stat-customers">0</div>
-            <div class="stat-card-label">Customers</div>
-            <div class="stat-card-sub">Total registered</div>
+            <div class="stat-icon stat-icon-green">💄</div>
+            <div><div class="stat-val" id="stat-products-count">0</div><div class="stat-label">Products</div></div>
           </div>
         </div>
 
-        <!-- Charts -->
-        <div class="charts-grid">
-          <!-- Revenue chart -->
-          <div class="chart-card">
-            <div class="chart-card-header">
-              <div>
-                <div class="chart-card-title">Revenue Overview</div>
-                <div class="chart-card-subtitle">Monthly revenue trend</div>
+        <!-- Revenue chart -->
+        <div class="analytics-grid">
+          <div class="dash-panel">
+            <div class="dash-panel-head">
+              <span class="dash-panel-title">Monthly Revenue</span>
+            </div>
+            <div class="dash-panel-body">
+              <div class="chart-bars" id="overview-chart"></div>
+            </div>
+          </div>
+          <div class="dash-panel">
+            <div class="dash-panel-head">
+              <span class="dash-panel-title">Sales by Category</span>
+            </div>
+            <div class="dash-panel-body">
+              <div class="analytics-summary-list" id="cat-summary"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent orders -->
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Recent Orders</span>
+            <button class="btn btn-sm btn-outline" onclick="showSection('orders',null)">View All</button>
+          </div>
+          <div class="dash-panel-body no-pad">
+            <div class="vb-table-wrap">
+              <table class="vb-table" id="recent-orders-table">
+                <thead><tr><th>Order ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+                <tbody id="recent-orders-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ ORDERS ═══════════ -->
+      <div class="dash-section" id="section-orders">
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">All Orders</span>
+          </div>
+          <div class="panel-toolbar">
+            <div class="panel-search-wrap">
+              <span class="panel-search-icon">🔍</span>
+              <input class="panel-search" id="orders-search" placeholder="Search by order ID or customer..." oninput="renderOrders()"/>
+            </div>
+            <select class="panel-filter-select" id="orders-status-filter" onchange="renderOrders()">
+              <option value="">All Status</option>
+              <option value="processing">Processing</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="dash-panel-body no-pad">
+            <div class="vb-table-wrap">
+              <table class="vb-table">
+                <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+                <tbody id="orders-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ PRODUCTS ═══════════ -->
+      <div class="dash-section" id="section-products">
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Products</span>
+            <button class="btn btn-primary btn-sm" onclick="openProductModal(null)">+ Add Product</button>
+          </div>
+          <div class="panel-toolbar">
+            <div class="panel-search-wrap">
+              <span class="panel-search-icon">🔍</span>
+              <input class="panel-search" id="products-search" placeholder="Search products..." oninput="renderProducts()"/>
+            </div>
+            <select class="panel-filter-select" id="products-cat-filter" onchange="renderProducts()">
+              <option value="">All Categories</option>
+              <option>Lips</option><option>Face</option><option>Eyes</option>
+              <option>Cheeks</option><option>Skincare</option>
+            </select>
+          </div>
+          <div class="dash-panel-body no-pad">
+            <div class="vb-table-wrap">
+              <table class="vb-table">
+                <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Rating</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="products-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ CUSTOMERS ═══════════ -->
+      <div class="dash-section" id="section-customers">
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Customers</span>
+          </div>
+          <div class="panel-toolbar">
+            <div class="panel-search-wrap">
+              <span class="panel-search-icon">🔍</span>
+              <input class="panel-search" id="customers-search" placeholder="Search customers..." oninput="renderCustomers()"/>
+            </div>
+            <select class="panel-filter-select" id="customers-type-filter" onchange="renderCustomers()">
+              <option value="">All Types</option>
+              <option value="vip">VIP</option>
+              <option value="regular">Regular</option>
+              <option value="new">New</option>
+            </select>
+          </div>
+          <div class="dash-panel-body no-pad">
+            <div class="vb-table-wrap">
+              <table class="vb-table">
+                <thead><tr><th>Customer</th><th>Phone</th><th>City</th><th>Orders</th><th>Total Spent</th><th>Type</th><th>Actions</th></tr></thead>
+                <tbody id="customers-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ REVIEWS ═══════════ -->
+      <div class="dash-section" id="section-reviews">
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Customer Reviews</span>
+          </div>
+          <div class="panel-toolbar">
+            <div class="panel-search-wrap">
+              <span class="panel-search-icon">🔍</span>
+              <input class="panel-search" id="reviews-search" placeholder="Search reviews..." oninput="renderReviews()"/>
+            </div>
+            <select class="panel-filter-select" id="reviews-rating-filter" onchange="renderReviews()">
+              <option value="">All Ratings</option>
+              <option value="5">★★★★★ 5 Stars</option>
+              <option value="4">★★★★☆ 4 Stars</option>
+              <option value="3">★★★☆☆ 3 Stars</option>
+              <option value="2">★★☆☆☆ 2 Stars</option>
+              <option value="1">★☆☆☆☆ 1 Star</option>
+            </select>
+          </div>
+          <div class="dash-panel-body no-pad">
+            <div class="vb-table-wrap">
+              <table class="vb-table">
+                <thead><tr><th>Customer</th><th>Product</th><th>Rating</th><th>Review</th><th>Date</th><th>Actions</th></tr></thead>
+                <tbody id="reviews-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ ANALYTICS ═══════════ -->
+      <div class="dash-section" id="section-analytics">
+        <div class="stats-grid" style="margin-bottom:1.5rem;">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-pink">📈</div>
+            <div><div class="stat-val" id="anal-avg-monthly">Rs.0</div><div class="stat-label">Avg Monthly</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-plum">🛍️</div>
+            <div><div class="stat-val" id="anal-total-orders">0</div><div class="stat-label">Total Orders</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-rose">⭐</div>
+            <div><div class="stat-val" id="anal-avg-rating">0</div><div class="stat-label">Avg Rating</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-green">💰</div>
+            <div><div class="stat-val" id="anal-total-rev">Rs.0</div><div class="stat-label">Total Revenue</div></div>
+          </div>
+        </div>
+
+        <div class="dash-panel">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Monthly Performance</span>
+          </div>
+          <div class="dash-panel-body no-pad">
+            <div class="vb-table-wrap">
+              <table class="vb-table">
+                <thead><tr><th>Month</th><th>Revenue</th><th>Orders</th><th>New Customers</th><th>Avg Order</th></tr></thead>
+                <tbody id="analytics-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ SETTINGS ═══════════ -->
+      <div class="dash-section" id="section-settings">
+        <div class="dash-panel" style="max-width:560px;">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Store Settings</span>
+          </div>
+          <div class="dash-panel-body">
+            <div class="form-group">
+              <label class="form-label">Employee Access Code</label>
+              <div class="pw-wrap">
+                <input class="form-input" id="set-emp-code" type="password" value="EMP2025" placeholder="Employee code"/>
+                <button type="button" class="pw-toggle" onclick="togglePwOwner('set-emp-code',this)">👁️</button>
               </div>
-              <div class="chart-period-tabs">
-                <button class="chart-period-tab active">6M</button>
-                <button class="chart-period-tab">1Y</button>
+              <span class="form-hint">Employees use this code to register/login.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Owner Access Code</label>
+              <div class="pw-wrap">
+                <input class="form-input" id="set-owner-code" type="password" value="OWNER2025" placeholder="Owner code"/>
+                <button type="button" class="pw-toggle" onclick="togglePwOwner('set-owner-code',this)">👁️</button>
               </div>
+              <span class="form-hint">Owner code to access this dashboard.</span>
             </div>
-            <div class="mini-bar-chart" id="revenue-chart">
-              <!-- Bars rendered by JS -->
+            <div class="form-group">
+              <label class="form-label">Free Delivery Minimum (Rs.)</label>
+              <input class="form-input" id="set-free-delivery" type="number" value="2000" min="0"/>
             </div>
-            <div style="display:flex; gap:0.5rem; margin-top:0.75rem; overflow-x:auto;" id="chart-labels"></div>
-          </div>
-
-          <!-- Category donut -->
-          <div class="chart-card">
-            <div class="chart-card-header">
-              <div>
-                <div class="chart-card-title">Sales by Category</div>
-                <div class="chart-card-subtitle">Product breakdown</div>
-              </div>
+            <div class="form-group">
+              <label class="form-label">Standard Delivery Fee (Rs.)</label>
+              <input class="form-input" id="set-delivery-fee" type="number" value="200" min="0"/>
             </div>
-            <div class="donut-chart-wrap">
-              <svg class="donut-svg" viewBox="0 0 120 120" id="donut-svg">
-                <!-- Rendered by JS -->
-              </svg>
-              <div class="donut-center">
-                <span class="donut-center-value" id="donut-total">0</span>
-                <span class="donut-center-label">Orders</span>
-              </div>
-            </div>
-            <div class="donut-legend" id="donut-legend"></div>
+            <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
           </div>
         </div>
 
-        <!-- Recent Orders table -->
-        <div class="table-card">
-          <div class="table-card-header">
-            <h3 class="table-card-title">Recent Orders</h3>
-            <div class="table-card-actions">
-              <button class="btn btn-ghost btn-sm" onclick="showPanel('orders', document.querySelector('[onclick*=orders]'))">View All →</button>
+        <!-- Active Coupon Codes info -->
+        <div class="dash-panel" style="max-width:560px;margin-top:1.5rem;">
+          <div class="dash-panel-head">
+            <span class="dash-panel-title">Promo Codes</span>
+          </div>
+          <div class="dash-panel-body">
+            <div class="vb-table-wrap">
+              <table class="vb-table">
+                <thead><tr><th>Code</th><th>Discount</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><b>VELVET10</b></td><td>10%</td><td><span class="status-badge s-delivered">Active</span></td></tr>
+                  <tr><td><b>BEAUTY20</b></td><td>20%</td><td><span class="status-badge s-delivered">Active</span></td></tr>
+                  <tr><td><b>VIP30</b></td><td>30%</td><td><span class="status-badge s-delivered">Active</span></td></tr>
+                  <tr><td><b>FIRST15</b></td><td>15%</td><td><span class="status-badge s-delivered">Active</span></td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
-          <table class="dash-table" id="recent-orders-table">
-            <thead>
-              <tr>
-                <th>Order #</th>
-                <th>Customer</th>
-                <th>Items</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="recent-orders-tbody">
-              <!-- JS renders rows -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Activity Feed -->
-        <div class="table-card">
-          <div class="table-card-header">
-            <h3 class="table-card-title">Recent Activity</h3>
-          </div>
-          <div class="activity-list" id="activity-list">
-            <!-- JS renders activity -->
-          </div>
-        </div>
-
-      </div><!-- end overview -->
-
-      <!-- ══════ ORDERS PANEL ══════ -->
-      <div class="dash-panel" id="panel-orders">
-        <div class="table-card">
-          <div class="table-card-header">
-            <h3 class="table-card-title">All Orders</h3>
-            <div class="table-card-actions">
-              <select class="dash-form-select" style="width:auto;" onchange="filterOrders(this.value)">
-                <option value="all">All Status</option>
-                <option value="processing">Processing</option>
-                <option value="shipped">Shipped</option>
-                <option value="delivered">Delivered</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
-              <input type="text" class="dash-form-input" style="width:200px;" placeholder="🔍 Search orders..." oninput="searchOrders(this.value)" />
-            </div>
-          </div>
-          <table class="dash-table">
-            <thead>
-              <tr>
-                <th>Order #</th>
-                <th>Customer</th>
-                <th>City</th>
-                <th>Items</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="orders-tbody">
-              <!-- JS renders -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ══════ ANALYTICS PANEL ══════ -->
-      <div class="dash-panel" id="panel-analytics">
-        <div class="stats-grid" style="margin-bottom:2rem;">
-          <div class="stat-card">
-            <div class="stat-card-top"><div class="stat-card-icon stat-icon-pink">💰</div></div>
-            <div class="stat-card-value" id="a-total-rev">Rs. 0</div>
-            <div class="stat-card-label">Total Revenue (All Time)</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-card-top"><div class="stat-card-icon stat-icon-plum">📦</div></div>
-            <div class="stat-card-value" id="a-total-orders">0</div>
-            <div class="stat-card-label">Total Orders</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-card-top"><div class="stat-card-icon stat-icon-rose">📊</div></div>
-            <div class="stat-card-value" id="a-avg-order">Rs. 0</div>
-            <div class="stat-card-label">Avg. Order Value</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-card-top"><div class="stat-card-icon stat-icon-success">🔄</div></div>
-            <div class="stat-card-value" id="a-conversion">0%</div>
-            <div class="stat-card-label">Fulfilment Rate</div>
-          </div>
-        </div>
-
-        <div class="table-card">
-          <div class="table-card-header"><h3 class="table-card-title">Monthly Analytics</h3></div>
-          <table class="dash-table">
-            <thead>
-              <tr><th>Month</th><th>Revenue</th><th>Orders</th><th>New Customers</th><th>Avg. Order Value</th></tr>
-            </thead>
-            <tbody id="analytics-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ══════ PRODUCTS PANEL ══════ -->
-      <div class="dash-panel" id="panel-products">
-        <div class="table-card">
-          <div class="table-card-header">
-            <h3 class="table-card-title">All Products</h3>
-            <div class="table-card-actions">
-              <select class="dash-form-select" style="width:auto;" onchange="filterProducts(this.value)">
-                <option value="all">All Categories</option>
-                <option value="Lips">Lips</option>
-                <option value="Face">Face</option>
-                <option value="Eyes">Eyes</option>
-                <option value="Cheeks">Cheeks</option>
-                <option value="Skincare">Skincare</option>
-              </select>
-              <input type="text" class="dash-form-input" style="width:200px;" placeholder="🔍 Search..." oninput="searchProducts(this.value)" />
-              <button class="btn btn-primary btn-sm product-add-btn" onclick="showPanel('add-product', null)">+ Add Product</button>
-            </div>
-          </div>
-          <table class="dash-table">
-            <thead>
-              <tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Sold</th><th>Rating</th><th>Status</th><th>Actions</th></tr>
-            </thead>
-            <tbody id="products-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ══════ ADD/EDIT PRODUCT PANEL ══════ -->
-      <div class="dash-panel" id="panel-add-product">
-        <div class="form-card">
-          <h3 class="form-card-title" id="product-form-title">Add New Product</h3>
-
-          <div class="form-grid-2">
-            <div class="dash-form-group">
-              <label class="dash-form-label">Product Name *</label>
-              <input type="text" class="dash-form-input" id="pf-name" placeholder="e.g. Velvet Red Matte Lipstick" />
-            </div>
-            <div class="dash-form-group">
-              <label class="dash-form-label">Category *</label>
-              <select class="dash-form-select" id="pf-category">
-                <option value="">Select Category</option>
-                <option value="Lips">Lips</option>
-                <option value="Face">Face</option>
-                <option value="Eyes">Eyes</option>
-                <option value="Cheeks">Cheeks</option>
-                <option value="Skincare">Skincare</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-grid-3">
-            <div class="dash-form-group">
-              <label class="dash-form-label">Price (Rs.) *</label>
-              <input type="number" class="dash-form-input" id="pf-price" placeholder="1299" min="0" />
-            </div>
-            <div class="dash-form-group">
-              <label class="dash-form-label">Original Price (Rs.)</label>
-              <input type="number" class="dash-form-input" id="pf-original-price" placeholder="1799" min="0" />
-            </div>
-            <div class="dash-form-group">
-              <label class="dash-form-label">Stock *</label>
-              <input type="number" class="dash-form-input" id="pf-stock" placeholder="50" min="0" />
-            </div>
-          </div>
-
-          <div class="form-grid-2">
-            <div class="dash-form-group">
-              <label class="dash-form-label">Shade / Variant</label>
-              <input type="text" class="dash-form-input" id="pf-shade" placeholder="e.g. Classic Red" />
-            </div>
-            <div class="dash-form-group">
-              <label class="dash-form-label">Badge</label>
-              <select class="dash-form-select" id="pf-badge">
-                <option value="">No Badge</option>
-                <option value="New">New</option>
-                <option value="Sale">Sale</option>
-                <option value="Hot">Hot</option>
-                <option value="Bestseller">Bestseller</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="dash-form-group">
-            <label class="dash-form-label">Description</label>
-            <textarea class="dash-form-textarea" id="pf-description" placeholder="Product description..."></textarea>
-          </div>
-
-          <div class="form-grid-2">
-            <label class="toggle-switch">
-              <input type="checkbox" id="pf-is-new" />
-              <span class="toggle-track"></span>
-              <span class="toggle-label">Mark as New Arrival</span>
-            </label>
-            <label class="toggle-switch">
-              <input type="checkbox" id="pf-is-active" checked />
-              <span class="toggle-track"></span>
-              <span class="toggle-label">Active (visible on store)</span>
-            </label>
-          </div>
-
-          <div style="display:flex; gap:1rem; margin-top:2rem;">
-            <button class="btn btn-primary btn-lg" onclick="saveProduct()">Save Product</button>
-            <button class="btn btn-outline" onclick="showPanel('products', null)">Cancel</button>
-          </div>
-          <!-- Hidden edit id -->
-          <input type="hidden" id="pf-edit-id" value="" />
-        </div>
-      </div>
-
-      <!-- ══════ REVIEWS PANEL ══════ -->
-      <div class="dash-panel" id="panel-reviews">
-        <div class="table-card">
-          <div class="table-card-header">
-            <h3 class="table-card-title">Customer Reviews</h3>
-            <div class="table-card-actions">
-              <select class="dash-form-select" style="width:auto;" onchange="filterReviews(this.value)">
-                <option value="all">All Reviews</option>
-                <option value="5">5 Stars</option>
-                <option value="4">4 Stars</option>
-                <option value="3">3 Stars &amp; Below</option>
-              </select>
-            </div>
-          </div>
-          <table class="dash-table">
-            <thead>
-              <tr><th>Customer</th><th>Product</th><th>Rating</th><th>Review</th><th>Date</th><th>Actions</th></tr>
-            </thead>
-            <tbody id="reviews-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ══════ CUSTOMERS PANEL ══════ -->
-      <div class="dash-panel" id="panel-customers">
-        <div class="table-card">
-          <div class="table-card-header">
-            <h3 class="table-card-title">All Customers</h3>
-            <div class="table-card-actions">
-              <input type="text" class="dash-form-input" style="width:220px;" placeholder="🔍 Search customers..." oninput="searchCustomers(this.value)" />
-            </div>
-          </div>
-          <table class="dash-table">
-            <thead>
-              <tr><th>Customer</th><th>Email</th><th>Phone</th><th>City</th><th>Orders</th><th>Total Spent</th><th>Status</th><th>Joined</th></tr>
-            </thead>
-            <tbody id="customers-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ══════ SETTINGS PANEL ══════ -->
-      <div class="dash-panel" id="panel-settings">
-        <div class="form-card">
-          <h3 class="form-card-title">Store Settings</h3>
-          <div class="form-grid-2">
-            <div class="dash-form-group">
-              <label class="dash-form-label">Store Name</label>
-              <input type="text" class="dash-form-input" value="Velvet Beauty" />
-            </div>
-            <div class="dash-form-group">
-              <label class="dash-form-label">Contact Email</label>
-              <input type="email" class="dash-form-input" placeholder="owner@velvetbeauty.com" />
-            </div>
-          </div>
-          <div class="dash-form-group">
-            <label class="dash-form-label">Employee Access Code</label>
-            <input type="text" class="dash-form-input" id="emp-code-setting" placeholder="Set employee registration code" value="EMP2025" />
-            <span style="font-size:0.75rem; color:var(--gray-400); margin-top:0.25rem; display:block;">Share this code with employees so they can register</span>
-          </div>
-          <div class="dash-form-group">
-            <label class="dash-form-label">Owner Access Code</label>
-            <input type="text" class="dash-form-input" placeholder="Owner registration code" value="OWNER2025" />
-          </div>
-          <div class="dash-form-group">
-            <label class="dash-form-label">Free Delivery Threshold (Rs.)</label>
-            <input type="number" class="dash-form-input" value="2000" />
-          </div>
-          <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
         </div>
       </div>
 
     </div><!-- end dash-content -->
   </main>
+</div><!-- end dash-page -->
 
-  <!-- Order Status Update Modal -->
-  <div class="modal-overlay" id="order-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Update Order</h3>
-        <button class="modal-close" onclick="closeOrderModal()">×</button>
-      </div>
-      <div id="order-modal-info" style="margin-bottom:1.5rem; font-size:0.875rem; color:var(--gray-500);"></div>
-      <div class="form-group">
-        <label class="form-label">Order Status</label>
-        <select class="form-select" id="order-status-select">
-          <option value="processing">Processing</option>
-          <option value="shipped">Shipped</option>
-          <option value="delivered">Delivered</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-      </div>
-      <button class="btn btn-primary w-full" onclick="updateOrderStatus()">Update Status</button>
+<!-- ═══ ORDER DETAIL MODAL ═══ -->
+<div class="modal-overlay" id="order-modal">
+  <div class="modal-box" style="max-width:560px;">
+    <div class="modal-hdr">
+      <h3 class="modal-title" id="om-title">Order Details</h3>
+      <button class="modal-close" onclick="VBModal.close('order-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="om-body"></div>
+    <div class="modal-footer">
+      <select class="form-select" id="om-status-select" style="min-width:160px;">
+        <option value="processing">Processing</option>
+        <option value="shipped">Shipped</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <button class="btn btn-primary" onclick="updateOrderStatus()">Update Status</button>
+      <button class="btn btn-danger" onclick="deleteOrder()">Delete Order</button>
+      <button class="btn btn-ghost" onclick="VBModal.close('order-modal')">Close</button>
     </div>
   </div>
+</div>
 
-  <!-- Delete Confirm Modal -->
-  <div class="modal-overlay" id="delete-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Confirm Delete</h3>
-        <button class="modal-close" onclick="closeDeleteModal()">×</button>
+<!-- ═══ PRODUCT MODAL ═══ -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-hdr">
+      <h3 class="modal-title" id="pm-title">Add Product</h3>
+      <button class="modal-close" onclick="VBModal.close('product-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="pm-id"/>
+      <div class="product-form-grid">
+        <div>
+          <div class="form-group">
+            <label class="form-label">Product Name <span class="req">*</span></label>
+            <input class="form-input" id="pm-name" placeholder="e.g. Velvet Red Lipstick" required/>
+          </div>
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label class="form-label">Category <span class="req">*</span></label>
+              <select class="form-select" id="pm-cat">
+                <option>Lips</option><option>Face</option><option>Eyes</option>
+                <option>Cheeks</option><option>Skincare</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Badge</label>
+              <select class="form-select" id="pm-badge">
+                <option value="">None</option>
+                <option value="new">New</option>
+                <option value="bestseller">Bestseller</option>
+                <option value="sale">Sale</option>
+                <option value="hot">Hot</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label class="form-label">Price (Rs.) <span class="req">*</span></label>
+              <input class="form-input" id="pm-price" type="number" placeholder="1500" min="0" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Original Price (Rs.)</label>
+              <input class="form-input" id="pm-orig-price" type="number" placeholder="2000" min="0"/>
+            </div>
+          </div>
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label class="form-label">Stock</label>
+              <input class="form-input" id="pm-stock" type="number" placeholder="50" min="0"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Rating (0–5)</label>
+              <input class="form-input" id="pm-rating" type="number" step="0.1" min="0" max="5" placeholder="4.5"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="toggle-label">
+              <input type="checkbox" id="pm-active" checked/>
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Active (visible on website)</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="toggle-label">
+              <input type="checkbox" id="pm-bestseller"/>
+              <span class="toggle-track"></span>
+              <span class="toggle-text">Mark as Bestseller</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label class="form-label">Image URL</label>
+            <input class="form-input" id="pm-image" placeholder="https://..." oninput="previewProductImg(this.value)"/>
+          </div>
+          <div class="img-preview-wrap">
+            <img class="img-preview-img hidden" id="pm-img-preview" src="" alt=""/>
+            <div class="img-preview-placeholder" id="pm-img-placeholder">
+              <div class="img-preview-icon">🖼️</div>
+              <div class="img-preview-text">Image preview</div>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:0.75rem;">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" id="pm-desc" rows="3" placeholder="Product description..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Shades (comma-separated hex)</label>
+            <input class="form-input" id="pm-shades" placeholder="#E91E8C, #C2185B, #C9956C"/>
+            <span class="form-hint">Enter color hex codes separated by commas</span>
+          </div>
+        </div>
       </div>
-      <p style="color:var(--gray-500); margin-bottom:2rem;" id="delete-modal-msg">Are you sure you want to delete this item?</p>
-      <div style="display:flex; gap:1rem;">
-        <button class="btn btn-primary w-full" style="background:var(--error);" onclick="confirmDelete()">Delete</button>
-        <button class="btn btn-outline w-full" onclick="closeDeleteModal()">Cancel</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+      <button class="btn btn-ghost" onclick="VBModal.close('product-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CUSTOMER MODAL ═══ -->
+<div class="modal-overlay" id="customer-modal">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-hdr">
+      <h3 class="modal-title" id="cm-title">Customer Details</h3>
+      <button class="modal-close" onclick="VBModal.close('customer-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="cm-body"></div>
+    <div class="modal-footer">
+      <select class="form-select" id="cm-type-select" style="min-width:140px;">
+        <option value="new">New</option>
+        <option value="regular">Regular</option>
+        <option value="vip">VIP</option>
+      </select>
+      <button class="btn btn-primary" onclick="updateCustomerType()">Update Type</button>
+      <button class="btn btn-danger" onclick="deleteCustomer()">Delete</button>
+      <button class="btn btn-ghost" onclick="VBModal.close('customer-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="confirm-body">
+      <div class="confirm-icon">⚠️</div>
+      <p class="confirm-msg" id="confirm-msg"></p>
+      <div class="confirm-btns">
+        <button class="btn btn-danger" id="confirm-yes">Confirm</button>
+        <button class="btn btn-ghost" onclick="VBModal.close('confirm-modal')">Cancel</button>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="toast-container" id="toast-container"></div>
-
-  <script src="../public/js/products-data.js"></script>
-  <script src="../public/js/dashboard-owner.js"></script>
+<script src="../public/js/store.js"></script>
+<script src="../public/js/dashboard-owner.js"></script>
 </body>
 </html>

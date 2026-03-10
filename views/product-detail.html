@@ -1,362 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Product — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css" />
-  <link rel="stylesheet" href="../public/css/main.css" />
-  <link rel="stylesheet" href="../public/css/product-detail.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Detail — Velvet Beauty</title>
+  <link rel="stylesheet" href="../public/css/variables.css"/>
+  <link rel="stylesheet" href="../public/css/main.css"/>
+  <link rel="stylesheet" href="../public/css/product-detail.css"/>
 </head>
-<body class="page-body">
+<body>
+<div id="toast-container"></div>
 
-  <!-- NAVBAR -->
-  <nav class="navbar" id="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <a href="index.html" class="navbar-logo">
-          <svg class="navbar-logo-svg" viewBox="0 0 38 38" fill="none">
-            <circle cx="19" cy="19" r="18" fill="#4A1A40"/>
-            <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
-            <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
-            <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
-            <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
-          </svg>
-          <div class="navbar-logo-text">
-            <span class="brand-name">Velvet Beauty</span>
-            <span class="brand-tagline">Luxury Cosmetics</span>
-          </div>
+<nav class="navbar solid" id="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <svg class="logo-svg" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" fill="#4A1A40"/><ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/><ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/><rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/><circle cx="19" cy="29" r="2" fill="#E91E8C"/></svg>
+        <div class="logo-text"><span class="logo-name">Velvet Beauty</span><span class="logo-tag">Luxury Cosmetics</span></div>
+      </a>
+      <ul class="navbar-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html" class="active">Shop</a></li>
+        <li><a href="shop.html?cat=lips">Lips</a></li>
+        <li><a href="shop.html?cat=face">Face</a></li>
+        <li><a href="shop.html?cat=eyes">Eyes</a></li>
+        <li><a href="shop.html?cat=skincare">Skincare</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <a href="wishlist.html" class="nav-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="nav-badge" id="wishlist-count" style="display:none">0</span>
         </a>
-        <ul class="navbar-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="shop.html">Shop</a></li>
-          <li><a href="shop.html?cat=lips">Lips</a></li>
-          <li><a href="shop.html?cat=face">Face</a></li>
-          <li><a href="shop.html?cat=eyes">Eyes</a></li>
-        </ul>
-        <div class="navbar-actions">
-          <a href="shop.html" class="nav-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></a>
-          <a href="wishlist.html" class="nav-icon-btn" id="nav-wishlist-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="nav-badge" id="wishlist-count">0</span></a>
-          <a href="cart.html" class="nav-icon-btn" id="nav-cart-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="nav-badge" id="cart-count">0</span></a>
-          <a href="login.html" class="nav-icon-btn" id="nav-account-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
-          <button class="navbar-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+        <a href="cart.html" class="nav-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="nav-badge" id="cart-count" style="display:none">0</span>
+        </a>
+        <div class="nav-dropdown-wrap">
+          <a href="login.html" class="nav-icon-btn" id="account-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </a>
+          <div class="nav-dropdown" id="user-dropdown"></div>
         </div>
+        <button class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></button>
       </div>
     </div>
-  </nav>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="index.html">Home</a><a href="shop.html">Shop All</a>
-    <a href="shop.html?cat=lips">Lips</a><a href="shop.html?cat=face">Face</a>
-    <a href="shop.html?cat=eyes">Eyes</a><a href="wishlist.html">Wishlist</a>
-    <a href="cart.html">Cart</a><a href="login.html">Login</a>
   </div>
+</nav>
 
-  <!-- PRODUCT DETAIL PAGE -->
-  <div class="product-detail-page">
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">🏠 Home</a>
+  <a href="shop.html" class="active">🛍️ Shop</a>
+  <div class="mob-divider"></div>
+  <a href="wishlist.html">💝 Wishlist</a>
+  <a href="cart.html">🛒 Cart</a>
+  <a href="login.html" id="mob-account-link">👤 Login</a>
+</div>
+
+<!-- ═══════ BREADCRUMB ═══════ -->
+<div class="pd-page">
+  <div class="pd-breadcrumb-bar">
     <div class="container">
-
-      <!-- Breadcrumb -->
       <nav class="breadcrumb">
         <a href="index.html">Home</a>
         <span class="breadcrumb-sep">›</span>
         <a href="shop.html">Shop</a>
         <span class="breadcrumb-sep">›</span>
-        <span class="current" id="pd-breadcrumb">Product</span>
+        <a href="#" id="pd-breadcrumb-cat">Category</a>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-curr" id="pd-breadcrumb-name">Product</span>
       </nav>
-
-      <!-- Main Product Layout -->
-      <div class="product-detail-layout">
-
-        <!-- Gallery -->
-        <div class="product-gallery">
-          <div class="product-main-image">
-            <img id="pd-main-img" src="https://images.unsplash.com/photo-1586495777744-4e6232bf2b56?w=600&q=80" alt="Product" />
-            <span class="product-main-image-badge badge-new" id="pd-badge">New</span>
-          </div>
-          <div class="product-thumbs" id="pd-thumbs">
-            <!-- Thumbnails inserted by JS -->
-            <div class="product-thumb active">
-              <img src="https://images.unsplash.com/photo-1586495777744-4e6232bf2b56?w=200&q=80" alt="thumb" />
-            </div>
-            <div class="product-thumb">
-              <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=200&q=80" alt="thumb" />
-            </div>
-            <div class="product-thumb">
-              <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=200&q=80" alt="thumb" />
-            </div>
-            <div class="product-thumb">
-              <img src="https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=200&q=80" alt="thumb" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Product Info -->
-        <div class="product-info">
-          <div class="product-brand-label">Velvet Beauty</div>
-          <h1 class="product-detail-name" id="pd-name">Velvet Red Matte Lipstick</h1>
-
-          <!-- Rating row -->
-          <div class="product-rating-row">
-            <div class="product-rating-stars">
-              <span style="color:#F5C518;">★★★★★</span>
-            </div>
-            <span class="product-rating-num" id="pd-rating">4.8</span>
-            <a class="product-review-count" href="#reviews" id="pd-review-count">(124 reviews)</a>
-            <div class="in-stock-badge" id="pd-stock-badge">
-              <span class="in-stock-dot"></span> In Stock
-            </div>
-          </div>
-
-          <!-- Price -->
-          <div class="product-price-section">
-            <span class="product-price-current" id="pd-price">Rs. 1,299</span>
-            <span class="product-price-original" id="pd-original-price">Rs. 1,799</span>
-            <span class="product-price-discount" id="pd-discount">28% OFF</span>
-          </div>
-
-          <!-- Description -->
-          <p class="product-desc" id="pd-desc">
-            A richly pigmented, long-wearing matte lipstick that delivers flawless coverage with a velvety finish. Infused with vitamin E for comfortable all-day wear. Transfer-proof, fade-resistant formula.
-          </p>
-
-          <!-- Shade Selector -->
-          <div class="shade-selector" id="pd-shade-section">
-            <div class="shade-selector-label">
-              Shade: <span id="selected-shade-name">Velvet Red</span>
-            </div>
-            <div class="shade-swatches" id="shade-swatches">
-              <div class="shade-swatch active" style="background:#C2185B;" data-shade="Velvet Red" title="Velvet Red" onclick="selectShade(this)"></div>
-              <div class="shade-swatch" style="background:#880E4F;" data-shade="Deep Plum" title="Deep Plum" onclick="selectShade(this)"></div>
-              <div class="shade-swatch" style="background:#E91E8C;" data-shade="Hot Pink" title="Hot Pink" onclick="selectShade(this)"></div>
-              <div class="shade-swatch" style="background:#C9956C;" data-shade="Nude Beige" title="Nude Beige" onclick="selectShade(this)"></div>
-              <div class="shade-swatch" style="background:#8B3A7A;" data-shade="Berry Crush" title="Berry Crush" onclick="selectShade(this)"></div>
-              <div class="shade-swatch" style="background:#FF6B6B;" data-shade="Coral Pop" title="Coral Pop" onclick="selectShade(this)"></div>
-            </div>
-          </div>
-
-          <!-- Quantity + CTA -->
-          <div class="product-cta-row">
-            <!-- Qty -->
-            <div class="qty-control">
-              <button class="qty-btn" onclick="changeQty(-1)">−</button>
-              <span class="qty-value" id="pd-qty">1</span>
-              <button class="qty-btn" onclick="changeQty(1)">+</button>
-            </div>
-
-            <!-- Add to cart -->
-            <button class="product-add-cart-btn" id="pd-add-cart-btn" onclick="addToCartFromDetail()">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-              Add to Cart
-            </button>
-
-            <!-- Wishlist -->
-            <button class="product-wishlist-btn" id="pd-wishlist-btn" onclick="toggleWishlistFromDetail()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            </button>
-          </div>
-
-          <!-- Product Meta -->
-          <div class="product-meta">
-            <div class="product-meta-row">
-              <div class="product-meta-icon">🚚</div>
-              <span>Free delivery on orders over Rs. 2000</span>
-            </div>
-            <div class="product-meta-row">
-              <div class="product-meta-icon">↩️</div>
-              <span>Easy 7-day returns</span>
-            </div>
-            <div class="product-meta-row">
-              <div class="product-meta-icon">🌿</div>
-              <span>100% Cruelty-Free &amp; Vegan</span>
-            </div>
-            <div class="product-meta-row">
-              <div class="product-meta-icon">✅</div>
-              <span>Dermatologist Tested</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ═══ REVIEWS SECTION ═══ -->
-      <div class="reviews-section" id="reviews">
-        <div class="section-header" style="align-items:flex-start; text-align:left;">
-          <span class="section-label">Customer Reviews</span>
-          <h2 class="section-title" style="font-size:2rem;">What Customers Say</h2>
-        </div>
-
-        <div class="reviews-layout">
-          <!-- Summary -->
-          <div class="reviews-summary">
-            <div class="reviews-avg-num" id="avg-rating-num">4.8</div>
-            <div class="reviews-avg-stars">
-              <span style="color:#F5C518;">★★★★★</span>
-            </div>
-            <div class="reviews-total-count" id="reviews-total-count">Based on 124 reviews</div>
-
-            <div class="rating-bars" style="margin-top:1.5rem; text-align:left;">
-              <div class="rating-bar-row">
-                <span class="rating-bar-label">5</span>
-                <div class="rating-bar-track"><div class="rating-bar-fill" style="width:72%;"></div></div>
-                <span class="rating-bar-pct">72%</span>
-              </div>
-              <div class="rating-bar-row">
-                <span class="rating-bar-label">4</span>
-                <div class="rating-bar-track"><div class="rating-bar-fill" style="width:18%;"></div></div>
-                <span class="rating-bar-pct">18%</span>
-              </div>
-              <div class="rating-bar-row">
-                <span class="rating-bar-label">3</span>
-                <div class="rating-bar-track"><div class="rating-bar-fill" style="width:7%;"></div></div>
-                <span class="rating-bar-pct">7%</span>
-              </div>
-              <div class="rating-bar-row">
-                <span class="rating-bar-label">2</span>
-                <div class="rating-bar-track"><div class="rating-bar-fill" style="width:2%;"></div></div>
-                <span class="rating-bar-pct">2%</span>
-              </div>
-              <div class="rating-bar-row">
-                <span class="rating-bar-label">1</span>
-                <div class="rating-bar-track"><div class="rating-bar-fill" style="width:1%;"></div></div>
-                <span class="rating-bar-pct">1%</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Reviews List -->
-          <div>
-            <div class="reviews-list" id="reviews-list">
-              <!-- Review 1 -->
-              <div class="review-card">
-                <div class="review-card-header">
-                  <div class="reviewer-info">
-                    <div class="reviewer-avatar" style="background:linear-gradient(135deg,#E91E8C,#C2185B);">A</div>
-                    <div>
-                      <div class="reviewer-name">Ayesha Khan</div>
-                      <div class="reviewer-date">March 2, 2025</div>
-                    </div>
-                  </div>
-                  <div style="color:#F5C518; font-size:14px;">★★★★★</div>
-                </div>
-                <p class="review-text">Absolutely in love with this lipstick! The colour payoff is incredible, it stayed on for 8+ hours without any touch-ups. The formula is creamy yet matte which is so hard to find. Will definitely repurchase!</p>
-                <div class="review-helpful">
-                  Helpful?
-                  <button class="review-helpful-btn" onclick="markHelpful(this, 42)">👍 42</button>
-                </div>
-              </div>
-              <!-- Review 2 -->
-              <div class="review-card">
-                <div class="review-card-header">
-                  <div class="reviewer-info">
-                    <div class="reviewer-avatar" style="background:linear-gradient(135deg,#6B2D5E,#4A1A40);">S</div>
-                    <div>
-                      <div class="reviewer-name">Sara Malik</div>
-                      <div class="reviewer-date">February 18, 2025</div>
-                    </div>
-                  </div>
-                  <div style="color:#F5C518; font-size:14px;">★★★★★</div>
-                </div>
-                <p class="review-text">Best matte lipstick I've tried! Rich pigment, doesn't dry out the lips, and the packaging is so luxurious. The Velvet Red shade is perfect for both day and night.</p>
-                <div class="review-helpful">
-                  Helpful?
-                  <button class="review-helpful-btn" onclick="markHelpful(this, 28)">👍 28</button>
-                </div>
-              </div>
-              <!-- Review 3 -->
-              <div class="review-card">
-                <div class="review-card-header">
-                  <div class="reviewer-info">
-                    <div class="reviewer-avatar" style="background:linear-gradient(135deg,#C9956C,#8B5E3C);">M</div>
-                    <div>
-                      <div class="reviewer-name">Maryam Rizvi</div>
-                      <div class="reviewer-date">January 30, 2025</div>
-                    </div>
-                  </div>
-                  <div style="color:#F5C518; font-size:14px;">★★★★<span style="color:#ddd;">★</span></div>
-                </div>
-                <p class="review-text">Really good product overall. The colour is stunning and lasts a long time. Only reason for 4 stars is I wish it came in more shades. Otherwise perfect!</p>
-                <div class="review-helpful">
-                  Helpful?
-                  <button class="review-helpful-btn" onclick="markHelpful(this, 15)">👍 15</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Write a review button -->
-            <div style="margin-top: 2rem;">
-              <button class="btn btn-outline" onclick="openReviewModal()">Write a Review</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- end container -->
-
-    <!-- Related Products -->
-    <div class="related-section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-label">You May Also Like</span>
-          <h2 class="section-title">Related Products</h2>
-        </div>
-        <div class="products-grid" id="related-grid"></div>
-      </div>
-    </div>
-
-  </div><!-- end product-detail-page -->
-
-  <!-- Write Review Modal -->
-  <div class="modal-overlay" id="review-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Write a Review</h3>
-        <button class="modal-close" onclick="closeReviewModal()">×</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Your Rating</label>
-        <div style="display:flex; gap:0.5rem; font-size:28px; cursor:pointer;" id="star-picker">
-          <span onclick="setReviewRating(1)" data-star="1" style="color:#ddd;">★</span>
-          <span onclick="setReviewRating(2)" data-star="2" style="color:#ddd;">★</span>
-          <span onclick="setReviewRating(3)" data-star="3" style="color:#ddd;">★</span>
-          <span onclick="setReviewRating(4)" data-star="4" style="color:#ddd;">★</span>
-          <span onclick="setReviewRating(5)" data-star="5" style="color:#ddd;">★</span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Your Name</label>
-        <input type="text" class="form-input" id="review-name" placeholder="Enter your name" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Your Review</label>
-        <textarea class="form-textarea" id="review-text-input" placeholder="Share your experience with this product..."></textarea>
-      </div>
-      <button class="btn btn-primary w-full" onclick="submitReview()">Submit Review</button>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
+  <!-- ═══════ PRODUCT MAIN ═══════ -->
+  <div class="pd-main">
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="brand-name">Velvet Beauty</div>
-          <p>Luxury cosmetics crafted with care.</p>
-          <div class="footer-socials" style="margin-top:1.5rem;">
-            <a href="#" class="social-icon">📸</a><a href="#" class="social-icon">👍</a><a href="#" class="social-icon">🎵</a>
+      <div class="pd-grid">
+
+        <!-- Gallery -->
+        <div class="pd-gallery">
+          <div class="pd-main-img-wrap">
+            <div class="pd-badge-wrap">
+              <span class="pc-badge" id="pd-badge" style="display:none"></span>
+            </div>
+            <button class="pd-wishlist-btn" id="pd-wishlist-btn" title="Add to Wishlist">🤍</button>
+            <img class="pd-main-img" id="pd-main-img" src="" alt="Product"/>
+          </div>
+          <div class="pd-thumbnails" id="pd-thumbnails"></div>
+        </div>
+
+        <!-- Info -->
+        <div class="pd-info">
+          <div class="pd-cat" id="pd-cat"></div>
+          <h1 class="pd-name" id="pd-name">Loading...</h1>
+
+          <div class="pd-rating-row">
+            <div class="pd-stars" id="pd-stars"></div>
+            <span class="pd-rating-val" id="pd-rating-val"></span>
+            <span class="pd-review-count" id="pd-review-count"></span>
+            <span class="pd-stock-badge" id="pd-stock"></span>
+          </div>
+
+          <div class="pd-price-row">
+            <span class="pd-price-now" id="pd-price-now"></span>
+            <span class="pd-price-was" id="pd-price-was"></span>
+            <span class="pd-discount-tag" id="pd-discount" style="display:none"></span>
+          </div>
+
+          <p class="pd-desc" id="pd-desc"></p>
+
+          <!-- Shades -->
+          <div id="pd-shades-wrap" style="margin-bottom:1.5rem;">
+            <div class="pd-section-label">Shade: <span class="pd-shade-selected" id="pd-shade-selected">—</span></div>
+            <div class="pd-swatches" id="pd-swatches"></div>
+          </div>
+
+          <!-- Qty + Add to Cart -->
+          <div class="pd-cta-row">
+            <div class="qty-ctrl">
+              <button class="qty-btn" id="pd-qty-minus">−</button>
+              <span class="qty-val" id="pd-qty">1</span>
+              <button class="qty-btn" id="pd-qty-plus">+</button>
+            </div>
+            <button class="btn btn-primary btn-lg" id="pd-add-cart-btn" style="flex:1;">
+              Add to Cart 🛒
+            </button>
+            <button class="btn btn-outline-pink btn-icon" id="pd-wish-btn" title="Wishlist" style="padding:0.85rem;">🤍</button>
+          </div>
+
+          <!-- Delivery meta -->
+          <div class="pd-meta-strip">
+            <div class="pd-meta-row"><span class="pd-meta-icon">🚚</span> Free delivery on orders over Rs. 2,000</div>
+            <div class="pd-meta-row"><span class="pd-meta-icon">🔄</span> Easy 7-day returns</div>
+            <div class="pd-meta-row"><span class="pd-meta-icon">✅</span> 100% authentic product</div>
+            <div class="pd-meta-row"><span class="pd-meta-icon">🔒</span> Secure checkout</div>
           </div>
         </div>
-        <div class="footer-col"><h4>Shop</h4><ul><li><a href="shop.html?cat=lips">Lips</a></li><li><a href="shop.html?cat=face">Face</a></li><li><a href="shop.html?cat=eyes">Eyes</a></li></ul></div>
-        <div class="footer-col"><h4>Help</h4><ul><li><a href="#">Returns</a></li><li><a href="#">Shipping</a></li><li><a href="#">Contact</a></li></ul></div>
-        <div class="footer-col"><h4>Newsletter</h4><form class="footer-newsletter-form" onsubmit="return false;"><input type="email" placeholder="Your email" /><button>Go</button></form></div>
+
       </div>
-      <div class="footer-bottom"><p>© 2025 Velvet Beauty. All rights reserved.</p></div>
     </div>
-  </footer>
+  </div>
 
-  <div class="toast-container" id="toast-container"></div>
+  <!-- ═══════ REVIEWS ═══════ -->
+  <div class="reviews-section">
+    <div class="container">
+      <div class="section-header" style="text-align:left;margin-bottom:2rem;">
+        <div class="section-eyebrow">Customer Feedback</div>
+        <h2 class="section-title" style="font-size:clamp(1.6rem,3vw,2.4rem);">Reviews &amp; <em>Ratings</em></h2>
+      </div>
 
-  <script src="../public/js/products-data.js"></script>
-  <script src="../public/js/cart.js"></script>
-  <script src="../public/js/wishlist.js"></script>
-  <script src="../public/js/product-detail.js"></script>
+      <div class="reviews-layout">
+        <!-- Rating summary -->
+        <div class="rating-summary">
+          <div class="rs-big-num" id="rs-big-num">0.0</div>
+          <div class="rs-stars" id="rs-stars">☆☆☆☆☆</div>
+          <div class="rs-count" id="rs-count">0 reviews</div>
+          <div class="rs-bars" id="rs-bars"></div>
+        </div>
+
+        <!-- Write review -->
+        <div>
+          <div class="write-review-card" id="write-review-card">
+            <h3 class="write-review-title">Write a Review</h3>
+            <div class="star-picker" id="star-picker">
+              <button class="star-pick-btn" data-star="1">★</button>
+              <button class="star-pick-btn" data-star="2">★</button>
+              <button class="star-pick-btn" data-star="3">★</button>
+              <button class="star-pick-btn" data-star="4">★</button>
+              <button class="star-pick-btn" data-star="5">★</button>
+            </div>
+            <div class="form-group">
+              <input class="form-input" id="review-title" placeholder="Review title (optional)"/>
+            </div>
+            <div class="form-group">
+              <textarea class="form-textarea" id="review-text" placeholder="Share your experience with this product..." rows="3"></textarea>
+            </div>
+            <button class="btn btn-primary w-full" id="submit-review-btn">Submit Review</button>
+            <p id="review-login-note" class="hidden" style="text-align:center;margin-top:0.75rem;font-size:0.82rem;color:var(--g400);">
+              <a href="login.html" style="color:var(--pink);font-weight:600;">Login</a> to write a review
+            </p>
+          </div>
+
+          <!-- Reviews list -->
+          <div id="reviews-list"></div>
+          <div class="empty-state hidden" id="reviews-empty" style="padding:2rem;">
+            <div class="empty-icon">💬</div>
+            <h3>No Reviews Yet</h3>
+            <p>Be the first to share your experience!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ RELATED ═══════ -->
+  <section class="related-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-eyebrow">You May Also Like</div>
+        <h2 class="section-title">Related <em>Products</em></h2>
+      </div>
+      <div class="products-grid" id="related-grid"></div>
+    </div>
+  </section>
+
+</div><!-- end pd-page -->
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="confirm-body">
+      <div class="confirm-icon">⚠️</div>
+      <p class="confirm-msg" id="confirm-msg"></p>
+      <div class="confirm-btns">
+        <button class="btn btn-danger" id="confirm-yes">Confirm</button>
+        <button class="btn btn-ghost" onclick="VBModal.close('confirm-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../public/js/store.js"></script>
+<script src="../public/js/product-detail.js"></script>
 </body>
 </html>

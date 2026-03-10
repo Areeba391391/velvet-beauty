@@ -1,167 +1,157 @@
-/* ============================================
+/* ============================================================
    VELVET BEAUTY — checkout.js
-   Checkout page: form validation, order
-   summary render, place order
-   ============================================ */
+   Checkout: Form Validation · Delivery Fees
+   Payment · Place Order
+   ============================================================ */
 
-let deliveryFee    = 0;
-let paymentMethod  = 'cod';
-let checkoutDiscount = 0;
+document.addEventListener('DOMContentLoaded', () => {
+  initNav();
+  VBAuth.guard(['customer','employee','owner']);
+  if (!VBCart.get().length) { window.location.href = 'cart.html'; return; }
+  renderSummary();
+  setupDeliveryListeners();
+  prefillAddress();
+});
 
-/* ── Render order review sidebar ── */
-function renderCheckoutOrder() {
-  const cart = getCart();
+// ── Prefill if session has address ────────────────────────────
+function prefillAddress() {
+  const session = VBAuth.session();
+  if (!session) return;
+  const nameEl = document.getElementById('addr-name');
+  if (nameEl && !nameEl.value) nameEl.value = session.name || '';
+}
 
-  /* Items */
-  const itemsEl = document.getElementById('checkout-order-items');
+// ── Render checkout summary ───────────────────────────────────
+function renderSummary() {
+  const coupon    = sessionStorage.getItem('vb_coupon') || '';
+  const t         = VBCart.totals(coupon);
+  const cart      = VBCart.get();
+  const deliveryFee = getDeliveryFee();
+
+  // Items list
+  const itemsEl = document.getElementById('cs-items');
   if (itemsEl) {
     itemsEl.innerHTML = cart.map(item => `
-      <div class="order-review-item">
-        <div class="order-review-item-img">
-          <img src="${item.image || ''}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1586495777744-4e6232bf2b56?w=200&q=80'" />
-          <span class="order-qty-badge">${item.quantity}</span>
-        </div>
-        <span class="order-review-item-name">${item.name}</span>
-        <span class="order-review-item-price">${formatPrice(item.price * item.quantity)}</span>
-      </div>
-    `).join('') || '<p style="color:var(--gray-400); font-size:0.875rem;">Cart is empty</p>';
+      <div class="cs-item">
+        <div class="cs-item-img"><img src="${item.image}" alt="${item.name}" onerror="this.src='https://placehold.co/52x52/FDE8F3/E91E8C?text=VB'"/></div>
+        <div><div class="cs-item-name">${item.name}</div><div class="cs-item-qty">Qty: ${item.qty}</div></div>
+        <div class="cs-item-price">Rs. ${(item.price * item.qty).toLocaleString()}</div>
+      </div>`).join('');
   }
 
-  /* Totals */
-  const subtotal = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const discount = Math.round(subtotal * checkoutDiscount / 100);
-  const total    = subtotal - discount + deliveryFee;
+  document.getElementById('cs-subtotal').textContent = fmtPrice(t.subtotal);
+  document.getElementById('cs-total').textContent    = fmtPrice(t.subtotal - t.discount + deliveryFee);
 
-  const el = (id) => document.getElementById(id);
-  if (el('co-subtotal'))  el('co-subtotal').textContent = formatPrice(subtotal);
-  if (el('co-delivery'))  el('co-delivery').textContent = deliveryFee === 0 ? 'Free 🎉' : formatPrice(deliveryFee);
-  if (el('co-total'))     el('co-total').textContent    = formatPrice(total);
+  const discRow = document.getElementById('cs-disc-row');
+  if (t.discount > 0) {
+    discRow.style.display = '';
+    document.getElementById('cs-disc').textContent = `−${fmtPrice(t.discount)}`;
+  } else {
+    discRow.style.display = 'none';
+  }
+  document.getElementById('cs-delivery').textContent = deliveryFee === 0 ? '🎁 Free' : fmtPrice(deliveryFee);
 
-  const discRow = el('co-discount-row');
-  if (discRow) discRow.style.display = checkoutDiscount > 0 ? '' : 'none';
-  if (el('co-discount')) el('co-discount').textContent = `-${formatPrice(discount)}`;
+  // Standard delivery note
+  const settings = DB.get(KEYS.settings) || { freeDeliveryMin:2000, deliveryFee:200 };
+  const stdPriceEl = document.getElementById('do-price-std');
+  const freeNote   = document.getElementById('free-delivery-note');
+  if (t.subtotal - t.discount >= settings.freeDeliveryMin) {
+    if (stdPriceEl) stdPriceEl.innerHTML = '<span class="do-free">Free 🎁</span>';
+    if (freeNote)   freeNote.style.display = '';
+  } else {
+    if (stdPriceEl) stdPriceEl.textContent = fmtPrice(settings.deliveryFee);
+    if (freeNote)   freeNote.style.display = 'none';
+  }
+
+  // Update steps visual
+  updateSteps(1);
 }
 
-/* ── Delivery option selection ── */
-function selectDelivery(el, type, fee) {
-  document.querySelectorAll('.delivery-option[data-delivery]').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  deliveryFee = fee;
-  /* Update standard price label */
-  const stdPrice = document.getElementById('delivery-std-price');
-  renderCheckoutOrder();
+function getDeliveryFee() {
+  const selected = document.querySelector('input[name="delivery"]:checked')?.value || 'standard';
+  const coupon = sessionStorage.getItem('vb_coupon') || '';
+  const t = VBCart.totals(coupon);
+  const settings = DB.get(KEYS.settings) || { freeDeliveryMin:2000, deliveryFee:200 };
+  const afterDisc = t.subtotal - t.discount;
+  if (selected === 'standard') return afterDisc >= settings.freeDeliveryMin ? 0 : settings.deliveryFee;
+  if (selected === 'express')  return 400;
+  if (selected === 'sameday')  return 600;
+  return settings.deliveryFee;
 }
 
-/* ── Payment method selection ── */
-function selectPayment(el, method) {
-  document.querySelectorAll('.delivery-option[data-pay]').forEach(o => o.classList.remove('selected'));
-  el.classList.add('selected');
-  paymentMethod = method;
+function setupDeliveryListeners() {
+  document.querySelectorAll('input[name="delivery"]').forEach(r => {
+    r.addEventListener('change', renderSummary);
+  });
 }
 
-/* ── Validate form ── */
-function validateCheckoutForm() {
+// ── Step indicator ────────────────────────────────────────────
+function updateSteps(active) {
+  for (let i=1; i<=4; i++) {
+    const el = document.getElementById(`step-${i}`);
+    if (!el) continue;
+    el.classList.remove('active','done');
+    if (i < active) el.classList.add('done');
+    else if (i === active) el.classList.add('active');
+  }
+}
+
+// ── Place Order ───────────────────────────────────────────────
+function placeOrder() {
+  // Validate
+  const name    = document.getElementById('addr-name')?.value.trim();
+  const phone   = document.getElementById('addr-phone')?.value.trim();
+  const street  = document.getElementById('addr-street')?.value.trim();
+  const city    = document.getElementById('addr-city')?.value;
   let valid = true;
 
   const fields = [
-    { id: 'first-name', err: 'err-first-name', check: v => v.length >= 2 },
-    { id: 'last-name',  err: 'err-last-name',  check: v => v.length >= 2 },
-    { id: 'phone',      err: 'err-phone',       check: v => /^[0-9\-\+]{10,13}$/.test(v.replace(/\s/g,'')) },
-    { id: 'address',    err: 'err-address',     check: v => v.length >= 5 },
-    { id: 'city',       err: 'err-city',        check: v => v !== '' }
+    { id:'addr-name',   errId:'err-name',   val:name,   msg:'Please enter your name' },
+    { id:'addr-phone',  errId:'err-phone',  val:phone,  msg:'Please enter your phone' },
+    { id:'addr-street', errId:'err-street', val:street, msg:'Please enter your address' },
+    { id:'addr-city',   errId:'err-city',   val:city,   msg:'Please select your city' },
   ];
-
-  fields.forEach(({ id, err, check }) => {
-    const input  = document.getElementById(id);
-    const errEl  = document.getElementById(err);
-    const val    = input?.value.trim() || '';
-    const ok     = check(val);
-    input?.classList.toggle('error', !ok);
-    if (errEl) errEl.classList.toggle('hidden', ok);
-    if (!ok) valid = false;
+  fields.forEach(f => {
+    const errEl = document.getElementById(f.errId);
+    if (!f.val) {
+      if (errEl) errEl.classList.add('show');
+      valid = false;
+    } else {
+      if (errEl) errEl.classList.remove('show');
+    }
   });
+  if (!valid) { VBToast.show('Please fill in all required fields', 'warning'); return; }
 
-  return valid;
-}
+  const session      = VBAuth.session();
+  const coupon       = sessionStorage.getItem('vb_coupon') || '';
+  const t            = VBCart.totals(coupon);
+  const deliveryFee  = getDeliveryFee();
+  const deliveryType = document.querySelector('input[name="delivery"]:checked')?.value || 'standard';
+  const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || 'cod';
+  const notes        = document.getElementById('addr-notes')?.value.trim();
 
-/* ── Place order ── */
-function placeOrder() {
-  const cart = getCart();
-  if (cart.length === 0) {
-    showToast('Your cart is empty!', 'warning');
-    return;
-  }
+  const btn = document.getElementById('place-order-btn');
+  if (btn) { btn.classList.add('btn-loading'); btn.disabled = true; }
 
-  if (!validateCheckoutForm()) {
-    showToast('Please fill all required fields', 'error');
-    return;
-  }
-
-  /* Build order object */
-  const firstName = document.getElementById('first-name')?.value.trim();
-  const lastName  = document.getElementById('last-name')?.value.trim();
-  const phone     = document.getElementById('phone')?.value.trim();
-  const address   = document.getElementById('address')?.value.trim();
-  const city      = document.getElementById('city')?.value;
-  const notes     = document.getElementById('order-notes')?.value.trim();
-
-  const subtotal  = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const total     = subtotal + deliveryFee;
-  const orderNum  = 'VB-' + String(Date.now()).slice(-6);
-
-  const order = {
-    orderNumber:   orderNum,
-    customerName:  `${firstName} ${lastName}`,
-    phone, address, city, notes,
-    items:         cart,
-    subtotal,
-    deliveryFee,
-    total,
-    paymentMethod,
-    createdAt:     new Date().toISOString()
-  };
-
-  /* Save to sessionStorage for success page */
-  sessionStorage.setItem('lastOrder', JSON.stringify(order));
-
-  /* Save order to localStorage orders list (for dashboard) */
-  const orders = JSON.parse(localStorage.getItem('vb_orders') || '[]');
-  orders.unshift({
-    id:           'o' + Date.now(),
-    orderNumber:  orderNum,
-    customerName: order.customerName,
-    city,
-    items:        cart.map(i => ({ productName: i.name, quantity: i.quantity, price: i.price })),
-    total,
-    status:       'processing',
-    createdAt:    new Date().toISOString().split('T')[0]
-  });
-  localStorage.setItem('vb_orders', JSON.stringify(orders));
-
-  /* Clear cart */
-  saveCart([]);
-
-  /* Redirect */
-  showToast('Order placed! Redirecting... 🎉', 'success');
   setTimeout(() => {
-    window.location.href = 'order-success.html';
-  }, 1000);
+    const order = VBOrders.place({
+      customerId:    session?.id || 'guest',
+      customerName:  name,
+      customerPhone: phone,
+      items:         VBCart.get(),
+      subtotal:      t.subtotal,
+      discount:      t.discount,
+      coupon:        coupon,
+      deliveryFee,
+      total:         t.subtotal - t.discount + deliveryFee,
+      deliveryType,
+      paymentMethod,
+      address:       `${street}, ${city}`,
+      notes,
+    });
+
+    VBCart.clear();
+    sessionStorage.removeItem('vb_coupon');
+    window.location.href = `order-success.html?id=${order.id}`;
+  }, 800);
 }
-
-/* ── Init ── */
-document.addEventListener('DOMContentLoaded', () => {
-  const cart = getCart();
-  if (cart.length === 0) {
-    showToast('Cart is empty! Add products first.', 'warning');
-    setTimeout(() => window.location.href = 'shop.html', 1500);
-    return;
-  }
-  /* Apply coupon discount from cart page if saved */
-  checkoutDiscount = Number(sessionStorage.getItem('vb_coupon_pct') || 0);
-  renderCheckoutOrder();
-
-  /* Cart badge */
-  const count = cart.reduce((s, i) => s + i.quantity, 0);
-  const badge = document.getElementById('cart-count');
-  if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
-});

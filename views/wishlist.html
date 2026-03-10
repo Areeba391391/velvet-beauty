@@ -1,108 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wishlist — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css" />
-  <link rel="stylesheet" href="../public/css/main.css" />
-  <link rel="stylesheet" href="../public/css/wishlist.css" />
+  <link rel="stylesheet" href="../public/css/variables.css"/>
+  <link rel="stylesheet" href="../public/css/main.css"/>
+  <link rel="stylesheet" href="../public/css/wishlist.css"/>
 </head>
-<body class="page-body">
+<body>
+<div id="toast-container"></div>
 
-  <!-- NAVBAR -->
-  <nav class="navbar" id="navbar">
-    <div class="container">
-      <div class="navbar-inner">
-        <a href="index.html" class="navbar-logo">
-          <svg class="navbar-logo-svg" viewBox="0 0 38 38" fill="none">
-            <circle cx="19" cy="19" r="18" fill="#4A1A40"/>
-            <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
-            <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
-            <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
-            <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
-          </svg>
-          <div class="navbar-logo-text">
-            <span class="brand-name">Velvet Beauty</span>
-            <span class="brand-tagline">Luxury Cosmetics</span>
-          </div>
+<nav class="navbar solid" id="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <svg class="logo-svg" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" fill="#4A1A40"/><ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/><ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/><rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/><circle cx="19" cy="29" r="2" fill="#E91E8C"/></svg>
+        <div class="logo-text"><span class="logo-name">Velvet Beauty</span><span class="logo-tag">Luxury Cosmetics</span></div>
+      </a>
+      <ul class="navbar-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="shop.html?cat=lips">Lips</a></li>
+        <li><a href="shop.html?cat=face">Face</a></li>
+        <li><a href="shop.html?cat=eyes">Eyes</a></li>
+        <li><a href="shop.html?cat=skincare">Skincare</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <a href="wishlist.html" class="nav-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="nav-badge" id="wishlist-count" style="display:none">0</span>
         </a>
-        <ul class="navbar-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="shop.html">Shop</a></li>
-          <li><a href="shop.html?cat=lips">Lips</a></li>
-          <li><a href="shop.html?cat=face">Face</a></li>
-          <li><a href="shop.html?cat=eyes">Eyes</a></li>
-        </ul>
-        <div class="navbar-actions">
-          <a href="shop.html" class="nav-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></a>
-          <a href="wishlist.html" class="nav-icon-btn active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="nav-badge" id="wishlist-count">0</span></a>
-          <a href="cart.html" class="nav-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="nav-badge" id="cart-count">0</span></a>
-          <a href="login.html" class="nav-icon-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
-          <button class="navbar-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+        <a href="cart.html" class="nav-icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="nav-badge" id="cart-count" style="display:none">0</span>
+        </a>
+        <div class="nav-dropdown-wrap">
+          <a href="login.html" class="nav-icon-btn" id="account-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </a>
+          <div class="nav-dropdown" id="user-dropdown"></div>
         </div>
+        <button class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></button>
       </div>
     </div>
-  </nav>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="index.html">Home</a><a href="shop.html">Shop</a>
-    <a href="wishlist.html">Wishlist</a><a href="cart.html">Cart</a><a href="login.html">Login</a>
   </div>
+</nav>
 
-  <!-- WISHLIST PAGE -->
-  <div class="wishlist-page">
-    <div class="container">
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">🏠 Home</a>
+  <a href="shop.html">🛍️ Shop</a>
+  <div class="mob-divider"></div>
+  <a href="wishlist.html">💝 Wishlist</a>
+  <a href="cart.html">🛒 Cart</a>
+  <a href="login.html" id="mob-account-link">👤 Login</a>
+</div>
 
-      <nav class="breadcrumb">
-        <a href="index.html">Home</a>
-        <span class="breadcrumb-sep">›</span>
-        <span class="current">My Wishlist</span>
-      </nav>
+<!-- PAGE HERO -->
+<div class="page-hero" style="background:linear-gradient(140deg,var(--cream) 0%,var(--pink-ultra) 55%,var(--cream-dark) 100%);">
+  <div class="container">
+    <div class="page-hero-eyebrow">Your Saved Items</div>
+    <h1 class="page-hero-title">My <em>Wishlist</em> 💝</h1>
+    <p class="page-hero-sub">Products you love — saved for later.</p>
+  </div>
+</div>
 
-      <div class="wishlist-header-row">
-        <div>
-          <h1 class="wishlist-page-title">My Wishlist 💝</h1>
-          <p class="wishlist-count" id="wishlist-item-count">0 items saved</p>
-        </div>
-        <button class="wishlist-move-all-btn" id="move-all-btn" onclick="moveAllToCart()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
-          Move All to Cart
+<!-- WISHLIST SECTION -->
+<section class="wishlist-section">
+  <div class="container">
+
+    <!-- Empty -->
+    <div class="empty-state hidden" id="wishlist-empty">
+      <div class="empty-icon">💝</div>
+      <h3>Your Wishlist is Empty</h3>
+      <p>Browse our collection and heart the products you love!</p>
+      <a href="shop.html" class="btn btn-primary btn-lg">Explore Collection</a>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="wishlist-toolbar" id="wishlist-toolbar" style="display:none;">
+      <span class="wishlist-count-label" id="wishlist-count-label">0 items</span>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm" onclick="moveAllToCart()">
+          Move All to Cart 🛒
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="clearWishlist()">
+          Clear Wishlist
         </button>
       </div>
+    </div>
 
-      <!-- Wishlist Grid -->
-      <div class="wishlist-grid" id="wishlist-grid">
-        <!-- Rendered by JS -->
+    <!-- Grid -->
+    <div class="wishlist-grid" id="wishlist-grid"></div>
+
+  </div>
+</section>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="confirm-body">
+      <div class="confirm-icon">⚠️</div>
+      <p class="confirm-msg" id="confirm-msg"></p>
+      <div class="confirm-btns">
+        <button class="btn btn-danger" id="confirm-yes">Confirm</button>
+        <button class="btn btn-ghost" onclick="VBModal.close('confirm-modal')">Cancel</button>
       </div>
-
-      <!-- Empty State -->
-      <div class="empty-state hidden" id="wishlist-empty-state">
-        <div class="empty-state-icon">💝</div>
-        <h3>Your Wishlist is Empty</h3>
-        <p>Save your favourite products here and come back to them anytime.</p>
-        <a href="shop.html" class="btn btn-primary btn-lg">Explore Products</a>
-      </div>
-
     </div>
   </div>
+</div>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand"><div class="brand-name">Velvet Beauty</div><p>Luxury cosmetics crafted with care.</p></div>
-        <div class="footer-col"><h4>Shop</h4><ul><li><a href="shop.html?cat=lips">Lips</a></li><li><a href="shop.html?cat=face">Face</a></li></ul></div>
-        <div class="footer-col"><h4>Help</h4><ul><li><a href="#">Returns</a></li><li><a href="#">Contact</a></li></ul></div>
-        <div class="footer-col"><h4>Newsletter</h4><form class="footer-newsletter-form" onsubmit="return false;"><input type="email" placeholder="Your email" /><button>Go</button></form></div>
-      </div>
-      <div class="footer-bottom"><p>© 2025 Velvet Beauty. All rights reserved.</p></div>
-    </div>
-  </footer>
-
-  <div class="toast-container" id="toast-container"></div>
-
-  <script src="../public/js/products-data.js"></script>
-  <script src="../public/js/cart.js"></script>
-  <script src="../public/js/wishlist.js"></script>
-  <script src="../public/js/wishlist-page.js"></script>
+<script src="../public/js/store.js"></script>
+<script src="../public/js/wishlist.js"></script>
 </body>
 </html>
