@@ -1,4 +1,49 @@
 /* ============================================================
+   VELVET BEAUTY — dashboard.css  (Enhanced)
+   ============================================================ */
+
+/* Override: product images in dashboard tables */
+.prod-img {
+  width: 44px; height: 44px; border-radius: 10px;
+  object-fit: cover; background: #f0f0f0;
+}
+.prod-img-fallback {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--plum-dark), var(--pink));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #fff; flex-shrink: 0;
+}
+.dash-product-cell { display: flex; align-items: center; gap: 12px; }
+.dash-product-info .prod-name { font-size: 13px; font-weight: 600; color: var(--g800); }
+.dash-product-info .prod-cat  { font-size: 11px; color: var(--g400); margin-top: 1px; }
+
+/* Enhanced chart bars */
+.chart-bar-fill { transition: height 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* Sidebar improvements */
+.sidebar-link { position: relative; overflow: hidden; }
+.sidebar-link::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--pink); border-radius: 0 3px 3px 0;
+  transform: scaleY(0); transition: transform 0.2s;
+}
+.sidebar-link.active::before { transform: scaleY(1); }
+
+/* Toast stacking on dashboard */
+#toast-container { z-index: 99999; }
+
+/* Visit store button */
+.sidebar-visit-site {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-radius: 10px;
+  background: rgba(233,30,140,0.08); color: var(--pink);
+  font-size: 12px; font-weight: 600; transition: 0.2s; margin-bottom: 8px;
+  text-decoration: none;
+}
+.sidebar-visit-site:hover { background: rgba(233,30,140,0.15); }
+
+
+/* ============================================================
    VELVET BEAUTY — dashboard.css
    Shared Dashboard: Sidebar · Stats · Tables · Modals
    Used by: dashboard-owner.html + dashboard-emp.html
@@ -416,3 +461,74 @@
 .toggle-switch input:checked ~ .toggle-slider { background: var(--pink); }
 .toggle-switch input:checked ~ .toggle-slider::after { transform: translateX(20px); }
 .toggle-label { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--g600); }
+
+/* ── Table Styles (used in dashboard) ─────────────────────── */
+.vb-table-wrap { overflow-x: auto; }
+.vb-table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+.vb-table thead tr {
+  background: var(--g50);
+  border-bottom: 1.5px solid var(--g100);
+}
+.vb-table th {
+  padding: var(--s3) var(--s4);
+  text-align: left; font-size: var(--fs-xs);
+  font-weight: var(--fw-semi); color: var(--g500);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.vb-table td {
+  padding: var(--s3) var(--s4);
+  color: var(--g700); vertical-align: middle;
+  border-bottom: 1px solid var(--g100);
+}
+.vb-table tbody tr:hover { background: var(--g50); }
+.vb-table tbody tr:last-child td { border-bottom: none; }
+
+/* Table action buttons */
+.tbl-btn {
+  padding: 5px 12px; border-radius: var(--r-full);
+  font-size: var(--fs-xs); font-weight: var(--fw-semi);
+  cursor: pointer; border: 1.5px solid transparent;
+  transition: all var(--t-fast);
+}
+.tbl-view   { background: var(--info-bg);    color: var(--info);    border-color: var(--info);    }
+.tbl-edit   { background: var(--warning-bg); color: var(--warning); border-color: var(--warning); }
+.tbl-delete { background: var(--error-bg);   color: var(--error);   border-color: var(--error);   }
+.tbl-btn:hover { filter: brightness(0.92); transform: translateY(-1px); }
+
+/* Product cell in table */
+.tbl-product-cell { display: flex; align-items: center; gap: var(--s3); }
+.tbl-product-img  {
+  width: 42px; height: 42px; border-radius: var(--r-md);
+  object-fit: cover; background: var(--g100); flex-shrink: 0;
+}
+.tbl-product-name { font-weight: var(--fw-semi); font-size: var(--fs-sm); color: var(--g800); }
+.tbl-product-cat  { font-size: var(--fs-xs); color: var(--g400); margin-top: 1px; }
+
+/* Customer cell */
+.tbl-customer-cell { display: flex; align-items: center; gap: var(--s3); }
+.tbl-cust-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  color: #fff; font-weight: var(--fw-bold); font-size: var(--fs-sm);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.tbl-cust-name  { font-weight: var(--fw-semi); color: var(--g800); font-size: var(--fs-sm); }
+.tbl-cust-email { font-size: var(--fs-xs); color: var(--g400); margin-top: 1px; }
+
+/* Order items preview */
+.order-items-preview { display: flex; gap: 4px; }
+.order-item-thumb {
+  width: 32px; height: 32px; border-radius: 6px;
+  object-fit: cover; background: var(--g100);
+  border: 1.5px solid var(--white);
+}
+.order-items-more {
+  width: 32px; height: 32px; border-radius: 6px;
+  background: var(--g100); color: var(--g500);
+  font-size: 10px; font-weight: var(--fw-bold);
+  display: flex; align-items: center; justify-content: center;
+}

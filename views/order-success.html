@@ -1,28 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Order Placed! — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css"/>
-  <link rel="stylesheet" href="../public/css/main.css"/>
-  <link rel="stylesheet" href="../public/css/checkout.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — Velvet Beauty</title>
+  <link rel="stylesheet" href="../public/css/variables.css">
+  <link rel="stylesheet" href="../public/css/main.css">
+  <style>
+    body { background: #faf7f5; }
+    .navbar-dark-solid { background: #0D0008 !important; padding: 18px 0 !important; }
+    .success-page { min-height: 85vh; display: flex; align-items: center; justify-content: center; padding: 120px 20px 80px; }
+    .success-card {
+      background: #fff; border-radius: 28px; padding: 60px 48px;
+      text-align: center; max-width: 560px; width: 100%;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+    }
+    .success-icon-wrap {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: linear-gradient(135deg, #d4edda, #a8ddb5);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 28px; font-size: 42px;
+    }
+    .success-eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: #2D8A4E; margin-bottom: 12px; display: block; }
+    .success-title { font-family: var(--font-h); font-size: 42px; font-weight: 300; color: #111; margin-bottom: 12px; line-height: 1.1; }
+    .success-title em { color: var(--p-pink); font-style: italic; }
+    .success-sub  { font-size: 15px; color: #888; margin-bottom: 32px; line-height: 1.8; }
+    .order-id-box {
+      background: #f8f8f8; border-radius: 14px; padding: 16px 24px;
+      margin-bottom: 32px; font-size: 13px; color: #666;
+    }
+    .order-id-box strong { color: #111; font-size: 18px; display: block; margin-top: 4px; font-family: var(--font-h); }
+    .success-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .delivery-info { display: flex; gap: 24px; justify-content: center; margin-bottom: 32px; }
+    .del-item { text-align: center; }
+    .del-item .del-icon { font-size: 28px; margin-bottom: 6px; }
+    .del-item .del-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1.5px; }
+    .del-item .del-val { font-size: 13px; font-weight: 700; color: #111; margin-top: 2px; }
+    .divider { border: none; border-top: 1px solid #f0f0f0; margin: 28px 0; }
+  </style>
 </head>
 <body>
 <div id="toast-container"></div>
 
-<nav class="navbar solid" id="navbar">
-  <div class="container">
-    <div class="navbar-inner">
-      <a href="index.html" class="navbar-logo">
-        <svg class="logo-svg" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" fill="#4A1A40"/><ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/><ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/><rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/><circle cx="19" cy="29" r="2" fill="#E91E8C"/></svg>
-        <div class="logo-text"><span class="logo-name">Velvet Beauty</span><span class="logo-tag">Luxury Cosmetics</span></div>
+<nav class="navbar navbar-dark-solid" id="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="logo">Velvet<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="nav-cart-link">
+        Cart <span class="cart-count-pill" id="cart-count" style="display:none">0</span>
       </a>
-      <div class="navbar-actions">
-        <a href="cart.html" class="nav-icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span class="nav-badge" id="cart-count" style="display:none">0</span>
-        </a>
+      <div class="nav-dropdown-wrap">
+        <button id="account-btn"></button>
+        <div id="user-dropdown"></div>
       </div>
     </div>
   </div>
@@ -30,74 +63,57 @@
 
 <div class="success-page">
   <div class="success-card">
-    <div class="success-animation">🎉</div>
-    <h1 class="success-title">Order Placed!</h1>
-    <p class="success-sub">Thank you for your order. We'll get it packed and shipped soon!</p>
+    <div class="success-icon-wrap">✅</div>
+    <span class="success-eyebrow">Order Confirmed</span>
+    <h1 class="success-title">Thank <em>You!</em></h1>
+    <p class="success-sub">Your order has been placed successfully. We'll prepare your luxury cosmetics with care and ship them to you soon.</p>
 
-    <div class="success-order-num">
-      📦 Order #<span id="success-order-id">VB-00000</span>
+    <div class="order-id-box">
+      Order ID
+      <strong id="order-id-display">VB-10009</strong>
     </div>
 
-    <!-- Items summary -->
-    <div class="success-items" id="success-items"></div>
-
-    <!-- Total -->
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding:0.75rem 1rem;background:var(--pink-ultra);border-radius:var(--r-lg);border:1px solid var(--pink-pale);">
-      <span style="font-weight:600;color:var(--plum-dark);">Total Paid</span>
-      <span style="font-family:var(--font-display);font-size:1.5rem;color:var(--pink);font-weight:500;" id="success-total">Rs. 0</span>
+    <div class="delivery-info">
+      <div class="del-item">
+        <div class="del-icon">📦</div>
+        <div class="del-label">Status</div>
+        <div class="del-val">Processing</div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">🚚</div>
+        <div class="del-label">Delivery</div>
+        <div class="del-val">3–5 Days</div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">💳</div>
+        <div class="del-label">Payment</div>
+        <div class="del-val" id="payment-display">COD</div>
+      </div>
     </div>
 
-    <!-- Delivery info -->
-    <div style="padding:0.75rem 1rem;background:var(--success-bg);border-radius:var(--r-md);margin-bottom:1.5rem;font-size:0.82rem;color:var(--success);text-align:left;">
-      🚚 Expected delivery: <strong id="success-delivery-days">3–5 business days</strong>
-    </div>
+    <hr class="divider">
 
-    <div class="success-btns">
-      <a href="shop.html" class="btn btn-primary btn-lg">Continue Shopping</a>
-      <a href="index.html" class="btn btn-outline btn-lg">Back to Home</a>
+    <div class="success-actions">
+      <a href="shop.html" class="btn btn-primary">Continue Shopping</a>
+      <a href="index.html" class="btn btn-ghost">Back to Home</a>
     </div>
   </div>
 </div>
 
 <script src="../public/js/store.js"></script>
 <script>
-  // Show last order details
-  document.addEventListener('DOMContentLoaded', () => {
-    initNav();
-    VBCart.updateBadge();
-    VBWish.updateBadge();
-
-    const params = new URLSearchParams(window.location.search);
-    const orderId = params.get('id');
-    if (!orderId) { window.location.href = 'index.html'; return; }
-
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get("id");
+  if (orderId) {
+    document.getElementById("order-id-display").textContent = orderId;
     const order = VBOrders.getById(orderId);
-    if (!order) { window.location.href = 'index.html'; return; }
-
-    document.getElementById('success-order-id').textContent = orderId;
-    document.getElementById('success-total').textContent = 'Rs. ' + order.total.toLocaleString();
-
-    // Delivery days
-    const days = { standard:'3–5 business days', express:'1–2 business days', sameday:'Today!' };
-    document.getElementById('success-delivery-days').textContent = days[order.deliveryType] || '3–5 business days';
-
-    // Items
-    const itemsEl = document.getElementById('success-items');
-    if (order.items && order.items.length) {
-      itemsEl.innerHTML = order.items.map(item => `
-        <div class="success-item">
-          <div class="si-img">
-            <img src="${item.image || 'https://placehold.co/48x48/FDE8F3/E91E8C?text=VB'}" alt="${item.name}" onerror="this.src='https://placehold.co/48x48/FDE8F3/E91E8C?text=VB'"/>
-          </div>
-          <div>
-            <div class="si-name">${item.name}</div>
-            <div class="si-qty">Qty: ${item.qty}</div>
-          </div>
-          <div class="si-price">Rs. ${(item.price * item.qty).toLocaleString()}</div>
-        </div>
-      `).join('');
+    if (order && order.paymentMethod) {
+      const pmMap = { cod:"Cash on Delivery", easypaisa:"EasyPaisa", jazzcash:"JazzCash", bank:"Bank Transfer" };
+      document.getElementById("payment-display").textContent = pmMap[order.paymentMethod] || order.paymentMethod;
     }
-  });
+  }
+});
 </script>
 </body>
 </html>

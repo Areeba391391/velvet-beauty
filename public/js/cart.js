@@ -1,132 +1,120 @@
 /* ============================================================
-   VELVET BEAUTY — cart.js
-   Cart: Items · Qty · Remove · Coupon · Summary
+   VELVET BEAUTY — CART LOGIC
    ============================================================ */
 
 let activeCoupon = null;
 
-document.addEventListener('DOMContentLoaded', () => {
-  initNav();
-  VBAuth.guard(['customer','employee','owner']);
-  renderCart();
+document.addEventListener("DOMContentLoaded", () => {
+    renderCart();
+    renderMiniRecs();
 });
 
 function renderCart() {
-  const cart    = VBCart.get();
-  const emptyEl = document.getElementById('cart-empty');
-  const layoutEl = document.getElementById('cart-layout');
+    const cart = VBCart.get(); // Helper from store.js
+    const emptyEl = document.getElementById("cart-empty");
+    const layoutEl = document.getElementById("cart-layout");
+    const listEl = document.getElementById("cart-items-list");
+    const headCount = document.getElementById("cart-title-count");
 
-  if (!cart.length) {
-    if (emptyEl)  emptyEl.classList.remove('hidden');
-    if (layoutEl) layoutEl.style.display = 'none';
-    return;
-  }
-  if (emptyEl)  emptyEl.classList.add('hidden');
-  if (layoutEl) layoutEl.style.display = '';
+    // Update Nav Count
+    const navBadge = document.getElementById("cart-count");
+    if (navBadge) navBadge.textContent = cart.length;
 
-  // Item count label
-  const countEl = document.getElementById('cart-item-count');
-  if (countEl) countEl.textContent = ` (${cart.length} item${cart.length!==1?'s':''})`;
+    if (!cart || cart.length === 0) {
+        if (emptyEl) emptyEl.classList.remove("hidden");
+        if (layoutEl) layoutEl.style.display = "none";
+        return;
+    }
 
-  // Items
-  const listEl = document.getElementById('cart-items-list');
-  if (listEl) {
-    listEl.innerHTML = cart.map(item => `
-      <div class="cart-item" data-id="${item.id}">
-        <div class="cart-item-img">
-          <img src="${item.image}" alt="${item.name}" onerror="this.src='https://placehold.co/88x88/FDE8F3/E91E8C?text=VB'"/>
-        </div>
-        <div class="cart-item-info">
-          <div class="cart-item-cat">${item.category||''}</div>
-          <div class="cart-item-name">${item.name}</div>
-          <div class="cart-item-unit">Rs. ${item.price.toLocaleString()} each</div>
-        </div>
-        <div class="qty-ctrl">
-          <button class="qty-btn" onclick="changeQty('${item.id}', ${item.qty-1})">−</button>
-          <span class="qty-val">${item.qty}</span>
-          <button class="qty-btn" onclick="changeQty('${item.id}', ${item.qty+1})">+</button>
-        </div>
-        <div class="cart-item-price">
-          Rs. ${(item.price * item.qty).toLocaleString()}
-          <div class="cart-item-price-sub">${item.qty > 1 ? `${item.qty} × Rs. ${item.price.toLocaleString()}` : ''}</div>
-        </div>
-        <button class="cart-remove-btn" onclick="removeItem('${item.id}')" title="Remove">✕</button>
-      </div>`).join('');
-  }
+    if (emptyEl) emptyEl.classList.add("hidden");
+    if (layoutEl) layoutEl.style.display = "grid";
+    if (headCount) headCount.textContent = `Your Items (${cart.length})`;
 
-  updateSummary();
+    // FIXED: Using backticks to avoid quote errors
+    if (listEl) {
+        listEl.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <div class="cart-item-img">
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='https://placehold.co/100x100/FDE8F3/E91E8C?text=Beauty'">
+                </div>
+                <div class="cart-item-info">
+                    <div class="cart-item-cat">${item.category || "Luxury"}</div>
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="qty-ctrl">
+                        <button onclick="changeQty('${item.id}', ${item.qty - 1})">−</button>
+                        <span class="qty-val">${item.qty}</span>
+                        <button onclick="changeQty('${item.id}', ${item.qty + 1})">+</button>
+                    </div>
+                </div>
+                <div class="cart-item-total">
+                    Rs. ${(item.price * item.qty).toLocaleString()}
+                </div>
+                <button class="remove-item" onclick="removeItem('${item.id}')">✕</button>
+            </div>
+        `).join("");
+    }
+
+    updateSummary();
 }
 
 function changeQty(id, qty) {
-  if (qty < 1) { removeItem(id); return; }
-  VBCart.updateQty(id, qty);
-  renderCart();
+    if (qty < 1) return removeItem(id);
+    VBCart.updateQty(id, qty);
+    renderCart();
 }
 
 function removeItem(id) {
-  VBCart.remove(id);
-  VBToast.show('Item removed from cart', 'info');
-  renderCart();
+    VBCart.remove(id);
+    VBToast.show("Item removed 🌸", "info");
+    renderCart();
 }
 
 function clearCart() {
-  VBModal.confirm('Clear your entire cart?', () => {
-    VBCart.clear();
-    activeCoupon = null;
-    VBToast.show('Cart cleared', 'info');
-    renderCart();
-  });
+    const modal = document.getElementById('confirm-modal');
+    modal.style.display = 'flex';
+    document.getElementById('confirm-yes').onclick = () => {
+        VBCart.clear();
+        modal.style.display = 'none';
+        renderCart();
+    };
 }
 
-// ── Coupon ────────────────────────────────────────────────────
-function applyCoupon() {
-  const input = document.getElementById('coupon-input');
-  const code  = (input?.value || '').trim().toUpperCase();
-  const valid = { VELVET10:10, BEAUTY20:20, VIP30:30, FIRST15:15 };
-  if (!code) { VBToast.show('Please enter a coupon code', 'warning'); return; }
-  if (!valid[code]) { VBToast.show('Invalid coupon code', 'error'); return; }
-  activeCoupon = code;
-  document.getElementById('coupon-normal').classList.add('hidden');
-  document.getElementById('coupon-applied').classList.remove('hidden');
-  document.getElementById('applied-code-name').textContent = code;
-  document.getElementById('applied-disc-text').textContent = valid[code] + '%';
-  VBToast.show(`Coupon ${code} applied — ${valid[code]}% off! 🎉`, 'success');
-  updateSummary();
-}
+window.VBModal = { close: (id) => document.getElementById(id).style.display = 'none' };
 
-function removeCoupon() {
-  activeCoupon = null;
-  document.getElementById('coupon-normal').classList.remove('hidden');
-  document.getElementById('coupon-applied').classList.add('hidden');
-  document.getElementById('coupon-input').value = '';
-  VBToast.show('Coupon removed', 'info');
-  updateSummary();
-}
-
-// ── Summary ───────────────────────────────────────────────────
 function updateSummary() {
-  const t = VBCart.totals(activeCoupon);
+    const totals = VBCart.totals(activeCoupon);
+    document.getElementById("sum-subtotal").textContent = `Rs. ${totals.subtotal.toLocaleString()}`;
+    document.getElementById("sum-delivery").textContent = totals.deliveryFee === 0 ? "FREE" : `Rs. ${totals.deliveryFee}`;
+    document.getElementById("sum-total").textContent = totals.total.toLocaleString();
 
-  document.getElementById('os-item-count').textContent = VBCart.get().length;
-  document.getElementById('os-subtotal').textContent   = fmtPrice(t.subtotal);
-  document.getElementById('os-delivery').textContent   = t.deliveryFee === 0 ? '🎁 Free' : fmtPrice(t.deliveryFee);
-  document.getElementById('os-total').textContent      = fmtPrice(t.total);
-
-  const discRow = document.getElementById('os-disc-row');
-  const discEl  = document.getElementById('os-disc');
-  if (t.discount > 0) {
-    discRow.style.display = '';
-    discEl.textContent = `−${fmtPrice(t.discount)}`;
-  } else {
-    discRow.style.display = 'none';
-  }
+    const discRow = document.getElementById("sum-disc-row");
+    if (totals.discount > 0) {
+        discRow.style.display = "flex";
+        document.getElementById("sum-discount").textContent = `-Rs. ${totals.discount.toLocaleString()}`;
+    } else {
+        discRow.style.display = "none";
+    }
 }
 
-// ── Checkout ──────────────────────────────────────────────────
-function goCheckout() {
-  if (!VBCart.get().length) { VBToast.show('Your cart is empty', 'warning'); return; }
-  // Pass coupon in session storage for checkout
-  if (activeCoupon) sessionStorage.setItem('vb_coupon', activeCoupon);
-  else sessionStorage.removeItem('vb_coupon');
-  window.location.href = 'checkout.html';
+function applyCoupon() {
+    const code = document.getElementById("coupon-input").value.trim().toUpperCase();
+    if (code === "VELVET10") {
+        activeCoupon = code;
+        VBToast.show("10% Discount Applied! ✨", "success");
+        updateSummary();
+    } else {
+        VBToast.show("Invalid code", "error");
+    }
+}
+
+function renderMiniRecs() {
+    const mini = document.getElementById("mini-recs");
+    if (!mini) return;
+    const recs = VBProducts.get().slice(0, 2);
+    mini.innerHTML = recs.map(p => `
+        <div style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
+            <img src="${p.image}" width="50" style="border-radius:10px;">
+            <div style="font-size:12px;"><strong>${p.name}</strong><br>Rs. ${p.price}</div>
+        </div>
+    `).join("");
 }

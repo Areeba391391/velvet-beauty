@@ -1,265 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shop — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css"/>
-  <link rel="stylesheet" href="../public/css/main.css"/>
-  <link rel="stylesheet" href="../public/css/shop.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Collection — Velvet Beauty</title>
+  <link rel="stylesheet" href="../public/css/variables.css">
+  <link rel="stylesheet" href="../public/css/main.css">
+  <link rel="stylesheet" href="../public/css/shop.css">
 </head>
 <body>
 <div id="toast-container"></div>
 
-<!-- NAVBAR (solid on inner pages) -->
-<nav class="navbar solid" id="navbar">
-  <div class="container">
-    <div class="navbar-inner">
-      <a href="index.html" class="navbar-logo">
-        <svg class="logo-svg" viewBox="0 0 38 38" fill="none">
-          <circle cx="19" cy="19" r="18" fill="#4A1A40"/>
-          <ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/>
-          <ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/>
-          <rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/>
-          <circle cx="19" cy="29" r="2" fill="#E91E8C"/>
-        </svg>
-        <div class="logo-text">
-          <span class="logo-name">Velvet Beauty</span>
-          <span class="logo-tag">Luxury Cosmetics</span>
-        </div>
+<!-- NAVBAR (dark for shop page) -->
+<nav class="navbar navbar-dark-solid" id="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="logo">Velvet<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="wishlist.html">Wishlist</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="nav-cart-link">
+        Cart <span class="cart-count-pill" id="cart-count" style="display:none">0</span>
       </a>
-      <ul class="navbar-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="shop.html" class="active">Shop</a></li>
-        <li><a href="wishlist.html">Wishlist</a></li>
-        <li><a href="dashboard-login.html" id="nav-dashboard-link" style="display:none;">Dashboard</a></li>
-      </ul>
-      <div class="navbar-actions">
-        <a href="wishlist.html" class="nav-icon-btn" title="Wishlist">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span class="nav-badge" id="wishlist-count" style="display:none">0</span>
-        </a>
-        <a href="cart.html" class="nav-icon-btn" title="Cart">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span class="nav-badge" id="cart-count" style="display:none">0</span>
-        </a>
-        <div class="nav-dropdown-wrap">
-          <a href="login.html" class="nav-icon-btn" id="account-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </a>
-          <div class="nav-dropdown" id="user-dropdown"></div>
-        </div>
-        <button class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></button>
+      <div class="nav-dropdown-wrap">
+        <button id="account-btn"></button>
+        <div id="user-dropdown"></div>
       </div>
     </div>
   </div>
 </nav>
 
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobile-menu">
-  <a href="index.html">Home</a>
-  <a href="shop.html" class="active">Shop</a>
-  <a href="wishlist.html">Wishlist</a>
-  <a href="cart.html">Cart</a>
-  <div class="mob-divider"></div>
-  <a href="login.html" id="mob-account-link">Login</a>
-  <a href="dashboard-login.html" id="mob-dashboard-link" style="display:none;">Dashboard</a>
-</div>
-
-<!-- ═══════ SHOP HERO (unique dark plum — NOT same as homepage) ═══════ -->
-<section class="shop-hero">
-  <div class="container">
-    <div class="shop-hero-inner">
-      <div class="shop-hero-left">
-        <p class="shop-hero-eyebrow" id="shop-eyebrow">Explore Our Collection</p>
-        <h1 class="shop-hero-title" id="shop-title">All <em>Products</em></h1>
-        <nav class="shop-hero-breadcrumb breadcrumb">
-          <a href="index.html">Home</a>
-          <span class="breadcrumb-sep">›</span>
-          <span class="breadcrumb-curr" id="shop-breadcrumb-curr">Shop</span>
-        </nav>
-      </div>
-      <!-- Category quick-nav pills -->
-      <div class="shop-hero-cats" id="hero-cats">
-        <button class="hero-cat-pill active" data-cat="all">All</button>
-        <button class="hero-cat-pill" data-cat="Lips">💄 Lips</button>
-        <button class="hero-cat-pill" data-cat="Face">✨ Face</button>
-        <button class="hero-cat-pill" data-cat="Eyes">👁️ Eyes</button>
-        <button class="hero-cat-pill" data-cat="Cheeks">🌸 Cheeks</button>
-        <button class="hero-cat-pill" data-cat="Skincare">🌿 Skincare</button>
-      </div>
+<!-- SHOP HERO -->
+<header class="shop-hero">
+  <div class="shop-hero-overlay"></div>
+  <div class="container shop-hero-content">
+    <span class="hero-eyebrow-small">Luxury Selection</span>
+    <h1>The <em>Complete</em> Collection</h1>
+    <p>Handcrafted premium cosmetics for your everyday radiance</p>
+    <div class="shop-hero-tabs">
+      <button class="shop-tab active" data-cat="all">All</button>
+      <button class="shop-tab" data-cat="Lips">Lips</button>
+      <button class="shop-tab" data-cat="Face">Face</button>
+      <button class="shop-tab" data-cat="Eyes">Eyes</button>
+      <button class="shop-tab" data-cat="Cheeks">Cheeks</button>
+      <button class="shop-tab" data-cat="Skincare">Skincare</button>
     </div>
   </div>
-</section>
+</header>
 
-<!-- ═══════ SHOP MAIN ═══════ -->
-<section class="shop-section">
+<!-- MAIN SHOP CONTENT -->
+<section class="shop-body">
   <div class="container">
     <div class="shop-layout">
 
-      <!-- FILTER SIDEBAR -->
-      <aside class="filter-sidebar" id="filter-sidebar">
-        <div class="filter-top">
-          <h2 class="filter-title">Filters</h2>
-          <button class="filter-clear-btn" onclick="clearAllFilters()">Clear All</button>
-        </div>
-
-        <!-- Category -->
-        <div class="filter-group">
-          <div class="filter-group-head">
-            <span>Category</span><span class="fgh-arrow">▾</span>
-          </div>
-          <div class="filter-group-body" id="cat-filter-list">
-            <div class="fcat-pill active" data-cat="all">
-              <div class="fcat-left"><span>All Products</span></div>
-              <span class="fcat-count" id="fcat-all">20</span>
-            </div>
-            <div class="fcat-pill" data-cat="Lips">
-              <div class="fcat-left"><span class="fcat-dot" style="background:#E91E8C"></span><span>Lips</span></div>
-              <span class="fcat-count" id="fcat-lips">5</span>
-            </div>
-            <div class="fcat-pill" data-cat="Face">
-              <div class="fcat-left"><span class="fcat-dot" style="background:#C9956C"></span><span>Face</span></div>
-              <span class="fcat-count" id="fcat-face">4</span>
-            </div>
-            <div class="fcat-pill" data-cat="Eyes">
-              <div class="fcat-left"><span class="fcat-dot" style="background:#6B2D5E"></span><span>Eyes</span></div>
-              <span class="fcat-count" id="fcat-eyes">4</span>
-            </div>
-            <div class="fcat-pill" data-cat="Cheeks">
-              <div class="fcat-left"><span class="fcat-dot" style="background:#C2185B"></span><span>Cheeks</span></div>
-              <span class="fcat-count" id="fcat-cheeks">3</span>
-            </div>
-            <div class="fcat-pill" data-cat="Skincare">
-              <div class="fcat-left"><span class="fcat-dot" style="background:#2D8A4E"></span><span>Skincare</span></div>
-              <span class="fcat-count" id="fcat-skincare">4</span>
-            </div>
+      <!-- SIDEBAR -->
+      <aside class="shop-sidebar">
+        <div class="sidebar-widget">
+          <h3 class="widget-title">Search</h3>
+          <div class="sidebar-search">
+            <input type="text" id="shop-search" placeholder="Search products...">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </div>
         </div>
 
-        <!-- Price -->
-        <div class="filter-group">
-          <div class="filter-group-head"><span>Price Range</span><span class="fgh-arrow">▾</span></div>
-          <div class="filter-group-body">
-            <div class="price-display">
-              <span>Rs. <span id="price-min-val">0</span></span>
-              <span>Rs. <span id="price-max-val">5000</span></span>
-            </div>
-            <div class="price-slider-wrap">
-              <div class="price-track"></div>
-              <div class="price-fill" id="price-fill"></div>
-              <input type="range" class="price-range" id="price-min" min="0" max="5000" step="100" value="0"/>
-              <input type="range" class="price-range" id="price-max" min="0" max="5000" step="100" value="5000"/>
-            </div>
+        <div class="sidebar-widget">
+          <h3 class="widget-title">Categories</h3>
+          <ul class="sidebar-cats" id="sidebar-cats">
+            <li class="active" data-cat="all">All Items</li>
+            <li data-cat="Lips">Lips</li>
+            <li data-cat="Face">Face &amp; Base</li>
+            <li data-cat="Eyes">Eye Artistry</li>
+            <li data-cat="Cheeks">Cheeks</li>
+            <li data-cat="Skincare">Skincare</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-widget">
+          <h3 class="widget-title">Price Range</h3>
+          <div class="price-display">
+            Rs. <span id="price-min-val">0</span> — <span id="price-max-val">5000</span>
+          </div>
+          <div class="range-wrap">
+            <input type="range" id="price-min" min="0" max="5000" value="0">
+            <input type="range" id="price-max" min="0" max="5000" value="5000">
           </div>
         </div>
 
-        <!-- Rating -->
-        <div class="filter-group">
-          <div class="filter-group-head"><span>Rating</span><span class="fgh-arrow">▾</span></div>
-          <div class="filter-group-body">
-            <label class="frating-opt"><input type="radio" name="rating" value="0" checked/> All Ratings</label>
-            <label class="frating-opt"><input type="radio" name="rating" value="4.5"/> <span class="frating-stars">★★★★★</span> 4.5+</label>
-            <label class="frating-opt"><input type="radio" name="rating" value="4"/>   <span class="frating-stars">★★★★☆</span> 4.0+</label>
-            <label class="frating-opt"><input type="radio" name="rating" value="3"/>   <span class="frating-stars">★★★☆☆</span> 3.0+</label>
-          </div>
-        </div>
-
-        <!-- Availability -->
-        <div class="filter-group">
-          <div class="filter-group-head"><span>Availability</span><span class="fgh-arrow">▾</span></div>
-          <div class="filter-group-body">
-            <label class="favail-opt"><input type="checkbox" id="chk-instock"/> In Stock Only</label>
-            <label class="favail-opt"><input type="checkbox" id="chk-new"/>     New Arrivals Only</label>
-            <label class="favail-opt"><input type="checkbox" id="chk-sale"/>    On Sale Only</label>
-          </div>
+        <div class="sidebar-promo-card">
+          <span>✨</span>
+          <p>Free delivery on orders over <strong>Rs. 2,000</strong></p>
         </div>
       </aside>
 
-      <!-- PRODUCTS AREA -->
-      <div class="shop-products-area">
-        <!-- Toolbar -->
+      <!-- PRODUCTS -->
+      <div class="shop-products">
         <div class="shop-toolbar">
-          <div class="shop-search-wrap">
-            <span class="shop-search-icon">🔍</span>
-            <input class="shop-search" id="shop-search" placeholder="Search products..." oninput="shopSearch(this.value)"/>
+          <span class="results-label"><strong id="results-count">0</strong> products found</span>
+          <div class="sort-group">
+            <label>Sort:</label>
+            <select id="shop-sort" onchange="applyFilters()">
+              <option value="default">Newest First</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating">Top Rated</option>
+            </select>
           </div>
-          <select class="shop-sort" id="shop-sort" onchange="applyFilters()">
-            <option value="default">Featured</option>
-            <option value="price-asc">Price: Low → High</option>
-            <option value="price-desc">Price: High → Low</option>
-            <option value="rating">Top Rated</option>
-            <option value="bestseller">Best Selling</option>
-            <option value="newest">Newest First</option>
-          </select>
-          <div class="view-toggle">
-            <button class="view-btn active" id="btn-grid" title="Grid" onclick="setView('grid',this)">⊞</button>
-            <button class="view-btn" id="btn-list" title="List" onclick="setView('list',this)">☰</button>
-          </div>
-          <button class="mob-filter-btn" onclick="openMobileFilter()">
-            ⚙️ Filters
-            <span class="mob-filter-badge hidden" id="filter-badge">0</span>
-          </button>
-          <span class="results-label"><b id="results-count">0</b> results</span>
         </div>
 
-        <!-- Active filter chips -->
-        <div class="active-chips" id="active-chips" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;"></div>
+        <div class="shop-grid" id="shop-grid"></div>
 
-        <!-- Products -->
-        <div class="products-grid" id="shop-grid"></div>
-
-        <!-- Empty -->
-        <div class="empty-state hidden" id="shop-empty">
-          <div class="empty-icon">🔍</div>
-          <h3>No Products Found</h3>
-          <p>Try adjusting your filters or search term.</p>
-          <button class="btn btn-primary" onclick="clearAllFilters()">Clear All Filters</button>
+        <div id="shop-empty" class="shop-empty hidden">
+          <div class="empty-icon">🕯️</div>
+          <h3>No products found</h3>
+          <p>Try adjusting your filters or search terms.</p>
+          <button class="btn btn-primary" onclick="clearAllFilters()">Reset Filters</button>
         </div>
-
-        <!-- Pagination -->
-        <div class="pagination" id="shop-pagination"></div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- Filter overlay (mobile) -->
-<div class="filter-overlay" id="filter-overlay" onclick="closeMobileFilter()"></div>
-
-<!-- Quick View Modal -->
-<div class="modal-overlay" id="quickview-modal">
-  <div class="modal-box" style="max-width:700px;">
-    <div class="modal-hdr">
-      <h3 class="modal-title" id="qv-name">Product</h3>
-      <button class="modal-close" onclick="VBModal.close('quickview-modal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="qv-grid">
-        <img class="qv-img" id="qv-img" src="" alt=""/>
-        <div>
-          <div class="qv-cat" id="qv-cat"></div>
-          <div class="qv-name" id="qv-name2"></div>
-          <div class="qv-stars" id="qv-stars"></div>
-          <p class="qv-desc" id="qv-desc"></p>
-          <div class="qv-price">
-            <span class="qv-price-now" id="qv-price-now"></span>
-            <span class="qv-price-was" id="qv-price-was"></span>
-          </div>
-          <div class="qv-btns">
-            <button class="btn btn-primary" id="qv-add-btn">Add to Cart 🛒</button>
-            <a class="btn btn-outline" id="qv-detail-btn" href="#">View Details</a>
-          </div>
-        </div>
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-col">
+      <h2 class="footer-logo">Velvet<span>.</span></h2>
+      <p>Premium cosmetics boutique. Handcrafted with passion in Pakistan.</p>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);font-size:13px;font-weight:700;transition:0.2s;text-decoration:none;" onmouseover="this.style.background='#E91E8C';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.5)'">f</a>
+        <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);font-size:11px;font-weight:700;transition:0.2s;text-decoration:none;" onmouseover="this.style.background='#E91E8C';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.5)'">ig</a>
+        <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);font-size:11px;font-weight:700;transition:0.2s;text-decoration:none;" onmouseover="this.style.background='#E91E8C';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.5)'">tw</a>
       </div>
     </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="shop.html">All Products</a></li>
+        <li><a href="shop.html?cat=Lips">Lips</a></li>
+        <li><a href="shop.html?cat=Face">Face</a></li>
+        <li><a href="shop.html?cat=Eyes">Eyes</a></li>
+        <li><a href="shop.html?cat=Skincare">Skincare</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Shipping Policy</a></li>
+        <li><a href="#">Return Policy</a></li>
+        <li><a href="dashboard-login.html">Staff Login</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Newsletter</h4>
+      <p style="margin-bottom:16px">Get exclusive drops and early access to new arrivals.</p>
+      <div style="display:flex;gap:8px">
+        <input type="email" placeholder="Your email" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);padding:11px 14px;color:#fff;flex:1;border-radius:10px;font-size:13px;outline:none;">
+        <button onclick="VBToast.show('Thanks for subscribing!','success')" style="background:var(--p-pink);border:none;color:#fff;padding:0 18px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;">Join</button>
+      </div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:10px;">No spam. Unsubscribe anytime.</p>
+    </div>
   </div>
-</div>
+  <div class="container">
+    <div class="footer-bottom">&copy; 2025 Velvet Beauty — All rights reserved. Made with 💜 in Pakistan</div>
+  </div>
+</footer>
 
-<!-- Confirm Modal -->
+
 <div class="modal-overlay" id="confirm-modal">
-  <div class="modal-box" style="max-width:400px;">
+  <div class="modal-box" style="max-width:400px">
     <div class="confirm-body">
       <div class="confirm-icon">⚠️</div>
       <p class="confirm-msg" id="confirm-msg"></p>

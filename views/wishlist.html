@@ -1,107 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wishlist — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css"/>
-  <link rel="stylesheet" href="../public/css/main.css"/>
-  <link rel="stylesheet" href="../public/css/wishlist.css"/>
+  <link rel="stylesheet" href="../public/css/variables.css">
+  <link rel="stylesheet" href="../public/css/main.css">
+  <link rel="stylesheet" href="../public/css/wishlist.css">
 </head>
 <body>
 <div id="toast-container"></div>
-
-<nav class="navbar solid" id="navbar">
-  <div class="container">
-    <div class="navbar-inner">
-      <a href="index.html" class="navbar-logo">
-        <svg class="logo-svg" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" fill="#4A1A40"/><ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/><ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/><rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/><circle cx="19" cy="29" r="2" fill="#E91E8C"/></svg>
-        <div class="logo-text"><span class="logo-name">Velvet Beauty</span><span class="logo-tag">Luxury Cosmetics</span></div>
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark-solid" id="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="logo">Velvet<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="wishlist.html" class="active">Wishlist</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="nav-cart-link">
+        Cart <span class="cart-count-pill" id="cart-count" style="display:none">0</span>
       </a>
-            <ul class="navbar-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="shop.html">Shop</a></li>
-        <li><a href="wishlist.html">Wishlist</a></li>
-        <li><a href="dashboard-login.html" id="nav-dashboard-link" style="display:none;">Dashboard</a></li>
-      </ul>
-      <div class="navbar-actions">
-        <a href="wishlist.html" class="nav-icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span class="nav-badge" id="wishlist-count" style="display:none">0</span>
-        </a>
-        <a href="cart.html" class="nav-icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span class="nav-badge" id="cart-count" style="display:none">0</span>
-        </a>
-        <div class="nav-dropdown-wrap">
-          <a href="login.html" class="nav-icon-btn" id="account-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </a>
-          <div class="nav-dropdown" id="user-dropdown"></div>
-        </div>
-        <button class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></button>
+      <div class="nav-dropdown-wrap">
+        <button id="account-btn"></button>
+        <div id="user-dropdown"></div>
       </div>
     </div>
   </div>
 </nav>
 
-<div class="mobile-menu" id="mobile-menu">
-  <a href="index.html">Home</a>
-  <a href="shop.html">Shop</a>
-  <a href="wishlist.html">Wishlist</a>
-  <a href="cart.html">Cart</a>
-  <div class="mob-divider"></div>
-  <a href="login.html" id="mob-account-link">Login / Register</a>
-  <a href="dashboard-login.html" id="mob-dashboard-link" style="display:none;">Dashboard</a>
-</div>
-  <a href="wishlist.html">💝 Wishlist</a>
-  <a href="cart.html">🛒 Cart</a>
-  <a href="login.html" id="mob-account-link">👤 Login</a>
-</div>
-
-<!-- PAGE HERO -->
-<div class="page-hero" style="background:linear-gradient(140deg,var(--cream) 0%,var(--pink-ultra) 55%,var(--cream-dark) 100%);">
+<main class="wishlist-main">
   <div class="container">
-    <div class="page-hero-eyebrow">Your Saved Items</div>
-    <h1 class="page-hero-title">My <em>Wishlist</em> 💝</h1>
-    <p class="page-hero-sub">Products you love — saved for later.</p>
-  </div>
-</div>
-
-<!-- WISHLIST SECTION -->
-<section class="wishlist-section">
-  <div class="container">
-
-    <!-- Empty -->
-    <div class="empty-state hidden" id="wishlist-empty">
-      <div class="empty-icon">💝</div>
-      <h3>Your Wishlist is Empty</h3>
-      <p>Browse our collection and heart the products you love!</p>
-      <a href="shop.html" class="btn btn-primary btn-lg">Explore Collection</a>
-    </div>
-
-    <!-- Toolbar -->
-    <div class="wishlist-toolbar" id="wishlist-toolbar" style="display:none;">
-      <span class="wishlist-count-label" id="wishlist-count-label">0 items</span>
-      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-        <button class="btn btn-primary btn-sm" onclick="moveAllToCart()">
-          Move All to Cart 🛒
-        </button>
-        <button class="btn btn-outline btn-sm" onclick="clearWishlist()">
-          Clear Wishlist
-        </button>
+    <div class="wishlist-header">
+      <!-- <div>
+        <h1 class="page-title">My <em>Wishlist</em></h1>
+        <p class="page-sub">Items you love — saved for later</p>
+      </div> -->
+      <div class="wishlist-actions" id="wish-actions" style="display:none">
+        <button class="btn btn-outline btn-sm" onclick="moveAllToCart()">Move All to Cart</button>
+        <button class="btn btn-ghost btn-sm" onclick="clearWishlist()">Clear Wishlist</button>
       </div>
     </div>
 
+    <!-- Empty State -->
+    <div id="wish-empty" class="wish-empty">
+      <div class="wish-empty-icon">💝</div>
+      <h2>Your wishlist is empty</h2>
+      <p>Browse our collection and save your favourites here.</p>
+      <a href="shop.html" class="btn btn-primary btn-lg">Discover Collection</a>
+    </div>
+
     <!-- Grid -->
-    <div class="wishlist-grid" id="wishlist-grid"></div>
-
+    <div id="wish-grid" class="wish-grid hidden"></div>
   </div>
-</section>
+</main>
 
-<!-- Confirm Modal -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-col">
+      <h2 class="footer-logo">Velvet<span>.</span></h2>
+      <p>Premium cosmetics boutique. Handcrafted with passion in Pakistan.</p>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);font-size:13px;font-weight:700;transition:0.2s;text-decoration:none;" onmouseover="this.style.background='#E91E8C';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.5)'">f</a>
+        <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);font-size:11px;font-weight:700;transition:0.2s;text-decoration:none;" onmouseover="this.style.background='#E91E8C';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.5)'">ig</a>
+        <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);font-size:11px;font-weight:700;transition:0.2s;text-decoration:none;" onmouseover="this.style.background='#E91E8C';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.5)'">tw</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="shop.html">All Products</a></li>
+        <li><a href="shop.html?cat=Lips">Lips</a></li>
+        <li><a href="shop.html?cat=Face">Face</a></li>
+        <li><a href="shop.html?cat=Eyes">Eyes</a></li>
+        <li><a href="shop.html?cat=Skincare">Skincare</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Shipping Policy</a></li>
+        <li><a href="#">Return Policy</a></li>
+        <li><a href="dashboard-login.html">Staff Login</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Newsletter</h4>
+      <p style="margin-bottom:16px">Get exclusive drops and early access to new arrivals.</p>
+      <div style="display:flex;gap:8px">
+        <input type="email" placeholder="Your email" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);padding:11px 14px;color:#fff;flex:1;border-radius:10px;font-size:13px;outline:none;">
+        <button onclick="VBToast.show('Thanks for subscribing!','success')" style="background:var(--p-pink);border:none;color:#fff;padding:0 18px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;">Join</button>
+      </div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:10px;">No spam. Unsubscribe anytime.</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="footer-bottom">&copy; 2025 Velvet Beauty — All rights reserved. Made with 💜 in Pakistan</div>
+  </div>
+</footer>
+
+
 <div class="modal-overlay" id="confirm-modal">
-  <div class="modal-box" style="max-width:400px;">
+  <div class="modal-box" style="max-width:400px">
     <div class="confirm-body">
       <div class="confirm-icon">⚠️</div>
       <p class="confirm-msg" id="confirm-msg"></p>
@@ -114,6 +117,64 @@
 </div>
 
 <script src="../public/js/store.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const session = VBAuth.session();
+  if (!session) {
+    // Show login prompt on wishlist page instead of abrupt redirect
+    document.getElementById('wish-empty').style.display = 'block';
+    document.getElementById('wish-empty').innerHTML = `
+      <div class="wish-empty-icon">🔐</div>
+      <h2>Please Sign In</h2>
+      <p>Login to your account to view and manage your wishlist.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+        <a href="login.html?return=wishlist.html" class="btn btn-primary btn-lg">Login to Account</a>
+        <a href="login.html?return=wishlist.html" class="btn btn-outline btn-lg">Create Account</a>
+      </div>
+    `;
+    return;
+  }
+  renderWishlist();
+});
+
+function renderWishlist() {
+  const ids   = VBWish.get();
+  const grid  = document.getElementById("wish-grid");
+  const empty = document.getElementById("wish-empty");
+  const acts  = document.getElementById("wish-actions");
+
+  if (!ids.length) {
+    if (grid)  grid.classList.add("hidden");
+    if (empty) empty.style.display = "block";
+    if (acts)  acts.style.display = "none";
+    return;
+  }
+  if (empty) empty.style.display = "none";
+  if (grid)  grid.classList.remove("hidden");
+  if (acts)  acts.style.display = "flex";
+
+  const products = ids.map(id => VBProducts.getById(id)).filter(Boolean);
+  grid.innerHTML = products.map((p,i) => vbCard(p, i*0.06)).join("");
+}
+
+function moveAllToCart() {
+  VBWish.moveAll();
+  VBToast.show("All items moved to cart!", "success");
+  renderWishlist();
+  VBCart.updateBadge();
+}
+
+function clearWishlist() {
+  VBModal.confirm("Remove all items from wishlist?", () => {
+    VBWish.save([]);
+    renderWishlist();
+    VBToast.show("Wishlist cleared", "info");
+  });
+}
+
+// Override vbToggleWish to re-render
+const _origToggle = vbToggleWish;
+</script>
 <script src="../public/js/wishlist.js"></script>
 </body>
 </html>

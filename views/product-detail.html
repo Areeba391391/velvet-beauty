@@ -1,227 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Product Detail — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css"/>
-  <link rel="stylesheet" href="../public/css/main.css"/>
-  <link rel="stylesheet" href="../public/css/product-detail.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details — Velvet Beauty</title>
+  <link rel="stylesheet" href="../public/css/variables.css">
+  <link rel="stylesheet" href="../public/css/main.css">
+  <link rel="stylesheet" href="../public/css/product-detail.css">
+  <!-- Premium Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="pd-boutique-bg">
+
 <div id="toast-container"></div>
 
-<nav class="navbar solid" id="navbar">
-  <div class="container">
-    <div class="navbar-inner">
-      <a href="index.html" class="navbar-logo">
-        <svg class="logo-svg" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" fill="#4A1A40"/><ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/><ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/><rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/><circle cx="19" cy="29" r="2" fill="#E91E8C"/></svg>
-        <div class="logo-text"><span class="logo-name">Velvet Beauty</span><span class="logo-tag">Luxury Cosmetics</span></div>
+<!-- DARK BOUTIQUE NAVBAR -->
+<nav class="navbar navbar-dark-solid" id="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="logo">Velvet<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="wishlist.html">Wishlist</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="nav-cart-link">
+        Cart <span class="cart-count-pill" id="cart-count" style="display:none">0</span>
       </a>
-            <ul class="navbar-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="shop.html">Shop</a></li>
-        <li><a href="wishlist.html">Wishlist</a></li>
-        <li><a href="dashboard-login.html" id="nav-dashboard-link" style="display:none;">Dashboard</a></li>
-      </ul>
-      <div class="navbar-actions">
-        <a href="wishlist.html" class="nav-icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span class="nav-badge" id="wishlist-count" style="display:none">0</span>
-        </a>
-        <a href="cart.html" class="nav-icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span class="nav-badge" id="cart-count" style="display:none">0</span>
-        </a>
-        <div class="nav-dropdown-wrap">
-          <a href="login.html" class="nav-icon-btn" id="account-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </a>
-          <div class="nav-dropdown" id="user-dropdown"></div>
-        </div>
-        <button class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></button>
+      <div class="nav-dropdown-wrap">
+        <button id="account-btn"></button>
+        <div id="user-dropdown"></div>
       </div>
     </div>
   </div>
 </nav>
 
-<div class="mobile-menu" id="mobile-menu">
-  <a href="index.html">Home</a>
-  <a href="shop.html">Shop</a>
-  <a href="wishlist.html">Wishlist</a>
-  <a href="cart.html">Cart</a>
-  <div class="mob-divider"></div>
-  <a href="login.html" id="mob-account-link">Login / Register</a>
-  <a href="dashboard-login.html" id="mob-dashboard-link" style="display:none;">Dashboard</a>
-</div>
-  <a href="wishlist.html">💝 Wishlist</a>
-  <a href="cart.html">🛒 Cart</a>
-  <a href="login.html" id="mob-account-link">👤 Login</a>
-</div>
+<!-- MAIN PRODUCT SECTION -->
+<main class="pd-container-v2">
+  <div class="container">
+    
+    <!-- Breadcrumb -->
+    <nav class="pd-breadcrumb">
+      <!-- <a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span id="pd-breadcrumb-name">Product</span> -->
+    </nav>
 
-<!-- ═══════ BREADCRUMB ═══════ -->
-<div class="pd-page">
-  <div class="pd-breadcrumb-bar">
-    <div class="container">
-      <nav class="breadcrumb">
-        <a href="index.html">Home</a>
-        <span class="breadcrumb-sep">›</span>
-        <a href="shop.html">Shop</a>
-        <span class="breadcrumb-sep">›</span>
-        <a href="#" id="pd-breadcrumb-cat">Category</a>
-        <span class="breadcrumb-sep">›</span>
-        <span class="breadcrumb-curr" id="pd-breadcrumb-name">Product</span>
-      </nav>
-    </div>
-  </div>
+    <div class="pd-main-grid">
+      
+      <!-- Left: Gallery Section -->
+      <div class="pd-gallery-v2">
+        <div class="main-stage">
+          <div class="pd-label-overlay" id="pd-badge-v2">BESTSELLER</div>
+          <button class="pd-wish-circle" id="pd-wish-btn-v2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <img id="pd-main-img" src="" alt="Product Image">
+        </div>
+        <div class="thumb-list" id="pd-thumbnails">
+          <!-- Thumbnails here -->
+        </div>
+      </div>
 
-  <!-- ═══════ PRODUCT MAIN ═══════ -->
-  <div class="pd-main">
-    <div class="container">
-      <div class="pd-grid">
-
-        <!-- Gallery -->
-        <div class="pd-gallery">
-          <div class="pd-main-img-wrap">
-            <div class="pd-badge-wrap">
-              <span class="pc-badge" id="pd-badge" style="display:none"></span>
-            </div>
-            <button class="pd-wishlist-btn" id="pd-wishlist-btn" title="Add to Wishlist">🤍</button>
-            <img class="pd-main-img" id="pd-main-img" src="" alt="Product"/>
-          </div>
-          <div class="pd-thumbnails" id="pd-thumbnails"></div>
+      <!-- Right: Content Section -->
+      <div class="pd-summary-v2">
+        <span class="pd-brand-tag" id="pd-cat-v2">Lipstick</span>
+        <h1 class="pd-title-v2" id="pd-name-v2">Velvet Matte</h1>
+        
+        <div class="pd-rating-v2">
+          <div class="stars" id="pd-stars-v2">★★★★★</div>
+          <span class="count" id="pd-review-count-v2">(0 reviews)</span>
+          <span class="stock-status" id="pd-stock-v2">In Stock</span>
         </div>
 
-        <!-- Info -->
-        <div class="pd-info">
-          <div class="pd-cat" id="pd-cat"></div>
-          <h1 class="pd-name" id="pd-name">Loading...</h1>
+        <div class="pd-price-box-v2">
+          <span class="price-current" id="pd-price-now">Rs. 0</span>
+          <span class="price-old" id="pd-price-was"></span>
+          <span class="price-save" id="pd-discount"></span>
+        </div>
 
-          <div class="pd-rating-row">
-            <div class="pd-stars" id="pd-stars"></div>
-            <span class="pd-rating-val" id="pd-rating-val"></span>
-            <span class="pd-review-count" id="pd-review-count"></span>
-            <span class="pd-stock-badge" id="pd-stock"></span>
-          </div>
+        <p class="pd-description-v2" id="pd-desc-v2">Loading product description...</p>
 
-          <div class="pd-price-row">
-            <span class="pd-price-now" id="pd-price-now"></span>
-            <span class="pd-price-was" id="pd-price-was"></span>
-            <span class="pd-discount-tag" id="pd-discount" style="display:none"></span>
-          </div>
-
-          <p class="pd-desc" id="pd-desc"></p>
-
-          <!-- Shades -->
-          <div id="pd-shades-wrap" style="margin-bottom:1.5rem;">
-            <div class="pd-section-label">Shade: <span class="pd-shade-selected" id="pd-shade-selected">—</span></div>
-            <div class="pd-swatches" id="pd-swatches"></div>
-          </div>
-
-          <!-- Qty + Add to Cart -->
-          <div class="pd-cta-row">
-            <div class="qty-ctrl">
-              <button class="qty-btn" id="pd-qty-minus">−</button>
-              <span class="qty-val" id="pd-qty">1</span>
-              <button class="qty-btn" id="pd-qty-plus">+</button>
+        <!-- Configuration -->
+        <div class="pd-config-v2">
+          <div id="pd-shades-wrap" class="config-group">
+            <label>Select Shade: <strong id="pd-shade-name">Dusty Rose</strong></label>
+            <div class="shade-swatches" id="pd-swatches">
+              <!-- Swatches generated here -->
             </div>
-            <button class="btn btn-primary btn-lg" id="pd-add-cart-btn" style="flex:1;">
-              Add to Cart 🛒
-            </button>
-            <button class="btn btn-outline-pink btn-icon" id="pd-wish-btn" title="Wishlist" style="padding:0.85rem;">🤍</button>
           </div>
 
-          <!-- Delivery meta -->
-          <div class="pd-meta-strip">
-            <div class="pd-meta-row"><span class="pd-meta-icon">🚚</span> Free delivery on orders over Rs. 2,000</div>
-            <div class="pd-meta-row"><span class="pd-meta-icon">🔄</span> Easy 7-day returns</div>
-            <div class="pd-meta-row"><span class="pd-meta-icon">✅</span> 100% authentic product</div>
-            <div class="pd-meta-row"><span class="pd-meta-icon">🔒</span> Secure checkout</div>
+          <div class="config-group">
+            <label>Quantity</label>
+            <div class="qty-pill-v2">
+              <button onclick="updateQty(-1)">−</button>
+              <span id="pd-qty">1</span>
+              <button onclick="updateQty(1)">+</button>
+            </div>
           </div>
         </div>
 
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════ REVIEWS ═══════ -->
-  <div class="reviews-section">
-    <div class="container">
-      <div class="section-header" style="text-align:left;margin-bottom:2rem;">
-        <div class="section-eyebrow">Customer Feedback</div>
-        <h2 class="section-title" style="font-size:clamp(1.6rem,3vw,2.4rem);">Reviews &amp; <em>Ratings</em></h2>
-      </div>
-
-      <div class="reviews-layout">
-        <!-- Rating summary -->
-        <div class="rating-summary">
-          <div class="rs-big-num" id="rs-big-num">0.0</div>
-          <div class="rs-stars" id="rs-stars">☆☆☆☆☆</div>
-          <div class="rs-count" id="rs-count">0 reviews</div>
-          <div class="rs-bars" id="rs-bars"></div>
+        <!-- Actions -->
+        <div class="pd-actions-v2">
+          <button class="btn-add-cart-v2" id="pd-add-cart-btn">
+            Add to Selection
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
         </div>
 
-        <!-- Write review -->
-        <div>
-          <div class="write-review-card" id="write-review-card">
-            <h3 class="write-review-title">Write a Review</h3>
-            <div class="star-picker" id="star-picker">
-              <button class="star-pick-btn" data-star="1">★</button>
-              <button class="star-pick-btn" data-star="2">★</button>
-              <button class="star-pick-btn" data-star="3">★</button>
-              <button class="star-pick-btn" data-star="4">★</button>
-              <button class="star-pick-btn" data-star="5">★</button>
-            </div>
-            <div class="form-group">
-              <input class="form-input" id="review-title" placeholder="Review title (optional)"/>
-            </div>
-            <div class="form-group">
-              <textarea class="form-textarea" id="review-text" placeholder="Share your experience with this product..." rows="3"></textarea>
-            </div>
-            <button class="btn btn-primary w-full" id="submit-review-btn">Submit Review</button>
-            <p id="review-login-note" class="hidden" style="text-align:center;margin-top:0.75rem;font-size:0.82rem;color:var(--g400);">
-              <a href="login.html" style="color:var(--pink);font-weight:600;">Login</a> to write a review
-            </p>
-          </div>
-
-          <!-- Reviews list -->
-          <div id="reviews-list"></div>
-          <div class="empty-state hidden" id="reviews-empty" style="padding:2rem;">
-            <div class="empty-icon">💬</div>
-            <h3>No Reviews Yet</h3>
-            <p>Be the first to share your experience!</p>
-          </div>
+        <!-- Value Propositions -->
+        <div class="pd-perks-v2">
+          <div class="perk"><span class="icon">✨</span> Premium Authentic Formula</div>
+          <div class="perk"><span class="icon">🚚</span> Free delivery above Rs. 2,000</div>
+          <div class="perk"><span class="icon">♻️</span> 7-Day Boutique Return Policy</div>
         </div>
       </div>
+
     </div>
   </div>
+</main>
 
-  <!-- ═══════ RELATED ═══════ -->
-  <section class="related-section">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-eyebrow">You May Also Like</div>
-        <h2 class="section-title">Related <em>Products</em></h2>
-      </div>
-      <div class="products-grid" id="related-grid"></div>
-    </div>
-  </section>
+<!-- REVIEWS SECTION -->
+<!-- <section class="reviews-v2">
+  <div class="container"> -->
+    <!-- <div class="review-header">
+      <h2>Boutique <em>Feedback</em></h2>
+      <button class="btn-write-review" onclick="toggleReviewForm()">Write a Review</button>
+    </div> -->
 
-</div><!-- end pd-page -->
+    <!-- <div class="review-layout-v2"> -->
+      <!-- Ratings Sidebar -->
+      <!-- <div class="review-stats">
+        <div class="stat-big" id="rs-big-num">0.0</div>
+        <div class="stat-stars" id="rs-stars">★★★★★</div>
+        <p id="rs-count">Based on 0 reviews</p>
+      </div> -->
 
-<!-- Confirm Modal -->
-<div class="modal-overlay" id="confirm-modal">
-  <div class="modal-box" style="max-width:400px;">
-    <div class="confirm-body">
-      <div class="confirm-icon">⚠️</div>
-      <p class="confirm-msg" id="confirm-msg"></p>
-      <div class="confirm-btns">
-        <button class="btn btn-danger" id="confirm-yes">Confirm</button>
-        <button class="btn btn-ghost" onclick="VBModal.close('confirm-modal')">Cancel</button>
-      </div>
+      <!-- List -->
+      <!-- <div class="review-list-v2" id="reviews-list"> -->
+        <!-- Review cards here -->
+      <!-- </div>
     </div>
   </div>
-</div>
+</section> -->
+
+<!-- RELATED PRODUCTS -->
+<!-- <section class="related-v2"> -->
+  <!-- <div class="container"> -->
+    <!-- <div class="related-header"> -->
+       <!-- <h2>Complete the <em>Look</em></h2> -->
+    <!-- </div> -->
+    <!-- <div class="luxury-grid" id="related-grid"></div> -->
+  <!-- </div> -->
+</section>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-col">
+      <h2 class="footer-logo">Velvet<span>.</span></h2>
+      <p>Premium cosmetics boutique. Handcrafted with passion in Pakistan.</p>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);font-size:13px;font-weight:700;transition:0.2s;text-decoration:none;" onmouseover="this.style.background='#E91E8C';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.5)'">f</a>
+        <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);font-size:11px;font-weight:700;transition:0.2s;text-decoration:none;" onmouseover="this.style.background='#E91E8C';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.5)'">ig</a>
+        <a href="#" style="width:34px;height:34px;background:rgba(255,255,255,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);font-size:11px;font-weight:700;transition:0.2s;text-decoration:none;" onmouseover="this.style.background='#E91E8C';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.08)';this.style.color='rgba(255,255,255,0.5)'">tw</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="shop.html">All Products</a></li>
+        <li><a href="shop.html?cat=Lips">Lips</a></li>
+        <li><a href="shop.html?cat=Face">Face</a></li>
+        <li><a href="shop.html?cat=Eyes">Eyes</a></li>
+        <li><a href="shop.html?cat=Skincare">Skincare</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Shipping Policy</a></li>
+        <li><a href="#">Return Policy</a></li>
+        <li><a href="dashboard-login.html">Staff Login</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Newsletter</h4>
+      <p style="margin-bottom:16px">Get exclusive drops and early access to new arrivals.</p>
+      <div style="display:flex;gap:8px">
+        <input type="email" placeholder="Your email" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);padding:11px 14px;color:#fff;flex:1;border-radius:10px;font-size:13px;outline:none;">
+        <button onclick="VBToast.show('Thanks for subscribing!','success')" style="background:var(--p-pink);border:none;color:#fff;padding:0 18px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;">Join</button>
+      </div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:10px;">No spam. Unsubscribe anytime.</p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="footer-bottom">&copy; 2025 Velvet Beauty — All rights reserved. Made with 💜 in Pakistan</div>
+  </div>
+</footer>
+
 
 <script src="../public/js/store.js"></script>
 <script src="../public/js/product-detail.js"></script>

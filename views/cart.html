@@ -1,170 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cart — Velvet Beauty</title>
-  <link rel="stylesheet" href="../public/css/variables.css"/>
-  <link rel="stylesheet" href="../public/css/main.css"/>
-  <link rel="stylesheet" href="../public/css/cart.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Selection — Velvet Beauty</title>
+  <link rel="stylesheet" href="../public/css/variables.css">
+  <link rel="stylesheet" href="../public/css/main.css">
+  <link rel="stylesheet" href="../public/css/cart.css">
+  <!-- Luxury Boutique Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="boutique-cart-bg">
+
 <div id="toast-container"></div>
 
-<nav class="navbar solid" id="navbar">
-  <div class="container">
-    <div class="navbar-inner">
-      <a href="index.html" class="navbar-logo">
-        <svg class="logo-svg" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" fill="#4A1A40"/><ellipse cx="19" cy="14" rx="5" ry="7" fill="#E91E8C"/><ellipse cx="19" cy="14" rx="3" ry="5" fill="#F472B6"/><rect x="16" y="20" width="6" height="10" rx="3" fill="#C9956C"/><circle cx="19" cy="29" r="2" fill="#E91E8C"/></svg>
-        <div class="logo-text"><span class="logo-name">Velvet Beauty</span><span class="logo-tag">Luxury Cosmetics</span></div>
+<!-- ORIGINAL BOUTIQUE NAVBAR -->
+<nav class="navbar navbar-dark" id="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="logo">Velvet<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">HOME</a></li>
+      <li><a href="shop.html">SHOP</a></li>
+      <li><a href="wishlist.html">WISHLIST</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="cart.html" class="cart-btn">
+        CART ( <span id="cart-count">0</span> )
       </a>
-            <ul class="navbar-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="shop.html">Shop</a></li>
-        <li><a href="wishlist.html">Wishlist</a></li>
-        <li><a href="dashboard-login.html" id="nav-dashboard-link" style="display:none;">Dashboard</a></li>
-      </ul>
-      <div class="navbar-actions">
-        <a href="wishlist.html" class="nav-icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span class="nav-badge" id="wishlist-count" style="display:none">0</span>
-        </a>
-        <a href="cart.html" class="nav-icon-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span class="nav-badge" id="cart-count" style="display:none">0</span>
-        </a>
-        <div class="nav-dropdown-wrap">
-          <a href="login.html" class="nav-icon-btn" id="account-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </a>
-          <div class="nav-dropdown" id="user-dropdown"></div>
-        </div>
-        <button class="nav-hamburger" id="nav-hamburger"><span></span><span></span><span></span></button>
-      </div>
     </div>
   </div>
 </nav>
 
-<div class="mobile-menu" id="mobile-menu">
-  <a href="index.html">Home</a>
-  <a href="shop.html">Shop</a>
-  <a href="wishlist.html">Wishlist</a>
-  <a href="cart.html">Cart</a>
-  <div class="mob-divider"></div>
-  <a href="login.html" id="mob-account-link">Login / Register</a>
-  <a href="dashboard-login.html" id="mob-dashboard-link" style="display:none;">Dashboard</a>
-</div>
-  <a href="wishlist.html">💝 Wishlist</a>
-  <a href="cart.html">🛒 Cart</a>
-  <a href="login.html" id="mob-account-link">👤 Login</a>
+<!-- PROGRESS TRACKER -->
+<div class="cart-header-wrap">
+    <div class="container">
+        <div class="checkout-progress">
+          <div class="step active"><span class="step-num">01</span> Shopping Cart</div>
+          <div class="step-line"></div>
+          <div class="step future"><span class="step-num">02</span> Checkout</div>
+          <div class="step-line"></div>
+          <div class="step future"><span class="step-num">03</span> Confirmation</div>
+        </div>
+        <h1 class="cart-main-title">Your <span>Selection</span></h1>
+    </div>
 </div>
 
-<!-- PAGE HERO -->
-<div class="page-hero">
+<main class="cart-page-content">
   <div class="container">
-    <div class="page-hero-eyebrow">Your Selection</div>
-    <h1 class="page-hero-title">Shopping <em>Cart</em></h1>
-    <p class="page-hero-sub">Review your items and proceed to checkout.</p>
-  </div>
-</div>
-
-<!-- CART SECTION -->
-<section class="cart-section">
-  <div class="container">
-
+    
     <!-- Empty State -->
-    <div class="empty-state hidden" id="cart-empty">
-      <div class="empty-icon">🛒</div>
-      <h3>Your Cart is Empty</h3>
-      <p>Looks like you haven't added anything yet. Explore our luxurious collection!</p>
-      <a href="shop.html" class="btn btn-primary btn-lg">Shop Now</a>
+    <div id="cart-empty" class="cart-empty-msg hidden">
+      <div class="empty-icon">🛍️</div>
+      <h2>Your bag is empty</h2>
+      <p>Discover our boutique collection and fill it with luxury.</p>
+      <a href="shop.html" class="btn-shop-link">Shop Collection</a>
     </div>
 
-    <!-- Cart Layout -->
-    <div class="cart-layout" id="cart-layout">
-
-      <!-- Items Panel -->
-      <div>
-        <div class="cart-panel">
-          <div class="cart-panel-head">
-            <div>
-              <span class="cart-panel-title">Your Items</span>
-              <span class="cart-item-count" id="cart-item-count"></span>
-            </div>
-            <button class="cart-clear-btn" onclick="clearCart()">Clear All</button>
+    <!-- Layout -->
+    <div id="cart-layout" class="cart-main-grid">
+      
+      <!-- Items Area -->
+      <div class="cart-items-panel">
+        <div class="panel-card">
+          <div class="panel-header">
+            <h2 id="cart-title-count">Your Items (0)</h2>
+            <button class="clear-selection" onclick="clearCart()">Clear All</button>
           </div>
-          <!-- Items list -->
-          <div id="cart-items-list"></div>
-
-          <!-- Coupon -->
-          <div class="coupon-row">
-            <div id="coupon-normal">
-              <div class="form-label" style="margin-bottom:0.5rem;">Have a promo code?</div>
-              <div class="coupon-form">
-                <input class="coupon-input" id="coupon-input" placeholder="ENTER CODE" maxlength="20"/>
-                <button class="btn btn-plum btn-sm" onclick="applyCoupon()">Apply</button>
-              </div>
-            </div>
-            <div id="coupon-applied" class="hidden">
-              <div class="coupon-applied-tag">
-                ✅ Coupon <b id="applied-code-name"></b> applied — <b id="applied-disc-text"></b> off!
-                <button class="coupon-remove" onclick="removeCoupon()">✕</button>
-              </div>
-            </div>
+          <div id="cart-items-list" class="items-list">
+             <!-- JS Renders Products Here -->
           </div>
         </div>
-
-        <div style="margin-top:1rem;">
-          <a href="shop.html" class="btn btn-ghost" style="font-size:0.85rem;">
-            ← Continue Shopping
-          </a>
-        </div>
+        
+        <a href="shop.html" class="btn-back-to-shop">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Continue Browsing
+        </a>
       </div>
 
-      <!-- Order Summary -->
-      <div class="order-summary">
-        <h3 class="os-title">Order Summary</h3>
-        <div class="os-row">
-          <span class="os-row-label">Subtotal (<span id="os-item-count">0</span> items)</span>
-          <span class="os-row-val" id="os-subtotal">Rs. 0</span>
+      <!-- Summary Area -->
+      <aside class="cart-summary-sidebar">
+        <div class="summary-card">
+          <h3>Order Summary</h3>
+          
+          <div class="promo-section">
+            <label>BOUTIQUE PROMO</label>
+            <div class="promo-input-wrap">
+              <input type="text" id="coupon-input" placeholder="E.G. VELVET10">
+              <button onclick="applyCoupon()">Apply</button>
+            </div>
+            <div id="coupon-msg" class="coupon-feedback hidden"></div>
+          </div>
+
+          <div class="summary-rows">
+            <div class="s-row"><span>Subtotal</span> <span id="sum-subtotal">Rs. 0</span></div>
+            <div class="s-row discount" id="sum-disc-row" style="display:none">
+                <span>Discount</span> <span id="sum-discount">-Rs. 0</span>
+            </div>
+            <div class="s-row"><span>Shipping</span> <span id="sum-delivery">Rs. 200</span></div>
+            
+            <div class="sum-divider"></div>
+            
+            <div class="total-row-v3">
+              <span class="label">Total</span>
+              <div class="amount-box">
+                <span class="currency">PKR</span>
+                <span id="sum-total">0</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-checkout-premium" onclick="window.location.href='checkout.html'">
+            Proceed to Checkout
+          </button>
         </div>
-        <div class="os-row" id="os-disc-row" style="display:none">
-          <span class="os-row-label">Discount</span>
-          <span class="os-row-disc" id="os-disc">−Rs. 0</span>
+
+        <!-- Recs -->
+        <div class="recs-panel">
+           <h4 class="recs-title">Recommended for You</h4>
+           <div id="mini-recs" class="mini-recs-stack"></div>
         </div>
-        <div class="os-row">
-          <span class="os-row-label">Delivery</span>
-          <span class="os-row-val" id="os-delivery">Rs. 200</span>
-        </div>
-        <div class="os-total-row">
-          <span class="os-total-label">Total</span>
-          <span class="os-total-val" id="os-total">Rs. 0</span>
-        </div>
-        <button class="btn btn-primary btn-full btn-lg" onclick="goCheckout()">
-          Proceed to Checkout →
-        </button>
-        <div class="os-payment-icons" style="margin-top:1rem;justify-content:center;">
-          <span class="pay-icon">VISA</span>
-          <span class="pay-icon">MC</span>
-          <span class="pay-icon">JCB</span>
-          <span class="pay-icon">COD</span>
-        </div>
-      </div>
+      </aside>
+
     </div>
-
   </div>
-</section>
+</main>
 
-<!-- Confirm Modal -->
+<!-- MODAL -->
 <div class="modal-overlay" id="confirm-modal">
-  <div class="modal-box" style="max-width:400px;">
-    <div class="confirm-body">
-      <div class="confirm-icon">⚠️</div>
-      <p class="confirm-msg" id="confirm-msg"></p>
-      <div class="confirm-btns">
-        <button class="btn btn-danger" id="confirm-yes">Confirm</button>
-        <button class="btn btn-ghost" onclick="VBModal.close('confirm-modal')">Cancel</button>
-      </div>
+  <div class="modal-box">
+    <div class="modal-spark">✨</div>
+    <h3>Clear Everything?</h3>
+    <p>Are you sure you want to empty your boutique selection?</p>
+    <div class="modal-btns">
+      <button class="btn-confirm-red" id="confirm-yes">Yes, Clear It</button>
+      <button class="btn-cancel-grey" onclick="VBModal.close('confirm-modal')">No, Keep It</button>
     </div>
   </div>
 </div>
