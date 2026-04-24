@@ -184,7 +184,7 @@ function togglePw(id, btn) {
   inp.type = inp.type === 'password' ? 'text' : 'password';
 }
 
-function handleLogin(e) {
+async function handleLogin(e) {
   e.preventDefault();
   const email    = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
@@ -195,8 +195,8 @@ function handleLogin(e) {
   btn.classList.add('btn-loading'); btn.disabled = true;
   if (errEl) errEl.classList.add('hidden');
 
-  setTimeout(() => {
-    const result = VBAuth.login(email, password, 'customer', '');
+  try {
+    const result = await VBAuth.login(email, password, 'customer', '');
     btn.classList.remove('btn-loading'); btn.disabled = false;
     if (!result.ok) {
       if (msgEl) msgEl.textContent = result.error || 'Invalid email or password.';
@@ -209,10 +209,14 @@ function handleLogin(e) {
       const ret = params.get('return');
       window.location.href = ret ? decodeURIComponent(ret) : 'index.html';
     }, 700);
-  }, 600);
+  } catch (err) {
+    btn.classList.remove('btn-loading'); btn.disabled = false;
+    if (msgEl) msgEl.textContent = 'Connection error. Is the server running?';
+    if (errEl) errEl.classList.remove('hidden');
+  }
 }
 
-function handleRegister(e) {
+async function handleRegister(e) {
   e.preventDefault();
   const data = {
     firstName: document.getElementById('reg-fname').value.trim(),
@@ -228,11 +232,11 @@ function handleRegister(e) {
   btn.classList.add('btn-loading'); btn.disabled = true;
   if (errEl) errEl.classList.add('hidden');
 
-  setTimeout(() => {
-    const result = VBAuth.register(data);
+  try {
+    const result = await VBAuth.register(data);
     btn.classList.remove('btn-loading'); btn.disabled = false;
     if (!result.ok) {
-      if (msgEl) msgEl.textContent = result.error;
+      if (msgEl) msgEl.textContent = result.error || 'Registration failed. Please try again.';
       if (errEl) errEl.classList.remove('hidden');
       return;
     }
@@ -242,7 +246,11 @@ function handleRegister(e) {
       const ret = params.get('return');
       window.location.href = ret ? decodeURIComponent(ret) : 'index.html';
     }, 700);
-  }, 600);
+  } catch (err) {
+    btn.classList.remove('btn-loading'); btn.disabled = false;
+    if (msgEl) msgEl.textContent = 'Connection error. Is the server running?';
+    if (errEl) errEl.classList.remove('hidden');
+  }
 }
 </script>
 </body>

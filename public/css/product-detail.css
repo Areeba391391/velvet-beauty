@@ -125,3 +125,37 @@ body.pd-boutique-bg { background-color: #fff; color: var(--plum); }
     .pd-main-grid { grid-template-columns: 1fr; gap: 40px; }
     .main-stage { height: 450px; }
 }
+/* ── Review Star Picker ── */
+.rv-stars-wrap {
+  display: flex;
+  gap: 6px;
+}
+.rv-star {
+  font-size: 32px;
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.15s, transform 0.15s;
+  user-select: none;
+}
+.rv-star:hover,
+.rv-star.selected {
+  color: #FFD700;
+  transform: scale(1.15);
+}
+
+/* Fix sticky gallery — was too high */
+.pd-gallery-v2 { position: sticky; top: 110px; }
+
+/* Related grid */
+.luxury-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .pd-title-v2 { font-size: 32px; }
+  .price-current { font-size: 28px; }
+  .review-layout-v2 { grid-template-columns: 1fr; }
+  .review-header { flex-direction: column; gap: 14px; align-items: flex-start; }
+}

@@ -242,7 +242,7 @@
     i.type = i.type === 'password' ? 'text' : 'password';
   }
 
-  function handleDashLogin(e) {
+  async function handleDashLogin(e) {
     e.preventDefault();
     const email    = document.getElementById('dl-email').value.trim();
     const password = document.getElementById('dl-password').value;
@@ -254,17 +254,21 @@
     btn.classList.add('btn-loading'); btn.disabled = true;
     if (errEl) errEl.classList.add('hidden');
 
-    setTimeout(() => {
-      const result = VBAuth.login(email, password, dlRole, code);
+    try {
+      const result = await VBAuth.login(email, password, dlRole, code);
       btn.classList.remove('btn-loading'); btn.disabled = false;
       if (!result.ok) {
-        if (msgEl) msgEl.textContent = result.error;
+        if (msgEl) msgEl.textContent = result.error || 'Invalid credentials. Please try again.';
         if (errEl) errEl.classList.remove('hidden');
         return;
       }
       VBToast.show('Welcome back! Redirecting…', 'success');
       setTimeout(() => redirectToDash(result.session.role), 700);
-    }, 600);
+    } catch (err) {
+      btn.classList.remove('btn-loading'); btn.disabled = false;
+      if (msgEl) msgEl.textContent = 'Connection error. Is the server running?';
+      if (errEl) errEl.classList.remove('hidden');
+    }
   }
 
   function redirectToDash(role) {

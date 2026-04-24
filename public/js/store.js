@@ -586,3 +586,8 @@ function typeBadge(type) {
    INIT
 ══════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', function () { initNav(); });
+
+/* ── seedIfNeeded: no-op (seeding is done server-side on startup) ── */
+function seedIfNeeded() {
+  /* Server auto-seeds owner & employee on MongoDB connect. Nothing to do here. */
+}

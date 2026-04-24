@@ -1,7 +1,5 @@
 /* ============================================================
-   VELVET BEAUTY — server.js
-   Express + MongoDB (Mongoose) Backend
-   Run: node server.js  →  http://localhost:3000
+   VELVET BEAUTY — server.js (FIXED)
    ============================================================ */
 
 require('dotenv').config();
@@ -9,7 +7,6 @@ require('dotenv').config();
 const express  = require('express');
 const mongoose = require('mongoose');
 const path     = require('path');
-
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
@@ -21,10 +18,75 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/views',  express.static(path.join(__dirname, 'views')));
 
+/* ── Customer Model (SAME model used by auth.js) ── */
+const Customer = require('./models/Customer');
+
+/* ── Auto Seed Users (Owner + Employee) ── */
+async function seedUsers() {
+  try {
+    const ownerEmail = 'owner@velvetbeauty.pk';
+    const empEmail   = 'employee@velvetbeauty.pk';
+
+    // Remove old bcrypt-hashed users if they exist (they won't work with plain-text auth)
+    const oldOwner = await Customer.findOne({ email: ownerEmail });
+    if (oldOwner) {
+      // If password looks like a bcrypt hash, delete and re-create with plain text
+      if (oldOwner.password && oldOwner.password.startsWith('$2')) {
+        await Customer.deleteOne({ email: ownerEmail });
+        console.log('  🔄  Old hashed owner removed, re-seeding...');
+      }
+    }
+    const oldEmp = await Customer.findOne({ email: empEmail });
+    if (oldEmp) {
+      if (oldEmp.password && oldEmp.password.startsWith('$2')) {
+        await Customer.deleteOne({ email: empEmail });
+        console.log('  🔄  Old hashed employee removed, re-seeding...');
+      }
+    }
+
+    const ownerExists = await Customer.findOne({ email: ownerEmail });
+    const empExists   = await Customer.findOne({ email: empEmail });
+
+    if (!ownerExists) {
+      await Customer.create({
+        name:     'Owner',
+        email:    ownerEmail,
+        password: 'owner123',   // plain text — matches auth.js plain comparison
+        phone:    '',
+        city:     '',
+        role:     'owner',
+      });
+      console.log('  👑  Owner seeded!');
+    }
+
+    if (!empExists) {
+      await Customer.create({
+        name:     'Employee',
+        email:    empEmail,
+        password: 'emp123',     // plain text — matches auth.js plain comparison
+        phone:    '',
+        city:     '',
+        role:     'employee',
+      });
+      console.log('  🏷️   Employee seeded!');
+    }
+
+    console.log('  ✅  Users ready!');
+  } catch (err) {
+    console.error('  ❌  Seeding error:', err.message);
+  }
+}
+
 /* ── MongoDB Connection ── */
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('  ✅  MongoDB connected successfully!'))
-  .catch(err => { console.error('  ❌  MongoDB connection error:', err.message); process.exit(1); });
+  .then(async () => {
+    console.log('  ✅  MongoDB connected successfully!');
+    await seedUsers();
+  })
+  .catch(err => {
+    console.error('  ❌  MongoDB connection error:', err.message);
+    process.exit(1);
+  });
 
 /* ── API Routes ── */
 app.use('/api/products',  require('./routes/products'));
@@ -34,29 +96,54 @@ app.use('/api/reviews',   require('./routes/reviews'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/auth',      require('./routes/auth'));
 
-/* ── Settings API (in-memory defaults, can be extended to DB later) ── */
+/* ── Settings API ── */
 let appSettings = {
   empCode:         process.env.EMP_CODE   || 'EMP2025',
   ownerCode:       process.env.OWNER_CODE || 'OWNER2025',
   freeDeliveryMin: 2000,
   deliveryFee:     200,
 };
+
 let appPromo = {
-  active: false, eyebrow: 'Limited Offer', title: '', desc: '',
-  code: '', codePct: '', ctaText: 'Shop Now', ctaLink: 'shop.html', countdownHours: 8,
+  active: false,
+  eyebrow: 'Limited Offer',
+  title: '',
+  desc: '',
+  code: '',
+  codePct: '',
+  ctaText: 'Shop Now',
+  ctaLink: 'shop.html',
+  countdownHours: 8,
 };
 
-app.get('/api/settings',      (req, res) => res.json({ success: true, data: appSettings }));
-app.put('/api/settings',      (req, res) => { appSettings = { ...appSettings, ...req.body }; res.json({ success: true, data: appSettings }); });
-app.get('/api/promo',         (req, res) => res.json({ success: true, data: appPromo }));
-app.put('/api/promo',         (req, res) => { appPromo = { ...appPromo, ...req.body }; res.json({ success: true, data: appPromo }); });
+app.get('/api/settings', (req, res) => {
+  res.json({ success: true, data: appSettings });
+});
+
+app.put('/api/settings', (req, res) => {
+  appSettings = { ...appSettings, ...req.body };
+  res.json({ success: true, data: appSettings });
+});
+
+app.get('/api/promo', (req, res) => {
+  res.json({ success: true, data: appPromo });
+});
+
+app.put('/api/promo', (req, res) => {
+  appPromo = { ...appPromo, ...req.body };
+  res.json({ success: true, data: appPromo });
+});
 
 /* ── HTML Pages ── */
-app.get('/', (req, res) => res.redirect('/views/index.html'));
+app.get('/', (req, res) => {
+  res.redirect('/views/index.html');
+});
 
 app.get('/:page.html', (req, res) => {
   const file = path.join(__dirname, 'views', req.params.page + '.html');
-  res.sendFile(file, err => { if (err) res.redirect('/views/index.html'); });
+  res.sendFile(file, err => {
+    if (err) res.redirect('/views/index.html');
+  });
 });
 
 /* ── Start Server ── */

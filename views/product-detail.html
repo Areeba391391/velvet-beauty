@@ -7,14 +7,13 @@
   <link rel="stylesheet" href="../public/css/variables.css">
   <link rel="stylesheet" href="../public/css/main.css">
   <link rel="stylesheet" href="../public/css/product-detail.css">
-  <!-- Premium Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="pd-boutique-bg">
 
 <div id="toast-container"></div>
 
-<!-- DARK BOUTIQUE NAVBAR -->
+<!-- NAVBAR -->
 <nav class="navbar navbar-dark-solid" id="navbar">
   <div class="container navbar-inner">
     <a href="index.html" class="logo">Velvet<span>.</span></a>
@@ -38,35 +37,35 @@
 <!-- MAIN PRODUCT SECTION -->
 <main class="pd-container-v2">
   <div class="container">
-    
+
     <!-- Breadcrumb -->
     <nav class="pd-breadcrumb">
-      <!-- <a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span id="pd-breadcrumb-name">Product</span> -->
+      <a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span id="pd-breadcrumb-name">Product</span>
     </nav>
 
     <div class="pd-main-grid">
-      
-      <!-- Left: Gallery Section -->
+
+      <!-- LEFT: Gallery -->
       <div class="pd-gallery-v2">
         <div class="main-stage">
-          <div class="pd-label-overlay" id="pd-badge-v2">BESTSELLER</div>
-          <button class="pd-wish-circle" id="pd-wish-btn-v2">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <div class="pd-label-overlay" id="pd-badge-v2" style="display:none">BESTSELLER</div>
+          <button class="pd-wish-circle" id="pd-wish-btn-v2" title="Add to Wishlist">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
           </button>
           <img id="pd-main-img" src="" alt="Product Image">
         </div>
-        <div class="thumb-list" id="pd-thumbnails">
-          <!-- Thumbnails here -->
-        </div>
+        <div class="thumb-list" id="pd-thumbnails"></div>
       </div>
 
-      <!-- Right: Content Section -->
+      <!-- RIGHT: Info -->
       <div class="pd-summary-v2">
-        <span class="pd-brand-tag" id="pd-cat-v2">Lipstick</span>
-        <h1 class="pd-title-v2" id="pd-name-v2">Velvet Matte</h1>
-        
+        <span class="pd-brand-tag" id="pd-cat-v2">Category</span>
+        <h1 class="pd-title-v2" id="pd-name-v2">Loading...</h1>
+
         <div class="pd-rating-v2">
-          <div class="stars" id="pd-stars-v2">★★★★★</div>
+          <div class="stars" id="pd-stars-v2">☆☆☆☆☆</div>
           <span class="count" id="pd-review-count-v2">(0 reviews)</span>
           <span class="stock-status" id="pd-stock-v2">In Stock</span>
         </div>
@@ -74,20 +73,19 @@
         <div class="pd-price-box-v2">
           <span class="price-current" id="pd-price-now">Rs. 0</span>
           <span class="price-old" id="pd-price-was"></span>
-          <span class="price-save" id="pd-discount"></span>
+          <span class="price-save" id="pd-discount" style="display:none"></span>
         </div>
 
-        <p class="pd-description-v2" id="pd-desc-v2">Loading product description...</p>
+        <p class="pd-description-v2" id="pd-desc-v2">Loading...</p>
 
-        <!-- Configuration -->
+        <!-- Shades -->
         <div class="pd-config-v2">
-          <div id="pd-shades-wrap" class="config-group">
-            <label>Select Shade: <strong id="pd-shade-name">Dusty Rose</strong></label>
-            <div class="shade-swatches" id="pd-swatches">
-              <!-- Swatches generated here -->
-            </div>
+          <div id="pd-shades-wrap" class="config-group" style="display:none">
+            <label>Select Shade: <strong id="pd-shade-name"></strong></label>
+            <div class="shade-swatches" id="pd-swatches"></div>
           </div>
 
+          <!-- Quantity -->
           <div class="config-group">
             <label>Quantity</label>
             <div class="qty-pill-v2">
@@ -101,12 +99,16 @@
         <!-- Actions -->
         <div class="pd-actions-v2">
           <button class="btn-add-cart-v2" id="pd-add-cart-btn">
-            Add to Selection
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Add to Cart
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
           </button>
         </div>
 
-        <!-- Value Propositions -->
+        <!-- Perks -->
         <div class="pd-perks-v2">
           <div class="perk"><span class="icon">✨</span> Premium Authentic Formula</div>
           <div class="perk"><span class="icon">🚚</span> Free delivery above Rs. 2,000</div>
@@ -119,39 +121,82 @@
 </main>
 
 <!-- REVIEWS SECTION -->
-<!-- <section class="reviews-v2">
-  <div class="container"> -->
-    <!-- <div class="review-header">
-      <h2>Boutique <em>Feedback</em></h2>
-      <button class="btn-write-review" onclick="toggleReviewForm()">Write a Review</button>
-    </div> -->
+<section class="reviews-v2">
+  <div class="container">
 
-    <!-- <div class="review-layout-v2"> -->
-      <!-- Ratings Sidebar -->
-      <!-- <div class="review-stats">
-        <div class="stat-big" id="rs-big-num">0.0</div>
-        <div class="stat-stars" id="rs-stars">★★★★★</div>
-        <p id="rs-count">Based on 0 reviews</p>
-      </div> -->
+    <div class="review-header">
+      <h2>Customer <em>Reviews</em></h2>
+      <button class="btn-write-review" id="btn-write-review" onclick="toggleReviewForm()">✍️ Write a Review</button>
+    </div>
 
-      <!-- List -->
-      <!-- <div class="review-list-v2" id="reviews-list"> -->
-        <!-- Review cards here -->
-      <!-- </div>
+    <!-- Write Review Form -->
+    <div id="review-write-form" style="display:none; background:#fff; border-radius:20px; padding:30px; margin-bottom:40px; box-shadow:0 4px 24px rgba(0,0,0,0.06);">
+      <h3 style="font-family:'Playfair Display',serif; font-size:22px; margin-bottom:20px;">Share Your Experience</h3>
+
+      <!-- Star Rating Picker -->
+      <div style="margin-bottom:20px;">
+        <label style="font-size:11px;text-transform:uppercase;font-weight:800;color:#aaa;display:block;margin-bottom:10px;">Your Rating *</label>
+        <div class="rv-stars-wrap" id="rv-stars-input">
+          <span class="rv-star" data-val="1" onclick="setReviewRating(1)">★</span>
+          <span class="rv-star" data-val="2" onclick="setReviewRating(2)">★</span>
+          <span class="rv-star" data-val="3" onclick="setReviewRating(3)">★</span>
+          <span class="rv-star" data-val="4" onclick="setReviewRating(4)">★</span>
+          <span class="rv-star" data-val="5" onclick="setReviewRating(5)">★</span>
+        </div>
+        <input type="hidden" id="rv-rating-val" value="0">
+      </div>
+
+      <!-- Review Text -->
+      <div style="margin-bottom:20px;">
+        <label style="font-size:11px;text-transform:uppercase;font-weight:800;color:#aaa;display:block;margin-bottom:10px;">Your Review *</label>
+        <textarea id="rv-text" rows="4" placeholder="Share your thoughts about this product..." style="width:100%;padding:14px;border:1.5px solid #eee;border-radius:12px;font-size:14px;resize:vertical;outline:none;font-family:inherit;"></textarea>
+      </div>
+
+      <div style="display:flex;gap:12px;">
+        <button id="rv-submit-btn" onclick="submitReview()" style="background:#2A0D28;color:#fff;border:none;padding:14px 32px;border-radius:50px;font-weight:700;font-size:14px;cursor:pointer;">
+          Post Review
+        </button>
+        <button onclick="toggleReviewForm()" style="background:#f5f5f5;color:#666;border:none;padding:14px 24px;border-radius:50px;font-weight:600;font-size:14px;cursor:pointer;">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- Reviews Layout -->
+    <div class="review-layout-v2">
+
+      <!-- Stats Sidebar -->
+      <div class="review-stats">
+        <div class="stat-big" id="rs-big-num">—</div>
+        <div class="stat-stars" id="rs-stars">☆☆☆☆☆</div>
+        <p id="rs-count">No reviews yet</p>
+        <!-- Rating Bars -->
+        <div id="rs-bars" style="margin-top:20px;"></div>
+      </div>
+
+      <!-- Reviews List -->
+      <div class="review-list-v2" id="reviews-list">
+        <div style="padding:28px;background:#fff;border-radius:16px;text-align:center;color:#aaa;font-size:14px;">
+          <div style="font-size:2rem;margin-bottom:8px;">💬</div>
+          Loading reviews...
+        </div>
+      </div>
+
     </div>
   </div>
-</section> -->
-
-<!-- RELATED PRODUCTS -->
-<!-- <section class="related-v2"> -->
-  <!-- <div class="container"> -->
-    <!-- <div class="related-header"> -->
-       <!-- <h2>Complete the <em>Look</em></h2> -->
-    <!-- </div> -->
-    <!-- <div class="luxury-grid" id="related-grid"></div> -->
-  <!-- </div> -->
 </section>
 
+<!-- RELATED PRODUCTS -->
+<section class="related-v2" id="related-section">
+  <div class="container">
+    <div class="related-header">
+      <h2>Complete the <em>Look</em></h2>
+    </div>
+    <div class="luxury-grid" id="related-grid"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer class="footer">
   <div class="container footer-grid">
     <div class="footer-col">
@@ -196,7 +241,6 @@
     <div class="footer-bottom">&copy; 2025 Velvet Beauty — All rights reserved. Made with 💜 in Pakistan</div>
   </div>
 </footer>
-
 
 <script src="../public/js/store.js"></script>
 <script src="../public/js/product-detail.js"></script>
