@@ -80,11 +80,14 @@ function renderGrid(list) {
   const grid  = document.getElementById("shop-grid");
   const empty = document.getElementById("shop-empty");
   const cnt   = document.getElementById("results-count");
-  if (cnt) cnt.textContent = list.length;
+  /* Deduplicate by ID before rendering */
+  const seenIds = new Set();
+  const unique  = list.filter(p => { const id = p._id || p.id; if (seenIds.has(id)) return false; seenIds.add(id); return true; });
+  if (cnt) cnt.textContent = unique.length;
   if (!grid) return;
-  if (!list.length) { grid.innerHTML = ""; if (empty) empty.classList.remove("hidden"); return; }
+  if (!unique.length) { grid.innerHTML = ""; if (empty) empty.classList.remove("hidden"); return; }
   if (empty) empty.classList.add("hidden");
-  grid.innerHTML = list.map((p, i) => vbCard(p, i * 0.05)).join("");
+  grid.innerHTML = unique.map((p, i) => vbCard(p, i * 0.05)).join("");
 }
 
 function clearAllFilters() {

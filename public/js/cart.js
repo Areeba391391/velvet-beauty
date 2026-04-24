@@ -17,7 +17,11 @@ function renderCart() {
   const headCount= document.getElementById("cart-title-count");
 
   const navBadge = document.getElementById("cart-count");
-  if (navBadge) navBadge.textContent = cart.length;
+  if (navBadge) {
+    const totalQty = cart.reduce((s, i) => s + (i.qty || 1), 0);
+    navBadge.textContent = totalQty;
+    navBadge.style.display = totalQty > 0 ? 'flex' : 'none';
+  }
 
   if (!cart || cart.length === 0) {
     if (emptyEl)  emptyEl.classList.remove("hidden");
@@ -55,6 +59,11 @@ function renderCart() {
 
 function changeQty(id, qty) {
   if (qty < 1) return removeItem(id);
+  const MAX_QTY = 2;
+  if (qty > MAX_QTY) {
+    VBToast.show('Maximum 2 per product allowed 🛍️', 'warning');
+    qty = MAX_QTY;
+  }
   VBCart.updateQty(id, qty);
   renderCart();
 }

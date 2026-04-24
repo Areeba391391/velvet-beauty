@@ -196,6 +196,9 @@ async function renderProducts() {
   const params = {};
   if (cat) params.category = cat;
   let products = await VBProducts.fetchAll(params);
+  /* Deduplicate by _id to prevent double rendering */
+  const _seen = new Set();
+  products = products.filter(p => { const pid = p._id || p.id; if (_seen.has(pid)) return false; _seen.add(pid); return true; });
   if (q) products = products.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
 
   const tbody = document.getElementById('products-body');
@@ -274,6 +277,16 @@ async function saveProduct() {
   };
   if (!data.name)  { VBToast.show('Product name is required', 'warning'); return; }
   if (!data.price) { VBToast.show('Price is required', 'warning'); return; }
+
+  /* ── Duplicate name check (only for NEW products) ── */
+  if (!id) {
+    const existing = await VBProducts.fetchAll();
+    const isDuplicate = existing.some(p => p.name.trim().toLowerCase() === data.name.toLowerCase());
+    if (isDuplicate) {
+      VBToast.show('❌ Product "' + data.name + '" already exists! Please use a different name.', 'error', 4000);
+      return;
+    }
+  }
 
   if (id) await VBProducts.update(id, data);
   else    await VBProducts.add(data);

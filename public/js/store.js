@@ -158,16 +158,25 @@ const VBCart = {
     const cart     = this.get();
     const id       = product._id || product.id;
     const existing = cart.find(i => i.id === id);
-    if (existing) existing.qty += qty;
-    else cart.push({
-      id:       id,
-      name:     product.name,
-      price:    product.price,
-      image:    product.image || '',
-      category: product.category,
-      qty,
-    });
+    const MAX_QTY  = 2; /* ── Max 2 per product ── */
+    if (existing) {
+      if (existing.qty >= MAX_QTY) {
+        /* Notify caller — handled via VBToast in vbAddToCart */
+        return 'MAX';
+      }
+      existing.qty = Math.min(existing.qty + qty, MAX_QTY);
+    } else {
+      cart.push({
+        id:       id,
+        name:     product.name,
+        price:    product.price,
+        image:    product.image || '',
+        category: product.category,
+        qty:      Math.min(qty, MAX_QTY),
+      });
+    }
     this.save(cart);
+    return 'OK';
   },
 
   remove(id)         { this.save(this.get().filter(i => i.id !== id)); },
@@ -483,27 +492,48 @@ function vbCard(product, animDelay) {
   const stars    = '&#9733;'.repeat(Math.round(product.rating || 0)) + '&#9734;'.repeat(5 - Math.round(product.rating || 0));
   const origHtml = product.originalPrice ? '<s class="pc-orig">Rs. ' + product.originalPrice.toLocaleString() + '</s>' : (product.origPrice ? '<s class="pc-orig">Rs. ' + product.origPrice.toLocaleString() + '</s>' : '');
   const badgeMap = { bestseller: 'badge-bestseller', sale: 'badge-sale', hot: 'badge-hot', new: 'badge-new' };
-  const badge    = product.badge ? '<span class="pc-badge ' + (badgeMap[product.badge] || '') + '">' + product.badge + '</span>' : '';
   const imgSrc   = product.image || 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600';
 
-  return '<div class="product-card" style="animation-delay:' + animDelay + 's" data-id="' + id + '">' +
-    '<div class="pc-img-wrap">' + badge +
+  /* ── Out of Stock check ── */
+  const stock     = typeof product.stock !== 'undefined' ? Number(product.stock) : 1;
+  const isOOS     = stock <= 0;
+  const badgeHtml = isOOS
+    ? '<span class="pc-badge badge-oos">Out of Stock</span>'
+    : (product.badge ? '<span class="pc-badge ' + (badgeMap[product.badge] || '') + '">' + product.badge + '</span>' : '');
+
+  /* Hover overlay — disable cart/wishlist when OOS */
+  const overlayBtns = isOOS
+    ? '<span class="pc-oos-label">Currently Unavailable</span><a class="pc-icon-btn" title="View Details" href="product-detail.html?id=' + id + '">' + ICONS.eye + '</a>'
+    : '<button class="pc-icon-btn' + (inWish ? ' wished' : '') + '" title="' + (inWish ? 'Remove from Wishlist' : 'Add to Wishlist') + '" onclick="vbToggleWish(\'' + id + '\',this)">' + (inWish ? ICONS.heartFill : ICONS.heart) + '</button>' +
+      '<button class="pc-quick-add-btn" onclick="vbAddToCart(\'' + id + '\')">' + ICONS.cart + ' Add to Cart</button>' +
+      '<a class="pc-icon-btn" title="View Details" href="product-detail.html?id=' + id + '">' + ICONS.eye + '</a>';
+
+  /* Add button — disabled when OOS */
+  const addBtnHtml = isOOS
+    ? '<button class="pc-add-btn pc-add-btn--oos" disabled title="Out of Stock">&#x1F6AB;</button>'
+    : '<button class="pc-add-btn" onclick="vbAddToCart(\'' + id + '\')" title="Add to Cart">' + ICONS.plus + '</button>';
+
+  return '<div class="product-card' + (isOOS ? ' card-oos' : '') + '" style="animation-delay:' + animDelay + 's" data-id="' + id + '">' +
+    '<div class="pc-img-wrap">' + badgeHtml +
     '<img src="' + imgSrc + '" alt="' + product.name + '" loading="lazy" onerror="this.src=\'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600\'"/>' +
-    '<div class="pc-hover-overlay">' +
-    '<button class="pc-icon-btn' + (inWish ? ' wished' : '') + '" title="' + (inWish ? 'Remove from Wishlist' : 'Add to Wishlist') + '" onclick="vbToggleWish(\'' + id + '\',this)">' + (inWish ? ICONS.heartFill : ICONS.heart) + '</button>' +
-    '<button class="pc-quick-add-btn" onclick="vbAddToCart(\'' + id + '\')">' + ICONS.cart + ' Add to Cart</button>' +
-    '<a class="pc-icon-btn" title="View Details" href="product-detail.html?id=' + id + '">' + ICONS.eye + '</a>' +
+    '<div class="pc-hover-overlay">' + overlayBtns +
     '</div></div>' +
     '<div class="pc-body">' +
     '<span class="pc-cat">' + product.category + '</span>' +
     '<a class="pc-name" href="product-detail.html?id=' + id + '">' + product.name + '</a>' +
     '<div class="pc-stars"><span>' + stars + '</span><span class="pc-rev">(' + (product.reviews || 0) + ')</span></div>' +
     '<div class="pc-footer"><div class="pc-price"><span class="pc-now">Rs. ' + product.price.toLocaleString() + '</span>' + origHtml + '</div>' +
-    '<button class="pc-add-btn" onclick="vbAddToCart(\'' + id + '\')" title="Add to Cart">' + ICONS.plus + '</button>' +
+    addBtnHtml +
     '</div></div></div>';
 }
 
 function vbToggleWish(id, btn) {
+  /* Check OOS from cached product */
+  const p = VBProducts.getByIdSync(id);
+  if (p && typeof p.stock !== 'undefined' && Number(p.stock) <= 0) {
+    VBToast.show('This product is Out of Stock', 'error');
+    return;
+  }
   const session = VBAuth.session();
   if (!session) {
     VBToast.show('Please login to save items to wishlist', 'warning');
@@ -538,8 +568,18 @@ async function vbAddToCart(id) {
   let p = VBProducts.getByIdSync(id);
   if (!p) p = await VBProducts.getById(id);
   if (!p) return;
-  VBCart.add(p);
-  VBToast.show(p.name + ' added to cart', 'success');
+  /* Out of Stock check — prevent adding to cart */
+  const stock = typeof p.stock !== 'undefined' ? Number(p.stock) : 1;
+  if (stock <= 0) {
+    VBToast.show(p.name + ' is Out of Stock', 'error');
+    return;
+  }
+  const result = VBCart.add(p);
+  if (result === 'MAX') {
+    VBToast.show('Maximum 2 per product allowed in cart 🛍️', 'warning');
+  } else {
+    VBToast.show(p.name + ' added to cart ✅', 'success');
+  }
 }
 
 async function vbQuickView(id) {

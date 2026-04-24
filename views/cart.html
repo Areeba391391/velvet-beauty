@@ -14,20 +14,54 @@
 
 <div id="toast-container"></div>
 
-<!-- ORIGINAL BOUTIQUE NAVBAR -->
+<!-- NAVBAR -->
 <nav class="navbar navbar-dark" id="navbar">
   <div class="container navbar-inner">
     <a href="index.html" class="logo">Velvet<span>.</span></a>
+
     <ul class="nav-links">
       <li><a href="index.html">HOME</a></li>
       <li><a href="shop.html">SHOP</a></li>
       <li><a href="wishlist.html">WISHLIST</a></li>
+      <li><a href="cart.html" class="active">CART</a></li>
     </ul>
+
     <div class="nav-actions">
-      <a href="cart.html" class="cart-btn">
-        CART ( <span id="cart-count">0</span> )
+      <!-- Account button (filled by store.js initNav) -->
+      <button class="nav-icon-btn" id="account-btn" title="Account">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+
+      <!-- Wishlist -->
+      <a href="wishlist.html" class="nav-icon-btn nav-wish-btn" title="Wishlist">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span id="wishlist-count" class="nav-badge" style="display:none">0</span>
       </a>
+
+      <!-- Cart -->
+      <a href="cart.html" class="nav-icon-btn nav-cart-btn active" title="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span id="cart-count" class="nav-badge" style="display:none">0</span>
+      </a>
+
+      <!-- Hamburger (mobile) -->
+      <button class="hamburger" id="nav-hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+
+    <!-- User dropdown -->
+    <div class="user-dropdown" id="user-dropdown"></div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <ul>
+      <li><a href="index.html">HOME</a></li>
+      <li><a href="shop.html">SHOP</a></li>
+      <li><a href="wishlist.html">WISHLIST</a></li>
+      <li><a href="cart.html">CART</a></li>
+    </ul>
   </div>
 </nav>
 

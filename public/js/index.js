@@ -13,8 +13,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 2. Load products from MongoDB
   const allProducts = await VBProducts.fetchAll();
 
-  // 3. Bestseller Rotator
-  const bests  = allProducts.filter(p => p.badge === 'bestseller' || p.sold > 0).sort((a,b) => (b.sold||0)-(a.sold||0));
+  // 3. Bestseller Rotator — deduplicate by ID
+  const _bestsRaw = allProducts.filter(p => p.badge === 'bestseller' || p.bestseller === true || (p.sold && p.sold > 0));
+  const _seenIds  = new Set();
+  const bests     = _bestsRaw.filter(p => { const id = p._id || p.id; if (_seenIds.has(id)) return false; _seenIds.add(id); return true; }).sort((a,b) => (b.sold||0)-(a.sold||0));
   let bsIndex  = 0;
   const card   = document.getElementById("bestseller-card");
   const bsImg  = document.getElementById("bs-img");
