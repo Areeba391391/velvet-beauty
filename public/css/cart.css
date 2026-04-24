@@ -75,3 +75,123 @@ body.boutique-cart-bg { background-color: var(--soft-bg); color: var(--plum); fo
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 2000; }
 .modal-box { background: #fff; padding: 50px; border-radius: 40px; text-align: center; width: 380px; }
 .btn-confirm-red { background: #ff4d4d; color: #fff; border: none; padding: 15px 30px; border-radius: 50px; font-weight: 700; margin-top: 20px; cursor: pointer; width: 100%; }
+
+/* ============================================================
+   NAVBAR — ICON BUTTONS, BADGES, HAMBURGER & MOBILE MENU
+   (Missing styles added for cart page navbar)
+   ============================================================ */
+
+/* Icon buttons (account, wishlist, cart) */
+.nav-icon-btn {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff; transition: 0.25s; cursor: pointer;
+  text-decoration: none;
+}
+.nav-icon-btn:hover {
+  background: rgba(255,255,255,0.18);
+  border-color: var(--p-pink);
+  color: #fff;
+}
+/* Active state (current page icon) */
+.nav-icon-btn.active,
+.nav-cart-btn.active {
+  background: var(--p-pink);
+  border-color: var(--p-pink);
+}
+
+/* Badge (cart count / wishlist count) */
+.nav-badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  min-width: 18px; height: 18px;
+  background: var(--p-pink);
+  color: #fff;
+  font-size: 9px; font-weight: 800;
+  border-radius: 50px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px;
+  border: 2px solid #000;
+  line-height: 1;
+}
+/* When active btn already has pink bg, use white badge */
+.nav-icon-btn.active .nav-badge {
+  background: #fff;
+  color: var(--p-pink);
+  border-color: var(--p-pink);
+}
+
+/* Hamburger button (mobile) */
+.hamburger {
+  display: none;
+  flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px;
+  width: 38px; height: 38px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  cursor: pointer; padding: 0;
+  transition: 0.25s;
+}
+.hamburger:hover { background: rgba(255,255,255,0.18); border-color: var(--p-pink); }
+.hamburger span {
+  display: block;
+  width: 18px; height: 2px;
+  background: #fff; border-radius: 2px;
+  transition: 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile menu */
+.mobile-menu {
+  display: none;
+  background: rgba(10, 0, 8, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.3s;
+}
+.mobile-menu.open {
+  max-height: 400px;
+  padding: 16px 0 20px;
+}
+.mobile-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.mobile-menu ul li a {
+  display: block;
+  padding: 13px 24px;
+  color: rgba(255,255,255,0.8);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  text-decoration: none;
+  transition: 0.2s;
+  border-left: 3px solid transparent;
+}
+.mobile-menu ul li a:hover,
+.mobile-menu ul li a.active {
+  color: #fff;
+  border-left-color: var(--p-pink);
+  background: rgba(255,255,255,0.04);
+}
+
+/* ---- Responsive: show hamburger on mobile ---- */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .mobile-menu { display: block; }
+}
+@media (max-width: 480px) {
+  .navbar-dark { padding: 16px 0 !important; }
+  .nav-icon-btn { width: 34px; height: 34px; }
+}
