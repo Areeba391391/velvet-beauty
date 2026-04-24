@@ -1,13 +1,13 @@
-/* ============================================
+/* ============================================================
    VELVET BEAUTY — routes/analytics.js
    Owner only: revenue & order analytics
-   ============================================ */
+   ============================================================ */
 
 const router    = require('express').Router();
 const Analytics = require('../models/Analytics');
 const Order     = require('../models/Order');
 
-/* GET analytics data */
+/* ── GET /api/analytics ──────────────────────────────────── */
 router.get('/', async (req, res) => {
   try {
     const data = await Analytics.find().sort({ year: 1, monthIndex: 1 });
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-/* GET live summary from orders */
+/* ── GET /api/analytics/summary ──────────────────────────── */
 router.get('/summary', async (req, res) => {
   try {
     const orders = await Order.find({ status: { $ne: 'cancelled' } });

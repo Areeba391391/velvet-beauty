@@ -1,12 +1,12 @@
-/* ============================================
+/* ============================================================
    VELVET BEAUTY — routes/reviews.js
-   ============================================ */
+   ============================================================ */
 
 const router  = require('express').Router();
 const Review  = require('../models/Review');
 const Product = require('../models/Product');
 
-/* GET reviews (for a product or all) */
+/* ── GET /api/reviews ────────────────────────────────────── */
 router.get('/', async (req, res) => {
   try {
     const { product, minRating } = req.query;
@@ -21,17 +21,23 @@ router.get('/', async (req, res) => {
   }
 });
 
-/* POST create review */
+/* ── POST /api/reviews ───────────────────────────────────── */
 router.post('/', async (req, res) => {
   try {
+    /* Fetch product name to store alongside */
+    if (req.body.product && !req.body.productName) {
+      const p = await Product.findById(req.body.product);
+      if (p) req.body.productName = p.name;
+    }
+
     const review = await Review.create(req.body);
 
-    /* Update product rating */
+    /* Recalculate product rating */
     const allReviews = await Review.find({ product: req.body.product });
     const avgRating  = allReviews.reduce((s, r) => s + r.rating, 0) / allReviews.length;
     await Product.findByIdAndUpdate(req.body.product, {
       rating:  Math.round(avgRating * 10) / 10,
-      reviews: allReviews.length
+      reviews: allReviews.length,
     });
 
     res.status(201).json({ success: true, data: review });
@@ -40,7 +46,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-/* DELETE review (owner + employee) */
+/* ── DELETE /api/reviews/:id ─────────────────────────────── */
 router.delete('/:id', async (req, res) => {
   try {
     await Review.findByIdAndDelete(req.params.id);

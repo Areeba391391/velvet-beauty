@@ -1,87 +1,107 @@
-/* ============================================
+/* ============================================================
    VELVET BEAUTY — routes/auth.js
    Login, Register, role-based access
-   NOTE: Simple demo auth — no JWT in this
-   version. Add bcrypt + JWT for production.
-   ============================================ */
+   Password plain text stored for demo — add bcrypt for prod
+   ============================================================ */
 
 const router   = require('express').Router();
 const Customer = require('../models/Customer');
 
-/* Access codes (ideally in .env) */
 const EMP_CODE   = process.env.EMP_CODE   || 'EMP2025';
 const OWNER_CODE = process.env.OWNER_CODE || 'OWNER2025';
 
-/* ── REGISTER ── */
+/* ── POST /api/auth/register ─────────────────────────────── */
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, phone, city, password, role, accessCode } = req.body;
+    const { name, email, phone, city, password, role = 'customer', accessCode = '' } = req.body;
 
-    /* Role validation */
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, message: 'Name, email and password are required' });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+    }
+
+    /* Access code check for staff */
     if (role === 'employee' && accessCode !== EMP_CODE) {
-      return res.status(403).json({ success: false, message: 'Invalid employee code' });
+      return res.status(403).json({ success: false, message: 'Invalid employee access code' });
     }
     if (role === 'owner' && accessCode !== OWNER_CODE) {
-      return res.status(403).json({ success: false, message: 'Invalid owner code' });
+      return res.status(403).json({ success: false, message: 'Invalid owner access code' });
     }
 
-    /* Check existing */
-    const existing = await Customer.findOne({ email });
+    /* Email already taken? */
+    const existing = await Customer.findOne({ email: email.toLowerCase() });
     if (existing) {
-      return res.status(409).json({ success: false, message: 'Email already registered' });
+      return res.status(409).json({ success: false, message: 'Email already registered. Please login.' });
     }
 
-    /* For customer role: save to Customer model */
-    let userData = { id: 'u' + Date.now(), name, email, phone, city, role };
+    /* Save user to DB */
+    const user = await Customer.create({
+      name,
+      email:    email.toLowerCase(),
+      password, // store plain for demo; use bcrypt in production
+      phone:    phone  || '',
+      city:     city   || '',
+      role,
+    });
 
-    if (role === 'customer') {
-      const customer = await Customer.create({ name, email, phone, city });
-      userData.customerId = customer._id;
-    }
+    const sessionData = {
+      customerId: user._id,
+      name:       user.name,
+      email:      user.email,
+      role:       user.role,
+    };
 
-    res.status(201).json({ success: true, data: userData });
+    res.status(201).json({ success: true, data: sessionData });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
   }
 });
 
-/* ── LOGIN ── */
+/* ── POST /api/auth/login ────────────────────────────────── */
 router.post('/login', async (req, res) => {
   try {
-    const { email, password, role, accessCode } = req.body;
+    const { email, password, role = 'customer', accessCode = '' } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Email and password required' });
+      return res.status(400).json({ success: false, message: 'Email and password are required' });
     }
 
-    /* Role code validation */
+    /* Access code check for staff roles */
     if (role === 'employee' && accessCode !== EMP_CODE) {
-      return res.status(403).json({ success: false, message: 'Invalid employee code' });
+      return res.status(403).json({ success: false, message: 'Invalid employee access code' });
     }
     if (role === 'owner' && accessCode !== OWNER_CODE) {
-      return res.status(403).json({ success: false, message: 'Invalid owner code' });
+      return res.status(403).json({ success: false, message: 'Invalid owner access code' });
     }
 
-    /* Demo: accept any valid email for the role
-       In production: check hashed password from DB */
-    const name = role === 'owner'    ? 'Store Owner'   :
-                 role === 'employee' ? 'Staff Member'   :
-                 email.split('@')[0];
+    /* Find user in DB */
+    const user = await Customer.findOne({ email: email.toLowerCase(), role });
 
-    const session = {
-      id:    'u' + Date.now(),
-      name,
-      email,
-      role: role || 'customer'
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'No account found with this email and role' });
+    }
+
+    /* Password check (plain comparison for demo) */
+    if (user.password !== password) {
+      return res.status(401).json({ success: false, message: 'Incorrect password' });
+    }
+
+    const sessionData = {
+      customerId: user._id,
+      name:       user.name,
+      email:      user.email,
+      role:       user.role,
     };
 
-    res.json({ success: true, data: session });
+    res.json({ success: true, data: sessionData });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-/* GET access codes (owner only — for settings page) */
+/* ── GET /api/auth/codes ─────────────────────────────────── */
 router.get('/codes', (req, res) => {
   res.json({ success: true, data: { empCode: EMP_CODE, ownerCode: OWNER_CODE } });
 });

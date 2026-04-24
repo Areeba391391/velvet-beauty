@@ -1,133 +1,125 @@
 /* ============================================================
-   VELVET BEAUTY — BOUTIQUE CHECKOUT LOGIC
+   VELVET BEAUTY — CHECKOUT LOGIC (MongoDB API version)
    ============================================================ */
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Initial Render
-    renderCheckoutSummary();
-    
-    // 2. Listen for delivery changes to update total
-    document.querySelectorAll('input[name="delivery"]').forEach(radio => {
-        radio.addEventListener('change', renderCheckoutSummary);
-    });
+document.addEventListener('DOMContentLoaded', async () => {
+  await renderCheckoutSummary();
 
-    // Sync navbar cart count
-    const cart = VBCart.get();
-    document.getElementById('cart-count').textContent = cart.length;
+  document.querySelectorAll('input[name="delivery"]').forEach(radio => {
+    radio.addEventListener('change', renderCheckoutSummary);
+  });
+
+  const cc = document.getElementById('cart-count');
+  if (cc) cc.textContent = VBCart.count();
 });
 
-/**
- * Calculates and Renders the Order Review Section
- */
-function renderCheckoutSummary() {
-    const cart = VBCart.get();
-    if (cart.length === 0) {
-        window.location.href = 'cart.html';
-        return;
-    }
+async function renderCheckoutSummary() {
+  const cart = VBCart.get();
+  if (cart.length === 0) { window.location.href = 'cart.html'; return; }
 
-    const itemsList = document.getElementById('cs-items');
-    const couponCode = sessionStorage.getItem('active_coupon') || null;
-    const totals = VBCart.totals(couponCode); // Utility from store.js
+  const itemsList  = document.getElementById('cs-items');
+  const couponCode = sessionStorage.getItem('active_coupon') || null;
+  const totals     = await VBCart.totals(couponCode);
 
-    // Get selected delivery fee
-    const deliveryType = document.querySelector('input[name="delivery"]:checked').value;
-    let deliveryFee = 200; // Standard
-    if (deliveryType === 'express') deliveryFee = 450;
+  const deliveryRadio = document.querySelector('input[name="delivery"]:checked');
+  const deliveryType  = deliveryRadio ? deliveryRadio.value : 'standard';
+  let deliveryFee     = deliveryType === 'express' ? 450 : 200;
 
-    // Free delivery check (e.g. if subtotal > 2000)
-    if (totals.subtotal > 2000 && deliveryType === 'standard') {
-        deliveryFee = 0;
-        document.getElementById('do-price-std').innerHTML = "FREE ✨";
-    } else {
-        document.getElementById('do-price-std').textContent = "Rs. 200";
-    }
+  if (totals.subtotal > 2000 && deliveryType === 'standard') {
+    deliveryFee = 0;
+    const stdEl = document.getElementById('do-price-std');
+    if (stdEl) stdEl.innerHTML = 'FREE ✨';
+  } else {
+    const stdEl = document.getElementById('do-price-std');
+    if (stdEl) stdEl.textContent = 'Rs. 200';
+  }
 
-    const grandTotal = totals.subtotal - totals.discount + deliveryFee;
+  const grandTotal = totals.subtotal - totals.discount + deliveryFee;
 
-    // Render Items
+  if (itemsList) {
     itemsList.innerHTML = cart.map(item => `
-        <div class="s-item">
-            <img src="${item.image}" alt="${item.name}">
-            <div class="s-item-info">
-                <h5>${item.name}</h5>
-                <span>Qty: ${item.qty}</span>
-            </div>
-            <div class="s-item-price">Rs. ${(item.price * item.qty).toLocaleString()}</div>
+      <div class="s-item">
+        <img src="${item.image || ''}" alt="${item.name}"
+             onerror="this.src='https://placehold.co/60x60/FDE8F3/E91E8C?text=💄'">
+        <div class="s-item-info">
+          <h5>${item.name}</h5>
+          <span>Qty: ${item.qty}</span>
         </div>
+        <div class="s-item-price">Rs. ${(item.price * item.qty).toLocaleString()}</div>
+      </div>
     `).join('');
+  }
 
-    // Update Totals UI
-    document.getElementById('cs-subtotal').textContent = `Rs. ${totals.subtotal.toLocaleString()}`;
-    document.getElementById('cs-delivery').textContent = deliveryFee === 0 ? 'FREE' : `Rs. ${deliveryFee}`;
-    document.getElementById('cs-total').textContent = grandTotal.toLocaleString();
+  const subEl  = document.getElementById('cs-subtotal'); if (subEl)  subEl.textContent  = `Rs. ${totals.subtotal.toLocaleString()}`;
+  const delEl  = document.getElementById('cs-delivery');  if (delEl)  delEl.textContent  = deliveryFee === 0 ? 'FREE' : `Rs. ${deliveryFee}`;
+  const totEl  = document.getElementById('cs-total');     if (totEl)  totEl.textContent  = grandTotal.toLocaleString();
 
-    if (totals.discount > 0) {
-        document.getElementById('cs-disc-row').style.display = 'flex';
-        document.getElementById('cs-disc').textContent = `-Rs. ${totals.discount.toLocaleString()}`;
-    }
+  if (totals.discount > 0) {
+    const discRow = document.getElementById('cs-disc-row');
+    if (discRow) discRow.style.display = 'flex';
+    const discEl = document.getElementById('cs-disc');
+    if (discEl)  discEl.textContent = `-Rs. ${totals.discount.toLocaleString()}`;
+  }
 }
 
-/**
- * Form Validation and Order Placement
- */
-function placeOrder() {
-    const btn = document.getElementById('place-order-btn');
-    
-    // Fields to validate
-    const name = document.getElementById('addr-name').value.trim();
-    const phone = document.getElementById('addr-phone').value.trim();
-    const street = document.getElementById('addr-street').value.trim();
-    const city = document.getElementById('addr-city').value;
+async function placeOrder() {
+  const btn = document.getElementById('place-order-btn');
 
-    let isValid = true;
+  const name   = document.getElementById('addr-name')?.value.trim()   || '';
+  const phone  = document.getElementById('addr-phone')?.value.trim()  || '';
+  const street = document.getElementById('addr-street')?.value.trim() || '';
+  const city   = document.getElementById('addr-city')?.value          || '';
 
-    // Simple validation logic
-    if (!name) { document.getElementById('err-name').classList.add('show'); isValid = false; }
-    else { document.getElementById('err-name').classList.remove('show'); }
+  let isValid = true;
+  const toggleErr = (id, show) => { const el = document.getElementById(id); if (el) el.classList.toggle('show', show); };
+  toggleErr('err-name',   !name);   if (!name)   isValid = false;
+  toggleErr('err-phone',  phone.length < 11); if (phone.length < 11) isValid = false;
+  toggleErr('err-street', !street); if (!street) isValid = false;
+  toggleErr('err-city',   !city);   if (!city)   isValid = false;
 
-    if (!phone || phone.length < 11) { document.getElementById('err-phone').classList.add('show'); isValid = false; }
-    else { document.getElementById('err-phone').classList.remove('show'); }
+  if (!isValid) { VBToast.show('Please fill required fields 🎀', 'warning'); return; }
 
-    if (!street) { document.getElementById('err-street').classList.add('show'); isValid = false; }
-    else { document.getElementById('err-street').classList.remove('show'); }
+  btn.innerHTML = 'Processing Order...';
+  btn.disabled  = true;
 
-    if (!city) { document.getElementById('err-city').classList.add('show'); isValid = false; }
-    else { document.getElementById('err-city').classList.remove('show'); }
+  const session    = VBAuth.session();
+  const cartItems  = VBCart.get();
+  const coupon     = sessionStorage.getItem('active_coupon');
+  const totalsData = await VBCart.totals(coupon);
 
-    if (!isValid) {
-        VBToast.show('Please fill required boutique fields 🎀', 'warning');
-        return;
-    }
+  const deliveryRadio = document.querySelector('input[name="delivery"]:checked');
+  const deliveryType  = deliveryRadio ? deliveryRadio.value : 'standard';
+  let deliveryFee     = deliveryType === 'express' ? 450 : 200;
+  if (totalsData.subtotal > 2000 && deliveryType === 'standard') deliveryFee = 0;
 
-    // Process Order
-    btn.innerHTML = "Processing Order Selection...";
-    btn.disabled = true;
+  const grandTotal = totalsData.subtotal - totalsData.discount + deliveryFee;
 
-    setTimeout(() => {
-        // Collect order data
-        const session = VBAuth.session();
-        const cartItems = VBCart.get();
-        const totalsData = VBCart.totals(sessionStorage.getItem('active_coupon'));
-        const orderData = {
-          customerId:    session ? session.id   : '',
-          customerName:  session ? session.name : 'Guest',
-          items:         cartItems,
-          subtotal:      totalsData.subtotal,
-          discount:      totalsData.discount,
-          deliveryFee:   totalsData.deliveryFee,
-          total:         totalsData.total,
-          paymentMethod: (document.getElementById('payment-method') || {}).value || 'cod',
-          deliveryType:  'standard',
-          address:       [
-            (document.getElementById('co-address') || {}).value || '',
-            (document.getElementById('co-city')    || {}).value || '',
-          ].filter(Boolean).join(', '),
-        };
-        const placedOrder = VBOrders.place(orderData);
-        VBCart.clear();
-        sessionStorage.removeItem('active_coupon');
-        VBToast.show('Order placed successfully! ✨', 'success');
-        window.location.href = 'order-success.html?id=' + (placedOrder ? placedOrder.id : '');
-    }, 1500);
+  const orderData = {
+    customerName:  session ? session.name : name,
+    customer:      session?.customerId || null,
+    items:         cartItems.map(i => ({
+      productName: i.name,
+      quantity:    i.qty,
+      price:       i.price,
+    })),
+    total:         grandTotal,
+    city:          city,
+    address:       `${street}, ${city}`,
+    paymentMethod: document.getElementById('payment-method')?.value || 'cod',
+    deliveryType,
+  };
+
+  const placedOrder = await VBOrders.place(orderData);
+
+  sessionStorage.removeItem('active_coupon');
+
+  if (placedOrder) {
+    VBToast.show('Order placed successfully! ✨', 'success');
+    const orderId = placedOrder._id || placedOrder.orderNumber || '';
+    window.location.href = 'order-success.html?id=' + orderId;
+  } else {
+    VBToast.show('Something went wrong. Please try again.', 'error');
+    btn.innerHTML = 'Place Order';
+    btn.disabled  = false;
+  }
 }
